@@ -3,26 +3,29 @@
 //!
 //! @brief  ゲーム関連のヘッダファイル
 //!
-//! @date   日付
-//!
-//! @author 制作者名
+//! @date   2018/08/07
 //__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
 
 // 多重インクルードの防止 ==================================================
 #pragma once
-
+#include "Graphic.h"
+#include "GameObjectStruct.h"
+#include "GameDefine.h"
+#include "GameEnum.h"
+#include "Key.h"
+#include "Sound.h"
 
 
 
 // 定数の定義 ==============================================================
 
 // <システム> ----------------------------------------------------------
-#define GAME_TITLE "Sample Game"        // ゲームタイトル
+#define GAME_TITLE "ドルアーガの迷宮"        // ゲームタイトル
 
 
 // <画面> --------------------------------------------------------------
-#define SCREEN_WIDTH    (640)                  // 画面の幅[pixel]
-#define SCREEN_HEIGHT   (480)                  // 画面の高さ[pixel]
+#define SCREEN_WIDTH    (800)                  // 画面の幅[pixel]
+#define SCREEN_HEIGHT   (600)                  // 画面の高さ[pixel]
 
 #define SCREEN_TOP      (0)                    // 画面の上端
 #define SCREEN_BOTTOM   (SCREEN_HEIGHT)        // 画面の下端
@@ -48,3 +51,8 @@ void RenderGame(void);
 
 // ゲームの終了処理
 void FinalizeGame(void);
+
+// シーンの変更要求
+void RequestScene(const SceneId sceneId);
+
+
