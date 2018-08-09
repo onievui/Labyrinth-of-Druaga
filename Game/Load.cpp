@@ -49,6 +49,7 @@ void LoadResources() {
 	g_texture[GRP_TITLE] = LoadGraph("Resources/Textures/Protected/title.png");
 	g_texture[GRP_TITLE_BG] = LoadGraph("Resources/Textures/Protected/title_bg.png");
 	g_texture[GRP_GIL] = LoadGraph("Resources/Textures/Protected/gil.png");
+	g_texture[GRP_MAPCHIP1] = LoadGraph("Resources/Textures/Protected/mapchip1.png");
 
 
 

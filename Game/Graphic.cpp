@@ -3,7 +3,7 @@
 //!
 //! @brief  グラフィックデータの処理
 //!
-//! @date   2018/08/08
+//! @date   2018/08/09
 //__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
 
 
@@ -22,6 +22,16 @@ void DrawGraphic(const Vector2DF pos, Graph *tex) {
 		sprite.rect.right, sprite.rect.bottom,
 		tex->exrate, tex->angle, sprite.texture, true);
 	
+}
+
+//グラフィックの描画（ポインタ版）
+void DrawGraphicP(const Vector2DF pos, GraphP *tex) {
+	Sprite sprite = *(tex->sprite);
+	DrawRectRotaGraphF(pos.x, pos.y,
+		sprite.rect.left, sprite.rect.top,
+		sprite.rect.right, sprite.rect.bottom,
+		tex->exrate, tex->angle, sprite.texture, true);
+
 }
 
 

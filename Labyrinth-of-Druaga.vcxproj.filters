@@ -112,6 +112,9 @@
     <ClCompile Include="Game\Player.cpp">
       <Filter>ゲーム\オブジェクト関連</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Map.cpp">
+      <Filter>ゲーム\オブジェクト関連</Filter>
+    </ClCompile>
   </ItemGroup>
   <!-- ヘッダファイル -->
   <ItemGroup>
@@ -191,6 +194,9 @@
       <Filter>ゲーム\オブジェクト関連</Filter>
     </ClInclude>
     <ClInclude Include="Game\RectF.h">
+      <Filter>ゲーム\オブジェクト関連</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Map.h">
       <Filter>ゲーム\オブジェクト関連</Filter>
     </ClInclude>
   </ItemGroup>

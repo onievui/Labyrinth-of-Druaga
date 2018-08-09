@@ -22,10 +22,17 @@
 struct GameObject {
 	Vector2DF pos;		//座標
 	Vector2DF vel;		//移動量
-	int state;		//状態
-	float speed;	//速度
-	float angle;	//角度
-	Graph graph;	//表示画像情報
+	int state;			//状態
+	float speed;		//速度
+	float angle;		//角度
+	Graph graph;		//表示画像情報
+};
+
+//マップ構造体
+struct Map {
+	SPR_ID knd;			//種類
+	Vector2DF pos;		//座標
+	GraphP graphp;		//画像
 };
 
 // プレイヤー構造体

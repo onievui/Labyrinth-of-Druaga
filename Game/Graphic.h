@@ -3,7 +3,7 @@
 //!
 //! @brief  グラフィックデータのヘッダファイル
 //!
-//! @date   2018/06/19
+//! @date   2018/08/09
 //!
 //! @author 永戸勇希
 //__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
@@ -25,7 +25,19 @@ struct Graph {
 
 };
 
+//graphic構造体（ポインタ版）
+struct GraphP {
+	Sprite *sprite;
+	float exrate;
+	float angle;
+
+};
+
 //スプライトの描画
 void DrawGraphic(const Vector2DF pos, Graph *tex);
+
+//グラフィックの描画（ポインタ版）
+void DrawGraphicP(const Vector2DF pos, GraphP *tex);
+
 
 

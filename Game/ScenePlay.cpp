@@ -9,6 +9,7 @@
 // ヘッダファイルの読み込み ================================================
 #include "GameMain.h"
 #include "ScenePlay.h"
+#include "Map.h"
 #include "Player.h"
 #include "Shader.h"
 #include "Mediator.h"
@@ -50,6 +51,9 @@ void StageFailedProcess();
 //----------------------------------------------------------------------
 void InitializePlay(void)
 {
+	//マップの初期化
+	InitializeMap();
+
 	//プレイヤーの初期化
 	InitializePlayer();
 
@@ -110,6 +114,9 @@ void UpdatePlay(void)
 //----------------------------------------------------------------------
 void RenderPlay(void)
 {
+	//マップの描画
+	DrawMap();
+
 	//プレイヤーの描画
 	DrawPlayer();
 }
