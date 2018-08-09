@@ -21,6 +21,7 @@ enum GRP_ID {
 	GRP_TITLE_BG,			//タイトル背景
 	GRP_STAGESELECT_BG,		//ステージセレクト背景
 	GRP_STAGESELECT_ICON,	//ステージセレクトアイコン
+	GRP_GIL,				//プレイヤー画像
 	GRP_ALL_NUM,			//読み込む画像ファイルの数
 };
 

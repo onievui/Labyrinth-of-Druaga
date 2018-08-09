@@ -92,6 +92,7 @@
     <ClCompile Include="Game\Key.cpp" />
     <ClCompile Include="Game\Load.cpp" />
     <ClCompile Include="Game\Mediator.cpp" />
+    <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="Game\SceneLogo.cpp" />
     <ClCompile Include="Game\ScenePlay.cpp" />
     <ClCompile Include="Game\SceneResult.cpp" />
@@ -118,6 +119,8 @@
     <ClInclude Include="Game\Key.h" />
     <ClInclude Include="Game\Load.h" />
     <ClInclude Include="Game\Mediator.h" />
+    <ClInclude Include="Game\Player.h" />
+    <ClInclude Include="Game\RectF.h" />
     <ClInclude Include="Game\SceneLogo.h" />
     <ClInclude Include="Game\ScenePlay.h" />
     <ClInclude Include="Game\SceneResult.h" />

@@ -9,6 +9,7 @@
 // ヘッダファイルの読み込み ================================================
 #include "GameMain.h"
 #include "ScenePlay.h"
+#include "Player.h"
 #include "Shader.h"
 #include "Mediator.h"
 
@@ -49,6 +50,9 @@ void StageFailedProcess();
 //----------------------------------------------------------------------
 void InitializePlay(void)
 {
+	//プレイヤーの初期化
+	InitializePlayer();
+
 	//カウンタの初期化
 	g_count = 0;
 
@@ -106,7 +110,8 @@ void UpdatePlay(void)
 //----------------------------------------------------------------------
 void RenderPlay(void)
 {
-	
+	//プレイヤーの描画
+	DrawPlayer();
 }
 
 
@@ -124,8 +129,10 @@ void FinalizePlay(void)
 }
 
 //プレイ処理
-void PlayProcess() {
-
+void PlayProcess() 
+{
+	//プレイヤーの更新
+	UpdatePlayer();
 	
 
 
@@ -133,26 +140,31 @@ void PlayProcess() {
 }
 
 //ポーズ画面処理
-void PauseProcess() {
+void PauseProcess() 
+{
 
 }
 
 //ステージ失敗状態への移行
-void RequestStageFailed() {
+void RequestStageFailed() 
+{
 	
 }
 
 //ステージ失敗処理
-void StageFailedProcess() {
+void StageFailedProcess() 
+{
 	
 }
 
 //ステージクリアへの移行
-void RequestStageClear() {
+void RequestStageClear() 
+{
 	
 }
 
 //ステージクリア処理
-void StageClearProcess() {
+void StageClearProcess() 
+{
 
 }

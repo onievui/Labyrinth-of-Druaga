@@ -3,7 +3,7 @@
 //!
 //! @brief  タイトルシーン関連のソースファイル
 //!
-//! @date   2018/08/07
+//! @date   2018/08/08
 //__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
 
 // ヘッダファイルの読み込み ================================================
@@ -45,7 +45,7 @@ void InitializeTitle(void)
 	g_title_object.state = 1;
 	g_title_object.speed = 0;
 	g_title_object.angle = 0;
-	g_title_object.graph = Graph{ &g_sprite[SPR_TITLE] , 1.0f, 0.0f };
+	g_title_object.graph = Graph{ g_sprite[SPR_TITLE] , 1.0f, 0.0f };
 
 	//背景オブジェクトの初期化
 	g_title_back_object.pos = Vector2DF{ (float)(SCREEN_CENTER_X),(float)(SCREEN_CENTER_Y) };
@@ -53,7 +53,7 @@ void InitializeTitle(void)
 	g_title_back_object.state = 1;
 	g_title_back_object.speed = 0;
 	g_title_back_object.angle = 0;
-	g_title_back_object.graph = Graph{ &g_sprite[SPR_TITLE_BG] , 1.3f, 0.0f };
+	g_title_back_object.graph = Graph{ g_sprite[SPR_TITLE_BG] , 1.3f, 0.0f };
 
 	//SetBGM(BGM_1);
 }

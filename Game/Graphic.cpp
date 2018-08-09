@@ -3,7 +3,7 @@
 //!
 //! @brief  グラフィックデータの処理
 //!
-//! @date   2018/08/07
+//! @date   2018/08/08
 //__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
 
 
@@ -16,7 +16,7 @@
 
 //グラフィックの描画
 void DrawGraphic(const Vector2DF pos, Graph *tex) {
-	Sprite sprite = *(tex->sprite);
+	Sprite sprite = tex->sprite;
 	DrawRectRotaGraphF(pos.x, pos.y,
 		sprite.rect.left, sprite.rect.top,
 		sprite.rect.right, sprite.rect.bottom,

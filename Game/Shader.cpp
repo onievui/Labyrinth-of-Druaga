@@ -48,7 +48,8 @@ void InitializeShader() {
 	g_waipu_object.angle = 0;
 	//g_waipu_object.graph = Graph{ g_sprite[******] , 1.0f, 0.0f };
 
-	for (int i = 0; i < 4; i++) {
+	int i;
+	for (i = 0; i < 4; i++) {
 		vertex[i].pos = VGet((i % 2)*(float)(SCREEN_WIDTH), (i / 2)*(float)(SCREEN_HEIGHT), 0);
 		vertex[i].rhw = 1.0f;
 		vertex[i].dif = GetColorU8(255, 255, 255, 255);
@@ -96,9 +97,9 @@ void UpdateShader() {
 			t = (180 - g_timer)/18.0f;
 			DrawRectExtendGraphF(g_waipu_object.pos.x - t * 600, g_waipu_object.pos.y - t * 450, 
 				g_waipu_object.pos.x + t * 600, g_waipu_object.pos.y + t * 450,
-				g_waipu_object.graph.sprite->rect.left, g_waipu_object.graph.sprite->rect.top, 
-				g_waipu_object.graph.sprite->rect.right, g_waipu_object.graph.sprite->rect.bottom,
-				g_waipu_object.graph.sprite->texture, TRUE);
+				g_waipu_object.graph.sprite.rect.left, g_waipu_object.graph.sprite.rect.top, 
+				g_waipu_object.graph.sprite.rect.right, g_waipu_object.graph.sprite.rect.bottom,
+				g_waipu_object.graph.sprite.texture, TRUE);
 			SetDrawScreen(DX_SCREEN_BACK);
 			SetUseTextureToShader(0, g_third_screen);
 			SetUseTextureToShader(1, g_fourth_screen);
@@ -115,9 +116,9 @@ void UpdateShader() {
 			t = g_timer / 18.0f;
 			DrawRectExtendGraphF(g_waipu_object.pos.x - t * 600, g_waipu_object.pos.y - t * 450, 
 				g_waipu_object.pos.x + t * 600, g_waipu_object.pos.y + t * 450,
-				g_waipu_object.graph.sprite->rect.left, g_waipu_object.graph.sprite->rect.top, 
-				g_waipu_object.graph.sprite->rect.right, g_waipu_object.graph.sprite->rect.bottom,
-				g_waipu_object.graph.sprite->texture, TRUE);
+				g_waipu_object.graph.sprite.rect.left, g_waipu_object.graph.sprite.rect.top, 
+				g_waipu_object.graph.sprite.rect.right, g_waipu_object.graph.sprite.rect.bottom,
+				g_waipu_object.graph.sprite.texture, TRUE);
 			SetDrawScreen(DX_SCREEN_BACK);
 			SetUseTextureToShader(0, g_third_screen);
 			SetUseTextureToShader(1, g_fourth_screen);

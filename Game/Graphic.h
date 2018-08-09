@@ -19,7 +19,7 @@
 
 //graphic\‘¢‘Ì
 struct Graph {
-	Sprite *sprite;
+	Sprite sprite;
 	float exrate;
 	float angle;
 

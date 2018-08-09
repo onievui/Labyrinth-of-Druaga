@@ -1,6 +1,9 @@
 #pragma once
 
 
+//外部に公開する定数の定義
+
+
 
 //フィールド関係
 #define FIELD_WIDTH    (800)                  // フィールドの幅[pixel]
@@ -15,7 +18,8 @@
 #define PI2	(PI * 2)
 
 
-
+//プレイヤー関係
+#define PLAYER_MAX	(1)		//プレイヤーの数
 
 
 

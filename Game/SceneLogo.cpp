@@ -3,7 +3,7 @@
 //!
 //! @brief  ロゴシーン関連のソースファイル
 //!
-//! @date   2018/08/07
+//! @date   2018/08/08
 //__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
 
 // ヘッダファイルの読み込み ================================================
@@ -48,7 +48,7 @@ void InitializeLogo(void)
 	g_logo_object1.state = 1;
 	g_logo_object1.speed = 0;
 	g_logo_object1.angle = 0;
-	g_logo_object1.graph = Graph{ &g_sprite[SPR_LOGO2] , 1.0f, 0.0f };
+	g_logo_object1.graph = Graph{ g_sprite[SPR_LOGO2] , 1.0f, 0.0f };
 
 	//ロゴオブジェクト2の初期化
 	g_logo_object2.pos = Vector2DF{ (float)(SCREEN_CENTER_X),(float)(SCREEN_CENTER_Y) };
@@ -56,7 +56,7 @@ void InitializeLogo(void)
 	g_logo_object2.state = 1;
 	g_logo_object2.speed = 0;
 	g_logo_object2.angle = 0;
-	g_logo_object2.graph = Graph{ &g_sprite[SPR_LOGO1] , 1.0f, 0.0f };
+	g_logo_object2.graph = Graph{ g_sprite[SPR_LOGO1] , 1.0f, 0.0f };
 	
 }
 

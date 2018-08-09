@@ -13,6 +13,7 @@
 //ヘッダーファイルの読み込み
 #include "Graphic.h"
 #include "Vector2DF.h"
+#include "RectF.h"
 #include "Sprite.h"
 
 
@@ -25,4 +26,17 @@ struct GameObject {
 	float speed;	//速度
 	float angle;	//角度
 	Graph graph;	//表示画像情報
+};
+
+// プレイヤー構造体
+struct Player {
+	int state;			//状態
+	Vector2DF pos;		//座標
+	RectF col;			//当たり判定の相対座標
+	Vector2DF vel;		//移動量
+	float speed;		//移動速度
+	BOOL is_left;		//左向きかどうか
+	Graph graph;		//表示画像情報
+	int sprite_num;		//スプライト番号
+	int anime_count;	//アニメーション用カウンタ
 };

@@ -22,6 +22,7 @@ enum SPR_ID {
 	SPR_TITLE_BG,			//タイトル背景スプライト
 	SPR_STAGESELECT_BG,		//ステージセレクト背景スプライト
 	SPR_STAGESELECT_ICON,	//ステージセレクトアイコンスプライト
+	SPR_STD_GIL,			//プレイヤー基準スプライト
 	SPR_ALL_NUM,			//スプライトの数
 };
 
@@ -39,3 +40,7 @@ extern Sprite g_sprite[SPR_ALL_NUM];
 
 //スプライトデータの初期化
 void InitializeSprite();
+
+//スプライト切り出し位置の取得
+RECT GetSpriteRect(const SPR_ID sprId, const int num);
+
