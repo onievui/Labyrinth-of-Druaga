@@ -9,6 +9,10 @@
 #pragma once
 
 
+//ヘッダファイルの読み込み
+#include "GameObjectStruct.h"
+
+
 
 //マップの初期化
 void InitializeMap();
@@ -16,7 +20,11 @@ void InitializeMap();
 //マップの描画
 void DrawMap();
 
+//マップを取得する
+MapAll GetMap();
 
+//指定した座標が通過不可マスかどうか
+BOOL IsMapPosWall(float x, float y);
 
 
 

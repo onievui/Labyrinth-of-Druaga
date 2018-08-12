@@ -88,6 +88,7 @@
   </ItemDefinitionGroup>
   <!-- ソースファイル -->
   <ItemGroup>
+    <ClCompile Include="Game\Collision.cpp" />
     <ClCompile Include="Game\Graphic.cpp" />
     <ClCompile Include="Game\Key.cpp" />
     <ClCompile Include="Game\Load.cpp" />
@@ -113,6 +114,7 @@
   </ItemGroup>
   <!-- ヘッダファイル -->
   <ItemGroup>
+    <ClInclude Include="Game\Collision.h" />
     <ClInclude Include="Game\GameDefine.h" />
     <ClInclude Include="Game\GameEnum.h" />
     <ClInclude Include="Game\GameObjectStruct.h" />

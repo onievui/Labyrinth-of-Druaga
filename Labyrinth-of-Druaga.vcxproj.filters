@@ -115,6 +115,9 @@
     <ClCompile Include="Game\Map.cpp">
       <Filter>ゲーム\オブジェクト関連</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Collision.cpp">
+      <Filter>ゲーム\ユーティリティ</Filter>
+    </ClCompile>
   </ItemGroup>
   <!-- ヘッダファイル -->
   <ItemGroup>
@@ -198,6 +201,9 @@
     </ClInclude>
     <ClInclude Include="Game\Map.h">
       <Filter>ゲーム\オブジェクト関連</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Collision.h">
+      <Filter>ゲーム\ユーティリティ</Filter>
     </ClInclude>
   </ItemGroup>
   <!-- リソースファイル -->

@@ -11,6 +11,7 @@
 #include "ScenePlay.h"
 #include "Map.h"
 #include "Player.h"
+#include "Collision.h"
 #include "Shader.h"
 #include "Mediator.h"
 
@@ -51,11 +52,14 @@ void StageFailedProcess();
 //----------------------------------------------------------------------
 void InitializePlay(void)
 {
+	//プレイヤーの初期化
+	InitializePlayer();
+
 	//マップの初期化
 	InitializeMap();
 
-	//プレイヤーの初期化
-	InitializePlayer();
+	//当たり判定の初期化
+	InitializeCollision();
 
 	//カウンタの初期化
 	g_count = 0;

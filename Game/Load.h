@@ -8,6 +8,8 @@
 
 #pragma once
 
+//ヘッダファイルの読み込み
+#include "GameEnum.h"
 
 
 
@@ -56,6 +58,9 @@ extern HFNT g_font_g150;
 
 //リソースの読み込み
 void LoadResources();
+
+//マップデータの読み込み
+void LoadMapData(const StageId stageId, int map_date[], int *width, int *height, const int max_width, int player_pos[]);
 
 //リソースの解放
 void DeleteResources();

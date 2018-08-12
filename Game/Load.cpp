@@ -65,6 +65,91 @@ void LoadResources() {
 	g_shader[SHA_WAIPU] = LoadPixelShader("Resources/Shaders/waipu.pso");
 }
 
+//マップデータの読み込み
+void LoadMapData(const StageId stageId, int map_date[], int *width, int *height, const int max_width, int player_pos[]) {
+	
+	//エラーチェック
+	if (stageId < 0 || stageId >= STAGE_NUM) {
+		MessageBox(NULL, "マップの読み込みで不正な値が渡されました", "", MB_OK);
+		return;
+	}
+
+	int i, fp, loop;
+	char fname[64];
+	sprintf(fname, "Resources/Texts/stage%d_map.dat", stageId + 1);
+	int input[64];
+	char inputc[64];
+	int knd;			//現在読み込んでいるデータの種類
+	int num;			//読み込んでいるデータの件数
+
+	fp = FileRead_open(fname);//ファイル読み込み
+	if (fp == NULL) {
+		MessageBox(NULL, "指定されたマップデータが存在しません", "", MB_OK);
+		return;
+	}
+	
+	//変数初期化
+	loop = 1, knd = 0, num = 0;
+
+	while (loop) {
+
+		for (i = 0; i<64; i++) {
+			inputc[i] = input[i] = FileRead_getc(fp);	//1文字取得する
+			if (inputc[i] == '#') {						//シャープがあればその行を読み飛ばす
+				while (FileRead_getc(fp) != '\n');
+				i = -1;
+				continue;
+			}
+			if (input[i] == ',' || input[i] == '\n') {	//カンマか改行ならそこまでを文字列とする
+				inputc[i] = '\0';
+				break;
+			}
+			if (input[i] == EOF) {		//ファイルの終わりなら
+				knd = -1;			//終了
+			}
+		}
+		switch (knd) {
+		//ステージの大きさ
+		case 0:
+			if (num == 0) {
+				*width = atoi(inputc);
+				num++;
+			}
+			else {
+				*height = atoi(inputc);
+				knd = 1;
+				num = 0;
+			}
+			
+			break;
+		//プレイヤーの初期座標
+		case 1:
+			if (num == 0) {
+				player_pos[0] = atoi(inputc);
+				num++;
+			}
+			else {
+				player_pos[1] = atoi(inputc);
+				knd = 2;
+				num = 0;
+			}
+			break;
+		//マップデータ
+		case 2:
+			map_date[(num % *width) + (num / *width)*max_width] = atoi(inputc);
+			num++;
+
+			break;
+		case -1:
+			loop = 0;
+			break;
+
+		}
+	}
+	FileRead_close(fp);
+
+}
+
 //リソースの解放
 void DeleteResources() {
 	//画像の削除

@@ -18,6 +18,14 @@
 #define PI2	(PI * 2)
 
 
+//マップ関係
+#define MAP_WIDTH_MAX	(12)	//マップの最大横幅
+#define MAP_HEIGHT_MAX	(9)		//マップの最大縦幅
+
+#define MAPCHIP_SIZE		(64)	//マップチップの大きさ
+#define MAPCHIP_SIZE_HALF	(32)	//マップチップの大きさの半分
+
+
 //プレイヤー関係
 #define PLAYER_MAX	(1)		//プレイヤーの数
 

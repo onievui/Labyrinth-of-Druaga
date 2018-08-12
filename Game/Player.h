@@ -27,9 +27,12 @@ void DrawPlayer();
 //プレイヤーの座標を取得する
 Vector2DF GetPlayerPos();
 
+//プレイヤーの座標を設定する
+void SetPlayerPos(Vector2DF pos);
+
 
 //プレイヤーの当たり判定を設定する
-//void SetPlayerCollider(CircleCollider *collider);
+void SetPlayerCollider(BoxCollider *collider);
 
 //プレイヤーが敵と衝突したときの処理
 //void CollisionPlayer();

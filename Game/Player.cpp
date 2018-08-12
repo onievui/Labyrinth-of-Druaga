@@ -31,7 +31,7 @@ Player g_player;
 void InitializePlayer() {
 	g_player.state = 1;
 	g_player.pos = Vector2DF{ (float)FIELD_CENTER_X,(float)FIELD_HEIGHT-100 };
-	g_player.col = RectF{ -32,-32,32,32 };
+	g_player.col = RectF{ -20,-32,20,32 };
 	g_player.vel = Vector2DF{ 0,0 };
 	g_player.speed = 4;
 	g_player.is_left = TRUE;
@@ -57,72 +57,89 @@ void UpdatePlayer() {
 //プレイヤーの移動
 void MovePlayer() {
 	
-		//速度の初期化
-		g_player.vel = Vector2DF{ 0,0 };
-		//移動後の座標
-		Vector2DF next_pos = Vector2DF{ g_player.pos.x,g_player.pos.y };
+	//速度の初期化
+	//g_player.vel = Vector2DF{ 0,0 };
+	//移動後の座標
+	Vector2DF next_pos = Vector2DF{ g_player.pos.x,g_player.pos.y };
 	
 
-		//横方向の移動
-		switch (CheckStateKeyLater(KEY_INPUT_LEFT, KEY_INPUT_RIGHT)) {
-		case 0:
-			break;
-		case 1:
-			AddVector2DF(g_player.vel, Vector2DF{ -g_player.speed,0 });
-			g_player.is_left = TRUE;
-			g_player.anime_count++;
-			break;
-		case 2:
-			AddVector2DF(g_player.vel, Vector2DF{ g_player.speed,0 });
-			g_player.is_left = FALSE;
-			g_player.anime_count++;
-			break;
-		default:
-			MessageBox(NULL, "プレイヤー入力エラー", "", MB_OK);
-			break;
-		}
+	//横方向の移動
+	switch (CheckStateKeyLater(KEY_INPUT_LEFT, KEY_INPUT_RIGHT)) {
+	case 0:
+		g_player.vel.x = 0;
+		break;
+	case 1:
+		//AddVector2DF(g_player.vel, Vector2DF{ -g_player.speed,0 });
+		g_player.vel.x = -g_player.speed;
+		g_player.is_left = TRUE;
+		g_player.anime_count++;
+		break;
+	case 2:
+		//AddVector2DF(g_player.vel, Vector2DF{ g_player.speed,0 });
+		g_player.vel.x = g_player.speed;
+		g_player.is_left = FALSE;
+		g_player.anime_count++;
+		break;
+	default:
+		MessageBox(NULL, "プレイヤー入力エラー", "", MB_OK);
+		break;
+	}
 
-		////縦方向の移動
-		//switch (CheckStateKeyLater(KEY_INPUT_UP, KEY_INPUT_DOWN)) {
-		//case 0:
-		//	break;
-		//case 1:
-		//	AddVector2DF(g_player.vel, Vector2DF{ 0,-g_player.speed });
-		//	ud_flag = true;
-		//	break;
-		//case 2:
-		//	AddVector2DF(g_player.vel, Vector2DF{ 0,g_player.speed });
-		//	ud_flag = true;
-		//	break;
-		//default:
-		//	MessageBox(NULL, "プレイヤー入力エラー", "", MB_OK);
-		//	break;
-		//}
+	if (CheckHitKeyDown(KEY_INPUT_Z)) {
+		g_player.vel.y -= 40;
+	}
+
+	g_player.vel.y += 2.4f;
+
+	if (g_player.pos.y + g_player.col.top > FIELD_HEIGHT) {
+		g_player.pos.y -= FIELD_HEIGHT;
+	}
+
+	////縦方向の移動
+	//switch (CheckStateKeyLater(KEY_INPUT_UP, KEY_INPUT_DOWN)) {
+	//case 0:
+	//	break;
+	//case 1:
+	//	AddVector2DF(g_player.vel, Vector2DF{ 0,-g_player.speed });
+	//	ud_flag = true;
+	//	break;
+	//case 2:
+	//	AddVector2DF(g_player.vel, Vector2DF{ 0,g_player.speed });
+	//	ud_flag = true;
+	//	break;
+	//default:
+	//	MessageBox(NULL, "プレイヤー入力エラー", "", MB_OK);
+	//	break;
+	//}
 
 
-		//移動量を座標に足す
-		AddVector2DF(next_pos, g_player.vel);
+	//マップとの当たり判定
+	OrderCollisionObjectMap(&g_player.pos, &g_player.vel, &g_player.col);
 
-		//移動範囲外なら座標を端に戻す
-		if (next_pos.x - g_player.graph.sprite.rect.right / 2 * g_player.graph.exrate < 0) {
-			g_player.pos.x = 0 + g_player.graph.sprite.rect.right / 2 * g_player.graph.exrate;
-		}
-		else if (next_pos.x + g_player.graph.sprite.rect.right / 2 * g_player.graph.exrate > FIELD_WIDTH) {
-			g_player.pos.x = FIELD_WIDTH - g_player.graph.sprite.rect.right / 2 * g_player.graph.exrate;
 
-		}
-		else {
-			g_player.pos.x = next_pos.x;
-		}
-		if (next_pos.y - g_player.graph.sprite.rect.bottom / 2 * g_player.graph.exrate < 0) {
-			g_player.pos.y = 0 + g_player.graph.sprite.rect.bottom / 2 * g_player.graph.exrate;
-		}
-		else if (next_pos.y + g_player.graph.sprite.rect.bottom / 2 * g_player.graph.exrate > FIELD_HEIGHT) {
-			g_player.pos.y = FIELD_HEIGHT - g_player.graph.sprite.rect.bottom / 2 * g_player.graph.exrate;
-		}
-		else {
-			g_player.pos.y = next_pos.y;
-		}
+	//移動量を座標に足す
+	AddVector2DF(g_player.pos, g_player.vel);
+
+	//移動範囲外なら座標を端に戻す
+	/*if (next_pos.x - g_player.graph.sprite.rect.right / 2 * g_player.graph.exrate < 0) {
+		g_player.pos.x = 0 + g_player.graph.sprite.rect.right / 2 * g_player.graph.exrate;
+	}
+	else if (next_pos.x + g_player.graph.sprite.rect.right / 2 * g_player.graph.exrate > FIELD_WIDTH) {
+		g_player.pos.x = FIELD_WIDTH - g_player.graph.sprite.rect.right / 2 * g_player.graph.exrate;
+
+	}
+	else {
+		g_player.pos.x = next_pos.x;
+	}
+	if (next_pos.y - g_player.graph.sprite.rect.bottom / 2 * g_player.graph.exrate < 0) {
+		g_player.pos.y = 0 + g_player.graph.sprite.rect.bottom / 2 * g_player.graph.exrate;
+	}
+	else if (next_pos.y + g_player.graph.sprite.rect.bottom / 2 * g_player.graph.exrate > FIELD_HEIGHT) {
+		g_player.pos.y = FIELD_HEIGHT - g_player.graph.sprite.rect.bottom / 2 * g_player.graph.exrate;
+	}
+	else {
+		g_player.pos.y = next_pos.y;
+	}*/
 
 }
 
@@ -156,6 +173,11 @@ void AnimatePlayer() {
 void DrawPlayer() {
 	if (g_player.state==1) {
 		DrawGraphic(g_player.pos, &g_player.graph);
+		RectF rect = { g_player.pos.x + g_player.col.left,
+			g_player.pos.y + g_player.col.top,
+			g_player.pos.x + g_player.col.right,
+			g_player.pos.y + g_player.col.bottom };
+		DrawBoxAA(rect.left, rect.top, rect.right, rect.bottom, COLOR_RED, 0);
 	}
 }
 
@@ -164,15 +186,19 @@ Vector2DF GetPlayerPos() {
 	return g_player.pos;
 }
 
+//プレイヤーの座標を設定する
+void SetPlayerPos(Vector2DF pos) {
+	g_player.pos = pos;
+}
+
 
 //プレイヤーの当たり判定を設定する
-//void SetPlayerCollider(CircleCollider *collider) {
-//	collider->pos = &g_player.pos;
-//	collider->vel = &g_player.vel;
-//	collider->r = &g_player.r;
-//	collider->offset = &g_player.offset;
-//	collider->state = &g_player.state;
-//}
+void SetPlayerCollider(BoxCollider *collider) {
+	collider->state = &g_player.state;
+	collider->pos = &g_player.pos;
+	collider->vel = &g_player.vel;
+	collider->col = &g_player.col;
+}
 
 //プレイヤーが敵と衝突したときの処理
 //void CollisionPlayer() {
