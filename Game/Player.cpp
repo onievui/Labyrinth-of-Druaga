@@ -31,9 +31,9 @@ Player g_player;
 void InitializePlayer() {
 	g_player.state = 1;
 	g_player.pos = Vector2DF{ (float)FIELD_CENTER_X,(float)FIELD_HEIGHT-100 };
-	g_player.col = RectF{ -20,-32,20,32 };
+	g_player.col = RectF{ -14,-31,14,31 };
 	g_player.vel = Vector2DF{ 0,0 };
-	g_player.speed = 4;
+	g_player.speed = 5;
 	g_player.is_left = TRUE;
 	g_player.sprite_num = 6;
 	g_player.graph = Graph{ g_sprite[SPR_STD_GIL],1.0,0.0 };
@@ -86,7 +86,7 @@ void MovePlayer() {
 	}
 
 	if (CheckHitKeyDown(KEY_INPUT_Z)) {
-		g_player.vel.y -= 40;
+		g_player.vel.y -= 25;
 	}
 
 	g_player.vel.y += 2.4f;

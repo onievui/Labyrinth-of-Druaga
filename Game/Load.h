@@ -60,7 +60,7 @@ extern HFNT g_font_g150;
 void LoadResources();
 
 //マップデータの読み込み
-void LoadMapData(const StageId stageId, int map_date[], int *width, int *height, const int max_width, int player_pos[]);
+void LoadMapData(const StageId stageId, int map_date[], int *width, int *height, int player_pos[]);
 
 //リソースの解放
 void DeleteResources();

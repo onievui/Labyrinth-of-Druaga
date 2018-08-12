@@ -41,7 +41,7 @@ void InitializeMap() {
 	Vector2DF player_pos2;
 
 	//マップデータの読み込み
-	LoadMapData(GetSelectStage(), map_data, &g_map_width, &g_map_height, MAP_WIDTH_MAX, player_pos);
+	LoadMapData(GetSelectStage(), map_data, &g_map_width, &g_map_height, player_pos);
 
 	//プレイヤーの初期座標を設定する
 	player_pos2.x = (float)(player_pos[0] * MAPCHIP_SIZE + MAP_OFFSET_X);
@@ -86,7 +86,12 @@ MapAll GetMap() {
 BOOL IsMapPosWall(float x, float y) {
 	int ix = (int)(x / MAPCHIP_SIZE);
 	int iy = (int)(y / MAPCHIP_SIZE);
-
+	//範囲外かどうか
+	if (ix < 0 || ix >= g_map_width ||
+		iy < 0 || iy >= g_map_height) {
+		return FALSE;
+	}
+	//通過可能マスかどうか
 	if (g_map[ix][iy].knd <= SPR_MAPCHIP1_1 + 1) {
 		return FALSE;
 	}

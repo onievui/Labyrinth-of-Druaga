@@ -13,6 +13,7 @@
 //ヘッダーファイルの読み込み
 #include "Load.h"
 #include "GameMain.h"
+#include "GameObjectStruct.h"
 
 
 
@@ -66,7 +67,7 @@ void LoadResources() {
 }
 
 //マップデータの読み込み
-void LoadMapData(const StageId stageId, int map_date[], int *width, int *height, const int max_width, int player_pos[]) {
+void LoadMapData(const StageId stageId, int map_data[], int *width, int *height, int player_pos[]) {
 	
 	//エラーチェック
 	if (stageId < 0 || stageId >= STAGE_NUM) {
@@ -81,6 +82,7 @@ void LoadMapData(const StageId stageId, int map_date[], int *width, int *height,
 	char inputc[64];
 	int knd;			//現在読み込んでいるデータの種類
 	int num;			//読み込んでいるデータの件数
+	int x, y;			//マップ用データの読み込み位置
 
 	fp = FileRead_open(fname);//ファイル読み込み
 	if (fp == NULL) {
@@ -89,7 +91,7 @@ void LoadMapData(const StageId stageId, int map_date[], int *width, int *height,
 	}
 	
 	//変数初期化
-	loop = 1, knd = 0, num = 0;
+	loop = 1, knd = 0, num = 0, x = 0, y = 0;
 
 	while (loop) {
 
@@ -113,10 +115,14 @@ void LoadMapData(const StageId stageId, int map_date[], int *width, int *height,
 		case 0:
 			if (num == 0) {
 				*width = atoi(inputc);
+				if (*width > MAP_WIDTH_MAX)
+					*width = MAP_WIDTH_MAX;
 				num++;
 			}
 			else {
 				*height = atoi(inputc);
+				if (*height > MAP_HEIGHT_MAX)
+					*height = MAP_HEIGHT_MAX;
 				knd = 1;
 				num = 0;
 			}
@@ -136,9 +142,20 @@ void LoadMapData(const StageId stageId, int map_date[], int *width, int *height,
 			break;
 		//マップデータ
 		case 2:
-			map_date[(num % *width) + (num / *width)*max_width] = atoi(inputc);
-			num++;
-
+			map_data[x+y*MAP_WIDTH_MAX]= atoi(inputc);
+			if (input[i] == '\n') {
+				x = 0;
+				y++;
+				if (y == *height) {
+					knd = -1;
+				}
+			}
+			else {
+				x++;
+				if (x == *width) {
+					while (FileRead_getc(fp) != '\n');
+				}
+			}
 			break;
 		case -1:
 			loop = 0;
