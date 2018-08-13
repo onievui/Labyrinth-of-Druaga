@@ -64,7 +64,7 @@ void UpdateCollision() {
 //}
 
 //オブジェクトとマップの当たり判定
-BOOL CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
+int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
 	float tempF;//計算用
 
 	//移動前の座標
@@ -119,7 +119,7 @@ BOOL CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
 	if (mD) if (vel->y>0)vel->y = 0;
 
 	//１方向でも衝突していたらTRUEを返す
-	return mL || mR || mU || mD;
+	return mL + mR*2 + mU*4 + mD*8;
 }
 
 

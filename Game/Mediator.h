@@ -4,7 +4,6 @@
 
 
 //ヘッダファイルの読み込み
-#include "GameEnum.h"
 #include "GameObjectStruct.h"
 
 
@@ -35,7 +34,7 @@ MapAll OrderGetMap();
 BOOL OrderIsMapPosWall(float x, float y);
 
 //オブジェクトとマップの当たり判定依頼
-BOOL OrderCollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col);
+int OrderCollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col);
 
 //カメラのオフセットを取得する依頼
 Vector2DF OrderGetCameraOffset();

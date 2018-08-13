@@ -26,7 +26,14 @@ enum StageId {
 	STAGE_NUM,
 };
 
-
+//プレイヤーの状態
+enum PlayerState {
+	PLAYER_STATE_DEAD,		//死に状態
+	PLAYER_STATE_STAND,		//立ち状態
+	PLAYER_STATE_JUMP,		//ジャンプ状態
+	PLAYER_STATE_SUMMON,	//召喚状態
+	PLAYER_STATE_NUM,		//プレイヤーの状態の種類数
+};
 
 
 

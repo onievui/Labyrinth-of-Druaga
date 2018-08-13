@@ -7,7 +7,7 @@
 void InitializeCollision();
 
 //オブジェクトとマップの当たり判定
-BOOL CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col);
+int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col);
 
 
 

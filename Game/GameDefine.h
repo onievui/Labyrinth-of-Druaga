@@ -35,13 +35,19 @@
 #define FIELD_CENTER_Y (FIELD_HEIGHT / 2)    // フィールドの中央(Y座標)
 
 
-//数学関係
-#define PI	(DX_PI_F)
-#define PI2	(PI * 2)
+//数学・物理関係
+#define PI	(DX_PI_F)	//円周率
+#define PI2	(PI * 2)	//円周率*2
 
+#define GRAVITY		(2.4f)	//重力
+
+#define ISGROUND	(8)		//地面に接しているかのマクロ
 
 //プレイヤー関係
 #define PLAYER_MAX	(1)		//プレイヤーの数
+
+#define PLAYER_WALK_SPEED	(5)		//プレイヤーの移動速度
+#define PLAYER_JUMP_SPEED	(-24)	//プレイヤーのジャンプ速度
 
 
 

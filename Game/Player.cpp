@@ -19,7 +19,11 @@
 
 
 //プロトタイプ宣言
-void MovePlayer();
+void ActPlayer();
+void PlayerActDead();
+void PlayerActStand();
+void PlayerActJump();
+void PlayerActSummon();
 void AnimatePlayer();
 
 
@@ -29,12 +33,12 @@ Player g_player;
 
 //プレイヤーの初期化
 void InitializePlayer() {
-	g_player.state = 1;
+	g_player.state = PLAYER_STATE_STAND;
 	g_player.pos = Vector2DF{ (float)FIELD_CENTER_X,(float)FIELD_HEIGHT-100 };
 	g_player.col = RectF{ -14,-31,14,31 };
 	g_player.vel = Vector2DF{ 0,0 };
-	g_player.speed = 5;
 	g_player.is_left = TRUE;
+	g_player.is_ground = FALSE;
 	g_player.sprite_num = 6;
 	g_player.graph = Graph{ g_sprite[SPR_STD_GIL],1.0,0.0 };
 	g_player.anime_count = 0;
@@ -46,37 +50,78 @@ void InitializePlayer() {
 //プレイヤーの更新
 void UpdatePlayer() {
 	if (g_player.state) {
-		//プレイヤーの移動
-		MovePlayer();
+		//プレイヤーの行動
+		ActPlayer();
 		//プレイヤーのアニメーション
 		AnimatePlayer();
 	}
 }
 
 
-//プレイヤーの移動
-void MovePlayer() {
-	
-	//速度の初期化
-	//g_player.vel = Vector2DF{ 0,0 };
-	//移動後の座標
-	Vector2DF next_pos = Vector2DF{ g_player.pos.x,g_player.pos.y };
-	
+//プレイヤーの行動
+void ActPlayer() {
 
+	//プレイヤーの状態で分岐する
+	switch (g_player.state) {
+		//死んでいるなら
+	case PLAYER_STATE_DEAD:
+		PlayerActDead();
+		break;
+		//立っているなら
+	case PLAYER_STATE_STAND:
+		PlayerActStand();
+		break;
+		//ジャンプしている（空中にいる）なら
+	case PLAYER_STATE_JUMP:
+		PlayerActJump();
+		break;
+		//召喚しているなら
+	case PLAYER_STATE_SUMMON:
+		PlayerActSummon();
+		break;
+		//エラーチェック
+	default:
+		MessageBox(NULL, "プレイヤーのアニメーションで不正な値が渡されました", "", MB_OK);
+		break;
+	}
+
+	//重力を加える
+	g_player.vel.y += GRAVITY;
+
+	//マップとの当たり判定
+	if (OrderCollisionObjectMap(&g_player.pos, &g_player.vel, &g_player.col) & ISGROUND) {
+		g_player.is_ground = TRUE;
+	}
+	else {
+		g_player.is_ground = FALSE;
+	}
+
+	//移動量を座標に足す
+	AddVector2DF(g_player.pos, g_player.vel);
+
+}
+
+//プレイヤーの死に状態
+void PlayerActDead() {
+
+}
+
+//プレイヤーの立ち状態
+void PlayerActStand() {
 	//横方向の移動
 	switch (CheckStateKeyLater(KEY_INPUT_LEFT, KEY_INPUT_RIGHT)) {
+	//移動していないならアニメーションをしない
 	case 0:
 		g_player.vel.x = 0;
+		g_player.anime_count = 0;
 		break;
 	case 1:
-		//AddVector2DF(g_player.vel, Vector2DF{ -g_player.speed,0 });
-		g_player.vel.x = -g_player.speed;
+		g_player.vel.x = -PLAYER_WALK_SPEED;
 		g_player.is_left = TRUE;
 		g_player.anime_count++;
 		break;
 	case 2:
-		//AddVector2DF(g_player.vel, Vector2DF{ g_player.speed,0 });
-		g_player.vel.x = g_player.speed;
+		g_player.vel.x = PLAYER_WALK_SPEED;
 		g_player.is_left = FALSE;
 		g_player.anime_count++;
 		break;
@@ -84,94 +129,112 @@ void MovePlayer() {
 		MessageBox(NULL, "プレイヤー入力エラー", "", MB_OK);
 		break;
 	}
-
-	if (CheckHitKeyDown(KEY_INPUT_Z)) {
-		g_player.vel.y -= 25;
+	//ジャンプしたなら上方向に加速してジャンプ状態に遷移する
+	if (CheckHitKeyDown(KEY_INPUT_Z) && g_player.is_ground) {
+		g_player.state = PLAYER_STATE_JUMP;
+		g_player.vel.y = PLAYER_JUMP_SPEED;
 	}
-
-	g_player.vel.y += 2.4f;
-
-	if (g_player.pos.y + g_player.col.top > FIELD_HEIGHT) {
-		g_player.pos.y -= FIELD_HEIGHT;
+	//空中にいたならジャンプ状態にする
+	else if (!g_player.is_ground) {
+		g_player.state = PLAYER_STATE_JUMP;
 	}
+}
 
-	////縦方向の移動
-	//switch (CheckStateKeyLater(KEY_INPUT_UP, KEY_INPUT_DOWN)) {
-	//case 0:
-	//	break;
-	//case 1:
-	//	AddVector2DF(g_player.vel, Vector2DF{ 0,-g_player.speed });
-	//	ud_flag = true;
-	//	break;
-	//case 2:
-	//	AddVector2DF(g_player.vel, Vector2DF{ 0,g_player.speed });
-	//	ud_flag = true;
-	//	break;
-	//default:
-	//	MessageBox(NULL, "プレイヤー入力エラー", "", MB_OK);
-	//	break;
-	//}
-
-
-	//マップとの当たり判定
-	OrderCollisionObjectMap(&g_player.pos, &g_player.vel, &g_player.col);
-
-
-	//移動量を座標に足す
-	AddVector2DF(g_player.pos, g_player.vel);
-
-	//移動範囲外なら座標を端に戻す
-	/*if (next_pos.x - g_player.graph.sprite.rect.right / 2 * g_player.graph.exrate < 0) {
-		g_player.pos.x = 0 + g_player.graph.sprite.rect.right / 2 * g_player.graph.exrate;
+//プレイヤーのジャンプ状態
+void PlayerActJump() {
+	//横方向の移動
+	switch (CheckStateKeyLater(KEY_INPUT_LEFT, KEY_INPUT_RIGHT)) {
+		//移動していないならアニメーションをしない
+	case 0:
+		g_player.vel.x = 0;
+		break;
+	case 1:
+		g_player.vel.x = -PLAYER_WALK_SPEED;
+		g_player.is_left = TRUE;
+		break;
+	case 2:
+		g_player.vel.x = PLAYER_WALK_SPEED;
+		g_player.is_left = FALSE;
+		break;
+	default:
+		MessageBox(NULL, "プレイヤー入力エラー", "", MB_OK);
+		break;
 	}
-	else if (next_pos.x + g_player.graph.sprite.rect.right / 2 * g_player.graph.exrate > FIELD_WIDTH) {
-		g_player.pos.x = FIELD_WIDTH - g_player.graph.sprite.rect.right / 2 * g_player.graph.exrate;
+	//地上にいたなら立ち状態にする
+	if (g_player.is_ground) {
+		g_player.state = PLAYER_STATE_STAND;
+	}
+}
 
-	}
-	else {
-		g_player.pos.x = next_pos.x;
-	}
-	if (next_pos.y - g_player.graph.sprite.rect.bottom / 2 * g_player.graph.exrate < 0) {
-		g_player.pos.y = 0 + g_player.graph.sprite.rect.bottom / 2 * g_player.graph.exrate;
-	}
-	else if (next_pos.y + g_player.graph.sprite.rect.bottom / 2 * g_player.graph.exrate > FIELD_HEIGHT) {
-		g_player.pos.y = FIELD_HEIGHT - g_player.graph.sprite.rect.bottom / 2 * g_player.graph.exrate;
-	}
-	else {
-		g_player.pos.y = next_pos.y;
-	}*/
+//プレイヤーの召喚状態
+void PlayerActSummon() {
 
 }
 
 //プレイヤーのアニメーション
 void AnimatePlayer() {
-	//歩いているなら
-	if (g_player.state == 1) {
+
+	//新しいスプライト番号
+	int sprite_num;	
+
+	//プレイヤーの状態で分岐する
+	switch (g_player.state) {
+		//死んでいるなら
+	case PLAYER_STATE_DEAD:
+		break;
+		//立っているなら
+	case PLAYER_STATE_STAND:
 		//左向き
 		if (g_player.is_left) {
 			if (g_player.anime_count % 12 < 6) {
-				g_player.sprite_num = 6;
+				sprite_num = 6;
 			}
 			else {
-				g_player.sprite_num = 7;
+				sprite_num = 7;
 			}
 		}
 		//右向き
 		else {
 			if (g_player.anime_count % 12 < 6) {
-				g_player.sprite_num = 4;
+				sprite_num = 4;
 			}
 			else {
-				g_player.sprite_num = 5;
+				sprite_num = 5;
 			}
 		}
+		break;
+		//ジャンプしている（空中にいる）なら
+	case PLAYER_STATE_JUMP:
+		//左向き
+		if (g_player.is_left) {
+			sprite_num = 7;
+		}
+		//右向き
+		else {
+			sprite_num = 5;
+		}
+		break;
+		//召喚しているなら
+	case PLAYER_STATE_SUMMON:
+		break;
+		//エラーチェック
+	default:
+		MessageBox(NULL, "プレイヤーのアニメーションで不正な値が渡されました", "", MB_OK);
+		break;
 	}
-	g_player.graph.sprite.rect = GetSpriteRect(SPR_STD_GIL, g_player.sprite_num);
+
+	//スプライトが変更されかどうか
+	if (g_player.sprite_num != sprite_num) {
+		//スプライト番号の変更
+		g_player.sprite_num = sprite_num;
+		//スプライトの変更
+		g_player.graph.sprite.rect = GetSpriteRect(SPR_STD_GIL, g_player.sprite_num);
+	}
 }
 
 //プレイヤーの描画
 void DrawPlayer() {
-	if (g_player.state==1) {
+	if (g_player.state) {
 		DrawGraphicToMap(g_player.pos, &g_player.graph);
 		//RectF rect = { g_player.pos.x + g_player.col.left,
 		//	g_player.pos.y + g_player.col.top,
@@ -194,7 +257,7 @@ void SetPlayerPos(Vector2DF pos) {
 
 //プレイヤーの当たり判定を設定する
 void SetPlayerCollider(BoxCollider *collider) {
-	collider->state = &g_player.state;
+	collider->state = (int*)&g_player.state;
 	collider->pos = &g_player.pos;
 	collider->vel = &g_player.vel;
 	collider->col = &g_player.col;

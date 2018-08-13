@@ -16,6 +16,7 @@
 #include "RectF.h"
 #include "Sprite.h"
 #include "GameDefine.h"
+#include "GameEnum.h"
 
 
 
@@ -43,12 +44,12 @@ struct MapAll {
 
 // プレイヤー構造体
 struct Player {
-	int state;			//状態
+	PlayerState state;	//状態
 	Vector2DF pos;		//座標
 	RectF col;			//当たり判定の相対座標
 	Vector2DF vel;		//移動量
-	float speed;		//移動速度
 	BOOL is_left;		//左向きかどうか
+	BOOL is_ground;		//地面に接しているかどうか
 	Graph graph;		//表示画像情報
 	int sprite_num;		//スプライト番号
 	int anime_count;	//アニメーション用カウンタ

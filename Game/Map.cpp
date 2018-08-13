@@ -81,11 +81,11 @@ void UpdateCameraOffset() {
 	}
 	//プレイヤーが右に寄っている場合
 	else if (g_map_width*MAPCHIP_SIZE - pl.x < SCREEN_CENTER_X) {
-		g_camera_offset.x = g_map_width*MAPCHIP_SIZE - SCREEN_WIDTH;
+		g_camera_offset.x = (float)(g_map_width*MAPCHIP_SIZE - SCREEN_WIDTH);
 	}
 	//プレイヤーが真ん中にいる場合
 	else {
-		g_camera_offset.x = pl.x - SCREEN_CENTER_X;
+		g_camera_offset.x = (float)(pl.x - SCREEN_CENTER_X);
 	}
 
 	//プレイヤーが上に寄っている場合
@@ -94,11 +94,11 @@ void UpdateCameraOffset() {
 	}
 	//プレイヤーが下に寄っている場合
 	else if (g_map_height*MAPCHIP_SIZE - pl.y < SCREEN_CENTER_Y) {
-		g_camera_offset.y = g_map_height*MAPCHIP_SIZE - SCREEN_HEIGHT;
+		g_camera_offset.y = (float)(g_map_height*MAPCHIP_SIZE - SCREEN_HEIGHT);
 	}
 	//プレイヤーが真ん中にいる場合
 	else {
-		g_camera_offset.y = pl.y - SCREEN_CENTER_Y;
+		g_camera_offset.y = (float)(pl.y - SCREEN_CENTER_Y);
 	}
 	
 }

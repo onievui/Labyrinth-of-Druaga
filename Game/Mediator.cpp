@@ -59,7 +59,7 @@ BOOL OrderIsMapPosWall(float x, float y) {
 }
 
 //オブジェクトとマップの当たり判定依頼
-BOOL OrderCollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
+int OrderCollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
 	return CollisionObjectMap(pos, vel, col);
 }
 
