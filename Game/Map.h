@@ -17,6 +17,9 @@
 //マップの初期化
 void InitializeMap();
 
+//カメラのオフセットを計算する
+void UpdateCameraOffset();
+
 //マップの描画
 void DrawMap();
 
@@ -26,5 +29,6 @@ MapAll GetMap();
 //指定した座標が通過不可マスかどうか
 BOOL IsMapPosWall(float x, float y);
 
-
+//カメラのオフセットを取得する
+Vector2DF GetCameraOffset();
 

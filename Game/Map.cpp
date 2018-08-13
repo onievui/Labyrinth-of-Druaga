@@ -27,8 +27,9 @@
 
 //グローバル変数の宣言
 Map g_map[MAP_WIDTH_MAX][MAP_HEIGHT_MAX];	//マップ構造体
-MapAll g_mapall;
-int g_map_width, g_map_height;
+MapAll g_mapall;							//マップ全体の構造体
+int g_map_width, g_map_height;				//マップの縦横幅
+Vector2DF g_camera_offset;					//カメラのオフセット
 
 
 
@@ -64,6 +65,42 @@ void InitializeMap() {
 		}
 	}
 	g_mapall.map = g_map;
+
+	//オフセットの初期化
+	g_camera_offset = { 0,0 };
+}
+
+//カメラのオフセットを計算する
+void UpdateCameraOffset() {
+	//プレイヤー座標の取得
+	Vector2DF pl = OrderGetPlayerPos();
+
+	//プレイヤーが左に寄っている場合
+	if (pl.x < SCREEN_CENTER_X) {
+		g_camera_offset.x = 0;
+	}
+	//プレイヤーが右に寄っている場合
+	else if (g_map_width*MAPCHIP_SIZE - pl.x < SCREEN_CENTER_X) {
+		g_camera_offset.x = g_map_width*MAPCHIP_SIZE - SCREEN_WIDTH;
+	}
+	//プレイヤーが真ん中にいる場合
+	else {
+		g_camera_offset.x = pl.x - SCREEN_CENTER_X;
+	}
+
+	//プレイヤーが上に寄っている場合
+	if (pl.y < SCREEN_CENTER_Y) {
+		g_camera_offset.y = 0;
+	}
+	//プレイヤーが下に寄っている場合
+	else if (g_map_height*MAPCHIP_SIZE - pl.y < SCREEN_CENTER_Y) {
+		g_camera_offset.y = g_map_height*MAPCHIP_SIZE - SCREEN_HEIGHT;
+	}
+	//プレイヤーが真ん中にいる場合
+	else {
+		g_camera_offset.y = pl.y - SCREEN_CENTER_Y;
+	}
+	
 }
 
 //マップの描画
@@ -71,7 +108,7 @@ void DrawMap() {
 	int i, j;
 	for (i = 0; i < g_map_width; i++) {
 		for (j = 0; j < g_map_height; j++) {
-			DrawGraphicP(g_map[i][j].pos, &g_map[i][j].graphp);
+			DrawGraphicToMapP(g_map[i][j].pos, &g_map[i][j].graphp);
 		}
 	}
 }
@@ -97,3 +134,13 @@ BOOL IsMapPosWall(float x, float y) {
 	}
 	return TRUE;
 }
+
+//カメラのオフセットを取得する
+Vector2DF GetCameraOffset() {
+	return g_camera_offset;
+}
+
+
+
+
+

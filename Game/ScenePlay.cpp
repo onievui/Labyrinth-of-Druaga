@@ -145,7 +145,8 @@ void PlayProcess()
 	//プレイヤーの更新
 	UpdatePlayer();
 	
-
+	//カメラのオフセットの更新
+	UpdateCameraOffset();
 
 	g_count++;
 }

@@ -63,3 +63,9 @@ BOOL OrderCollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
 	return CollisionObjectMap(pos, vel, col);
 }
 
+//カメラのオフセットを取得する依頼
+Vector2DF OrderGetCameraOffset() {
+	return GetCameraOffset();
+}
+
+

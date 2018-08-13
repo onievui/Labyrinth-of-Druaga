@@ -3,9 +3,7 @@
 //!
 //! @brief  グラフィックデータのヘッダファイル
 //!
-//! @date   2018/08/09
-//!
-//! @author 永戸勇希
+//! @date   2018/08/13
 //__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
 
 #pragma once
@@ -39,5 +37,10 @@ void DrawGraphic(const Vector2DF pos, Graph *tex);
 //グラフィックの描画（ポインタ版）
 void DrawGraphicP(const Vector2DF pos, GraphP *tex);
 
+//マップに対するグラフィックの描画
+void DrawGraphicToMap(Vector2DF pos, Graph *tex);
+
+//マップに対するグラフィックの描画（ポインタ版）
+void DrawGraphicToMapP(Vector2DF pos, GraphP *tex);
 
 

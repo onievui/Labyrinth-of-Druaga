@@ -172,12 +172,12 @@ void AnimatePlayer() {
 //ÉvÉåÉCÉÑÅ[ÇÃï`âÊ
 void DrawPlayer() {
 	if (g_player.state==1) {
-		DrawGraphic(g_player.pos, &g_player.graph);
-		RectF rect = { g_player.pos.x + g_player.col.left,
-			g_player.pos.y + g_player.col.top,
-			g_player.pos.x + g_player.col.right,
-			g_player.pos.y + g_player.col.bottom };
-		DrawBoxAA(rect.left, rect.top, rect.right, rect.bottom, COLOR_RED, 0);
+		DrawGraphicToMap(g_player.pos, &g_player.graph);
+		//RectF rect = { g_player.pos.x + g_player.col.left,
+		//	g_player.pos.y + g_player.col.top,
+		//	g_player.pos.x + g_player.col.right,
+		//	g_player.pos.y + g_player.col.bottom };
+		//DrawBoxAA(rect.left, rect.top, rect.right, rect.bottom, COLOR_RED, 0);
 	}
 }
 
