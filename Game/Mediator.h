@@ -28,7 +28,7 @@ void OrderSetPlayerPos(Vector2DF pos);
 void OrderSetPlayerCollider(BoxCollider *collider);
 
 //マップを取得する依頼
-MapAll OrderGetMap();
+MapData OrderGetMap();
 
 //指定した座標が通過不可マスかどうかの依頼
 BOOL OrderIsMapPosWall(float x, float y);

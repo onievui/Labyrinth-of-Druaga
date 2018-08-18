@@ -12,7 +12,6 @@
 
 //ヘッダーファイルの読み込み
 #include "Load.h"
-#include "GameMain.h"
 #include "GameObjectStruct.h"
 
 
@@ -67,8 +66,8 @@ void LoadResources() {
 }
 
 //マップデータの読み込み
-void LoadMapData(const StageId stageId, int map_data[], int *width, int *height, int player_pos[]) {
-	
+void LoadMapData(const StageId stageId, MapData *mapdata) {
+
 	//エラーチェック
 	if (stageId < 0 || stageId >= STAGE_NUM) {
 		MessageBox(NULL, "マップの読み込みで不正な値が渡されました", "", MB_OK);
@@ -89,7 +88,7 @@ void LoadMapData(const StageId stageId, int map_data[], int *width, int *height,
 		MessageBox(NULL, "指定されたマップデータが存在しません", "", MB_OK);
 		return;
 	}
-	
+
 	//変数初期化
 	loop = 1, knd = 0, num = 0, x = 0, y = 0;
 
@@ -111,48 +110,49 @@ void LoadMapData(const StageId stageId, int map_data[], int *width, int *height,
 			}
 		}
 		switch (knd) {
-		//ステージの大きさ
+			//ステージの大きさ
 		case 0:
 			if (num == 0) {
-				*width = atoi(inputc);
-				if (*width > MAP_WIDTH_MAX)
-					*width = MAP_WIDTH_MAX;
+				mapdata->width = atoi(inputc);
+				if (mapdata->width > MAP_WIDTH_MAX)
+					mapdata->width = MAP_WIDTH_MAX;
 				num++;
 			}
 			else {
-				*height = atoi(inputc);
-				if (*height > MAP_HEIGHT_MAX)
-					*height = MAP_HEIGHT_MAX;
+				mapdata->height = atoi(inputc);
+				if (mapdata->height > MAP_HEIGHT_MAX)
+					mapdata->height = MAP_HEIGHT_MAX;
 				knd = 1;
 				num = 0;
 			}
-			
+
 			break;
-		//プレイヤーの初期座標
+			//プレイヤーの初期座標
 		case 1:
 			if (num == 0) {
-				player_pos[0] = atoi(inputc);
+				mapdata->player_init_pos.x = (float)atof(inputc);
 				num++;
 			}
 			else {
-				player_pos[1] = atoi(inputc);
+				mapdata->player_init_pos.y = (float)atof(inputc);
 				knd = 2;
 				num = 0;
 			}
 			break;
-		//マップデータ
+			//マップデータ
 		case 2:
-			map_data[x+y*MAP_WIDTH_MAX]= atoi(inputc);
+			//map_data[x + y*MAP_WIDTH_MAX] = atoi(inputc);
+			mapdata->map[x][y].knd = (SPR_ID)atoi(inputc);
 			if (input[i] == '\n') {
 				x = 0;
 				y++;
-				if (y == *height) {
+				if (y == mapdata->height) {
 					knd = -1;
 				}
 			}
 			else {
 				x++;
-				if (x == *width) {
+				if (x == mapdata->width) {
 					while (FileRead_getc(fp) != '\n');
 				}
 			}

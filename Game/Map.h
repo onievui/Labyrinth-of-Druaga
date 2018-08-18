@@ -24,7 +24,7 @@ void UpdateCameraOffset();
 void DrawMap();
 
 //マップを取得する
-MapAll GetMap();
+MapData GetMap();
 
 //指定した座標が通過不可マスかどうか
 BOOL IsMapPosWall(float x, float y);

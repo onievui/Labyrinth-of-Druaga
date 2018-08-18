@@ -9,7 +9,8 @@
 #pragma once
 
 
-//ヘッダーファイルの読み込み
+//ヘッダファイルの読み込み
+#include "Load.h"
 #include "Sprite.h"
 
 //スプライトデータ

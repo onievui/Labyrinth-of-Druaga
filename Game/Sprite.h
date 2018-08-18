@@ -10,7 +10,7 @@
 
 
 //ヘッダファイルの読み込み
-#include "Load.h"
+//#include "Load.h"
 
 
 

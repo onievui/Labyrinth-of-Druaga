@@ -49,7 +49,7 @@ void OrderSetPlayerCollider(BoxCollider *collider) {
 }
 
 //ƒ}ƒbƒv‚ðŽæ“¾‚·‚éˆË—Š
-MapAll OrderGetMap() {
+MapData OrderGetMap() {
 	return GetMap();
 }
 

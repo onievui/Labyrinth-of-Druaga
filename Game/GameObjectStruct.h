@@ -38,8 +38,12 @@ struct Map {
 };
 
 //マップ全体の構造体
-struct MapAll {
-	Map(*map)[MAP_HEIGHT_MAX];
+struct MapData {
+	Map map[MAP_WIDTH_MAX][MAP_HEIGHT_MAX];	//各マスの情報
+	int width;								//マップの横幅
+	int height;								//マップの縦幅
+	Vector2DF player_init_pos;				//プレイヤーの初期座標
+	Vector2DF treasure_pos;					//お宝の座標
 };
 
 // プレイヤー構造体
