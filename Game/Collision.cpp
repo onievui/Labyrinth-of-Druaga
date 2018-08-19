@@ -9,59 +9,52 @@
 
 
 
-//グローバル変数の宣言
-BoxCollider g_player_collider[PLAYER_MAX];				//プレイヤーの当たり判定
+//マクロの定義
+//動く矩形の当たり判定をオブジェクトの数分ループさせるマクロ
+#define MR_COLLISION_MACRO(col1, len1, i, col2, len2, j, check)			\
+	for (i = 0; i < len1; i++)											\
+		if (*col1[i].state)												\
+			for (j = 0; j < len2; j++)									\
+				if (*col2[j].state)										\
+					if (check = CollisionMovingAABB(&col1[i], &col2[j]))	
 
+
+
+//グローバル変数の宣言
+BoxCollider g_player_collider[PLAYER_MAX];			//プレイヤーの当たり判定
+BoxCollider g_treasure_collider[TREASURE_MAX];		//お宝の当たり判定	
 
 
 //プロトタイプ宣言
-BOOL CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2);
+int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2);
 
 
 
 //当たり判定の初期化
 void InitializeCollision() {
 	OrderSetPlayerCollider(g_player_collider);
+	OrderSetTreasureCollider(g_treasure_collider);
 }
 
 //当たり判定
 void UpdateCollision() {
+
+	//ループ用カウンタ
+	int i = 0, j = 0;
+	//当たり判定用フラグ
+	int check = 0;
+
+
+	//プレイヤーとお宝の当たり判定
+	MR_COLLISION_MACRO(g_player_collider, PLAYER_MAX, i, g_treasure_collider, TREASURE_MAX, j, check) {
+		//お宝を消す
+		OrderCollisionTreasure();
+		//お宝を取得した時の処理を行う
+		OrderPlayerGetTreasure();
+	}
 	
+
 }
-
-
-////オブジェクトとマップの当たり判定
-//BOOL CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
-//	int i, j;
-//	BoxCollider obj1, obj2;
-//	BOOL ret = FALSE;
-//	int state = 1;
-//	Vector2DF vel2 = { 0,0 };
-//	RectF col2 = { -MAPCHIP_SIZE_HALF,-MAPCHIP_SIZE_HALF,MAPCHIP_SIZE_HALF,MAPCHIP_SIZE_HALF };
-//
-//	obj1.state = obj2.state = &state;
-//	obj1.pos = pos;
-//	obj1.vel = vel;
-//	obj1.col = col;
-//	obj2.vel = &vel2;
-//	obj2.col = &col2;
-//
-//	MapAll mapall = OrderGetMap();	//マップの取得
-//
-//
-//	for (i = 0; i < MAP_WIDTH_MAX; i++) {
-//		for (j = 0; j < MAP_HEIGHT_MAX; j++) {
-//			if (mapall.map[i][j].knd > SPR_MAPCHIP1_1+1) {
-//				obj2.pos = &mapall.map[i][j].pos;
-//				if (CollisionMovingAABB(&obj1, &obj2)) {
-//					ret = TRUE;
-//				}
-//			}
-//		}
-//	}
-//
-//	return ret;
-//}
 
 //オブジェクトとマップの当たり判定
 int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
@@ -203,7 +196,7 @@ int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
 
 
 //オブジェクトと動く矩形同士の当たり判定
-BOOL CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
+int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
 	Vector2DF vel = *obj1->vel;		//相対速度の計算
 	SubVector2DF(vel, *obj2->vel);
 
@@ -276,11 +269,16 @@ BOOL CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
 		if (t == ty) {
 			obj1->vel->y *= ty;
 			obj2->vel->y *= ty;
+			//obj1の下側と衝突したなら
+			if (obj1->pos->y < obj2->pos->y) {
+				return ISGROUND;
+			}
 		}
 		return TRUE;
 	}
 	return FALSE;
 }
+
 /*
 //オブジェクトと動く矩形同士の当たり判定
 BOOL CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {

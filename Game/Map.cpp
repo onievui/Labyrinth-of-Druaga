@@ -3,16 +3,14 @@
 //!
 //! @brief  マップ関連の処理
 //!
-//! @date   2018/08/
+//! @date   2018/08/18
 //__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
 
 #pragma once
 
 //ヘッダーファイルの読み込み
 #include "GameObjectStruct.h"
-#include "GameDefine.h"
 #include "Mediator.h"
-
 
 
 //定数の定義
@@ -20,17 +18,13 @@
 #define MAP_OFFSET_Y	(32)	//マップのオフセット
 
 
-
 //プロトタイプ宣言
 extern void LoadMapData(const StageId stageId, MapData *mapdata);	//マップデータの読み込み (Load.cpp)
 
 
-
 //グローバル変数の宣言
-MapData g_mapdata;				//マップ全体の構造体
+MapData g_mapdata;				//マップ情報の構造体
 Vector2DF g_camera_offset;		//カメラのオフセット
-
-
 
 
 //マップの初期化
@@ -44,6 +38,11 @@ void InitializeMap() {
 	MulVector2DF(g_mapdata.player_init_pos, MAPCHIP_SIZE);
 	AddVector2DF(g_mapdata.player_init_pos, Vector2DF{ MAP_OFFSET_X,MAP_OFFSET_Y });
 	OrderSetPlayerPos(g_mapdata.player_init_pos);
+
+	//お宝の初期座標を設定する
+	MulVector2DF(g_mapdata.treasure_pos, MAPCHIP_SIZE);
+	AddVector2DF(g_mapdata.treasure_pos, Vector2DF{ MAP_OFFSET_X,MAP_OFFSET_Y });
+	OrderSetTreasurePos(g_mapdata.treasure_pos);
 
 
 	//マップデータの初期化
@@ -134,8 +133,6 @@ BOOL IsMapPosWall(float x, float y) {
 Vector2DF GetCameraOffset() {
 	return g_camera_offset;
 }
-
-
 
 
 

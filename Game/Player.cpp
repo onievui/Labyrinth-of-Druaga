@@ -3,15 +3,13 @@
 //!
 //! @brief  プレイヤーオブジェクトの処理
 //!
-//! @date   2018/08/09
+//! @date   2018/08/18
 //__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
 
 #pragma once
 
 //ヘッダーファイルの読み込み
 #include "GameObjectStruct.h"
-#include "GameDefine.h"
-#include "Player.h"
 #include "Mediator.h"
 #include "Key.h"
 #include <math.h>
@@ -24,6 +22,7 @@ void PlayerActDead();
 void PlayerActStand();
 void PlayerActJump();
 void PlayerActSummon();
+void PlayerActClear();
 void AnimatePlayer();
 
 
@@ -61,6 +60,9 @@ void UpdatePlayer() {
 //プレイヤーの行動
 void ActPlayer() {
 
+	//移動量を座標に足す
+	AddVector2DF(g_player.pos, g_player.vel);
+
 	//プレイヤーの状態で分岐する
 	switch (g_player.state) {
 		//死んでいるなら
@@ -79,6 +81,10 @@ void ActPlayer() {
 	case PLAYER_STATE_SUMMON:
 		PlayerActSummon();
 		break;
+		//クリアしているなら
+	case PLAYER_STATE_CLEAR:
+		PlayerActClear();
+		break;
 		//エラーチェック
 	default:
 		MessageBox(NULL, "プレイヤーのアニメーションで不正な値が渡されました", "", MB_OK);
@@ -96,8 +102,7 @@ void ActPlayer() {
 		g_player.is_ground = FALSE;
 	}
 
-	//移動量を座標に足す
-	AddVector2DF(g_player.pos, g_player.vel);
+
 
 }
 
@@ -171,6 +176,11 @@ void PlayerActSummon() {
 
 }
 
+//プレイヤーのクリア状態
+void PlayerActClear() {
+	g_player.anime_count++;
+}
+
 //プレイヤーのアニメーション
 void AnimatePlayer() {
 
@@ -179,10 +189,10 @@ void AnimatePlayer() {
 
 	//プレイヤーの状態で分岐する
 	switch (g_player.state) {
-		//死んでいるなら
+	//死んでいるなら
 	case PLAYER_STATE_DEAD:
 		break;
-		//立っているなら
+	//立っているなら
 	case PLAYER_STATE_STAND:
 		//左向き
 		if (g_player.is_left) {
@@ -203,7 +213,7 @@ void AnimatePlayer() {
 			}
 		}
 		break;
-		//ジャンプしている（空中にいる）なら
+	//ジャンプしている（空中にいる）なら
 	case PLAYER_STATE_JUMP:
 		//左向き
 		if (g_player.is_left) {
@@ -214,10 +224,19 @@ void AnimatePlayer() {
 			sprite_num = 5;
 		}
 		break;
-		//召喚しているなら
+	//召喚しているなら
 	case PLAYER_STATE_SUMMON:
 		break;
-		//エラーチェック
+	//クリア状態なら
+	case PLAYER_STATE_CLEAR:
+		if (g_player.is_ground) {
+			sprite_num = ((g_player.anime_count % 30) < 15);
+		}
+		else {
+			sprite_num = g_player.sprite_num;
+		}
+		break;
+	//エラーチェック
 	default:
 		MessageBox(NULL, "プレイヤーのアニメーションで不正な値が渡されました", "", MB_OK);
 		break;
@@ -254,6 +273,10 @@ void SetPlayerPos(Vector2DF pos) {
 	g_player.pos = pos;
 }
 
+//プレイヤーの地面判定を設定する
+void SetPlayerIsGround(BOOL isGround) {
+	g_player.is_ground = isGround;
+}
 
 //プレイヤーの当たり判定を設定する
 void SetPlayerCollider(BoxCollider *collider) {
@@ -261,6 +284,11 @@ void SetPlayerCollider(BoxCollider *collider) {
 	collider->pos = &g_player.pos;
 	collider->vel = &g_player.vel;
 	collider->col = &g_player.col;
+}
+
+//プレイヤーがお宝を取得したときの処理
+void PlayerGetTreasure() {
+	g_player.state = PLAYER_STATE_CLEAR;
 }
 
 //プレイヤーが敵と衝突したときの処理

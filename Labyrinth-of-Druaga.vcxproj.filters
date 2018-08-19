@@ -94,9 +94,6 @@
     <ClCompile Include="Game\SceneStageSelect.cpp">
       <Filter>ゲーム\シーン関連</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Vector2DF.cpp">
-      <Filter>ゲーム\オブジェクト関連</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Key.cpp">
       <Filter>ゲーム\ユーティリティ</Filter>
     </ClCompile>
@@ -117,6 +114,12 @@
     </ClCompile>
     <ClCompile Include="Game\Collision.cpp">
       <Filter>ゲーム\ユーティリティ</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Treasure.cpp">
+      <Filter>ゲーム\オブジェクト関連</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Vector2DF.cpp">
+      <Filter>ゲーム\オブジェクト関連</Filter>
     </ClCompile>
   </ItemGroup>
   <!-- ヘッダファイル -->
@@ -204,6 +207,9 @@
     </ClInclude>
     <ClInclude Include="Game\Collision.h">
       <Filter>ゲーム\ユーティリティ</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Treasure.h">
+      <Filter>ゲーム\オブジェクト関連</Filter>
     </ClInclude>
   </ItemGroup>
   <!-- リソースファイル -->

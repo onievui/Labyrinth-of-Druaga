@@ -3,15 +3,14 @@
 //!
 //! @brief  プレイヤーオブジェクトのヘッダファイル
 //!
-//! @date   2018/08/08
+//! @date   2018/08/18
 //__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
 
 #pragma once
 
 
-//ヘッダーファイルの読み込み
-#include "Vector2DF.h"
-//#include "Collision.h"
+//ヘッダファイルの読み込み
+#include "GameObjectStruct.h"
 
 
 
@@ -30,9 +29,14 @@ Vector2DF GetPlayerPos();
 //プレイヤーの座標を設定する
 void SetPlayerPos(Vector2DF pos);
 
+//プレイヤーの地面判定を設定する
+void SetPlayerIsGround(BOOL isGround);
 
 //プレイヤーの当たり判定を設定する
 void SetPlayerCollider(BoxCollider *collider);
+
+//プレイヤーがお宝を取得したときの処理
+void PlayerGetTreasure();
 
 //プレイヤーが敵と衝突したときの処理
 //void CollisionPlayer();

@@ -43,11 +43,16 @@
 
 #define ISGROUND	(8)		//地面に接しているかのマクロ
 
+
 //プレイヤー関係
 #define PLAYER_MAX	(1)		//プレイヤーの数
 
 #define PLAYER_WALK_SPEED	(5)		//プレイヤーの移動速度
 #define PLAYER_JUMP_SPEED	(-24)	//プレイヤーのジャンプ速度
+
+
+//お宝関係
+#define TREASURE_MAX	(1)		//お宝の数
 
 
 

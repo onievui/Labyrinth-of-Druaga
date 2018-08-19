@@ -26,6 +26,7 @@ void InitializeSprite() {
 	for (i = 0; i < 11; i++) {
 		g_sprite[SPR_MAPCHIP1_1 + i] = Sprite{ g_texture[GRP_MAPCHIP1],  RECT{ 4 + i*(64 + 4),  4,  64,  64 } };
 	}
+	g_sprite[SPR_OBJECT_TREASURE] = Sprite{ g_texture[GRP_OBJECT_OTHER], RECT{ 8 + 2*(64 + 8),  8,  64,  64 } };
 }
 
 //スプライト切り出し位置の取得

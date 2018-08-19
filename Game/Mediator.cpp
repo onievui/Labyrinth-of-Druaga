@@ -7,6 +7,7 @@
 #include "Mediator.h"
 #include "Map.h"
 #include "Player.h"
+#include "Treasure.h"
 #include "Collision.h"
 
 
@@ -43,9 +44,34 @@ void OrderSetPlayerPos(Vector2DF pos) {
 	SetPlayerPos(pos);
 }
 
+//プレイヤーの地面判定を設定する依頼
+void OrderSetPlayerIsGround(BOOL isGround) {
+	SetPlayerIsGround(isGround);
+}
+
 //プレイヤーの当たり判定を設定する依頼
 void OrderSetPlayerCollider(BoxCollider *collider) {
 	SetPlayerCollider(collider);
+}
+
+//プレイヤーがお宝を取得したときの処理依頼
+void OrderPlayerGetTreasure() {
+	PlayerGetTreasure();
+}
+
+//お宝の座標を設定する
+void OrderSetTreasurePos(Vector2DF pos) {
+	SetTreasurePos(pos);
+}
+
+//お宝の当たり判定を設定する
+void OrderSetTreasureCollider(BoxCollider *collider) {
+	SetTreasureCollider(collider);
+}
+
+//お宝がプレイヤーと衝突したときの処理依頼
+void OrderCollisionTreasure() {
+	CollisionTreasure();
 }
 
 //マップを取得する依頼

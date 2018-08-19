@@ -9,11 +9,6 @@
 #pragma once
 
 
-//ヘッダファイルの読み込み
-//#include "Load.h"
-
-
-
 //スプライトのID
 //スプライト数が多く同時に複数使用しない場合は基準スプライトを使い、動的に切り出し位置を取得する
 enum SPR_ID {
@@ -35,6 +30,7 @@ enum SPR_ID {
 	SPR_MAPCHIP1_9,			//マップチップ1スプライト9
 	SPR_MAPCHIP1_10,		//マップチップ1スプライト10
 	SPR_MAPCHIP1_11,		//マップチップ1スプライト11
+	SPR_OBJECT_TREASURE,	//お宝スプライト
 	SPR_ALL_NUM,			//スプライトの数
 };
 

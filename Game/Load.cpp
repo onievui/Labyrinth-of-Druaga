@@ -50,7 +50,7 @@ void LoadResources() {
 	g_texture[GRP_TITLE_BG] = LoadGraph("Resources/Textures/Protected/title_bg.png");
 	g_texture[GRP_GIL] = LoadGraph("Resources/Textures/Protected/gil.png");
 	g_texture[GRP_MAPCHIP1] = LoadGraph("Resources/Textures/Protected/mapchip1.png");
-
+	g_texture[GRP_OBJECT_OTHER] = LoadGraph("Resources/Textures/Protected/object_other.png");
 
 
 	//効果音の読み込み
@@ -110,24 +110,28 @@ void LoadMapData(const StageId stageId, MapData *mapdata) {
 			}
 		}
 		switch (knd) {
-			//ステージの大きさ
+		//ステージの大きさ
 		case 0:
 			if (num == 0) {
 				mapdata->width = atoi(inputc);
 				if (mapdata->width > MAP_WIDTH_MAX)
 					mapdata->width = MAP_WIDTH_MAX;
+				else if (mapdata->width < 1)
+					mapdata->width = 1;
 				num++;
 			}
 			else {
 				mapdata->height = atoi(inputc);
 				if (mapdata->height > MAP_HEIGHT_MAX)
 					mapdata->height = MAP_HEIGHT_MAX;
+				else if (mapdata->height < 1)
+					mapdata->height = 1;
 				knd = 1;
 				num = 0;
 			}
 
 			break;
-			//プレイヤーの初期座標
+		//プレイヤーの初期座標
 		case 1:
 			if (num == 0) {
 				mapdata->player_init_pos.x = (float)atof(inputc);
@@ -139,8 +143,20 @@ void LoadMapData(const StageId stageId, MapData *mapdata) {
 				num = 0;
 			}
 			break;
-			//マップデータ
+		//お宝の座標
 		case 2:
+			if (num == 0) {
+				mapdata->treasure_pos.x = (float)atof(inputc);
+				num++;
+			}
+			else {
+				mapdata->treasure_pos.y = (float)atof(inputc);
+				knd = 3;
+				num = 0;
+			}
+			break;
+		//マップデータ
+		case 3:
 			//map_data[x + y*MAP_WIDTH_MAX] = atoi(inputc);
 			mapdata->map[x][y].knd = (SPR_ID)atoi(inputc);
 			if (input[i] == '\n') {

@@ -24,8 +24,23 @@ Vector2DF OrderGetPlayerPos();
 //プレイヤーの座標を設定する依頼
 void OrderSetPlayerPos(Vector2DF pos);
 
+//プレイヤーの地面判定を設定する依頼
+void OrderSetPlayerIsGround(BOOL isGround);
+
 //プレイヤーの当たり判定を設定する依頼
 void OrderSetPlayerCollider(BoxCollider *collider);
+
+//プレイヤーがお宝を取得したときの処理依頼
+void OrderPlayerGetTreasure();
+
+//お宝の座標を設定する
+void OrderSetTreasurePos(Vector2DF pos);
+
+//お宝の当たり判定を設定する
+void OrderSetTreasureCollider(BoxCollider *collider);
+
+//お宝がプレイヤーと衝突したときの処理依頼
+void OrderCollisionTreasure();
 
 //マップを取得する依頼
 MapData OrderGetMap();

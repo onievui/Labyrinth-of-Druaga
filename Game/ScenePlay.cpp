@@ -11,6 +11,7 @@
 #include "ScenePlay.h"
 #include "Map.h"
 #include "Player.h"
+#include "Treasure.h"
 #include "Collision.h"
 #include "Shader.h"
 #include "Mediator.h"
@@ -54,6 +55,9 @@ void InitializePlay(void)
 {
 	//プレイヤーの初期化
 	InitializePlayer();
+
+	//お宝の初期化
+	InitializeTreasure();
 
 	//マップの初期化
 	InitializeMap();
@@ -121,8 +125,12 @@ void RenderPlay(void)
 	//マップの描画
 	DrawMap();
 
+	//お宝の描画
+	DrawTreasure();
+
 	//プレイヤーの描画
 	DrawPlayer();
+
 }
 
 
@@ -144,6 +152,12 @@ void PlayProcess()
 {
 	//プレイヤーの更新
 	UpdatePlayer();
+
+	//お宝の更新
+	UpdateTreasure();
+
+	//当たり判定の更新
+	UpdateCollision();
 	
 	//カメラのオフセットの更新
 	UpdateCameraOffset();

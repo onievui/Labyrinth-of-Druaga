@@ -103,6 +103,7 @@
     <ClCompile Include="Game\Shader.cpp" />
     <ClCompile Include="Game\Sound.cpp" />
     <ClCompile Include="Game\Sprite.cpp" />
+    <ClCompile Include="Game\Treasure.cpp" />
     <ClCompile Include="Game\Vector2DF.cpp" />
     <ClCompile Include="WinMain.cpp" />
     <ClCompile Include="Libraries\GameLibrary\GameLibGraphics.cpp" />
@@ -133,6 +134,7 @@
     <ClInclude Include="Game\Shader.h" />
     <ClInclude Include="Game\Sound.h" />
     <ClInclude Include="Game\Sprite.h" />
+    <ClInclude Include="Game\Treasure.h" />
     <ClInclude Include="Game\Vector2DF.h" />
     <ClInclude Include="Libraries\GameLibrary\GameLibGraphics.h" />
     <ClInclude Include="Libraries\GameLibrary\GameLibInput.h" />

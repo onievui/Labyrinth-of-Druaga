@@ -59,6 +59,15 @@ struct Player {
 	int anime_count;	//アニメーション用カウンタ
 };
 
+//お宝構造体
+struct Treasure {
+	int state;		//状態
+	Vector2DF pos;	//座標
+	RectF col;		//当たり判定の相対座標
+	Vector2DF vel;	//移動量
+	Graph graph;	//表示画像情報
+};
+
 //動く矩形の衝突判定用構造体
 struct BoxCollider {
 	int *state;			//オブジェクトの状態
