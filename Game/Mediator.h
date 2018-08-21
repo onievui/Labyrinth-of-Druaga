@@ -18,6 +18,12 @@ void SetSelectStage(StageId stageId);
 //選択中のステージの取得
 StageId GetSelectStage();
 
+//プレイ画面のクリア時間の記憶
+void SetClearTime(int time);
+
+//プレイ画面のクリア時間の取得
+int GetClearTime();
+
 //プレイヤーの座標を取得する依頼
 Vector2DF OrderGetPlayerPos();
 
@@ -32,6 +38,9 @@ void OrderSetPlayerCollider(BoxCollider *collider);
 
 //プレイヤーがお宝を取得したときの処理依頼
 void OrderPlayerGetTreasure();
+
+//召喚モンスターの生成依頼
+int OrderCreateMinion(MinionPattern knd, Vector2DF pos, BOOL isLeft);
 
 //お宝の座標を設定する
 void OrderSetTreasurePos(Vector2DF pos);

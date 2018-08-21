@@ -7,6 +7,7 @@
 #include "Mediator.h"
 #include "Map.h"
 #include "Player.h"
+#include "MinionManager.h"
 #include "Treasure.h"
 #include "Collision.h"
 
@@ -14,6 +15,7 @@
 
 //グローバル変数の宣言
 static StageId g_select_stage;	//選択中のステージ
+static int g_clear_time;		//ステージクリアまでの時間
 
 
 
@@ -21,7 +23,7 @@ static StageId g_select_stage;	//選択中のステージ
 //グローバル変数の初期化
 void InitializeMediator() {
 	g_select_stage = (StageId)-1;
-	
+	g_clear_time = -1;
 }
 
 //選択中のステージの設定
@@ -32,6 +34,16 @@ void SetSelectStage(StageId stageId) {
 //選択中のステージの取得
 StageId GetSelectStage() {
 	return g_select_stage;
+}
+
+//プレイ画面のクリア時間の設定
+void SetClearTime(int time) {
+	g_clear_time = time;
+}
+
+//プレイ画面のクリア時間の取得
+int GetClearTime() {
+	return g_clear_time;
 }
 
 //プレイヤーの座標を取得する依頼
@@ -57,6 +69,11 @@ void OrderSetPlayerCollider(BoxCollider *collider) {
 //プレイヤーがお宝を取得したときの処理依頼
 void OrderPlayerGetTreasure() {
 	PlayerGetTreasure();
+}
+
+//召喚モンスターの生成依頼
+int OrderCreateMinion(MinionPattern knd, Vector2DF pos, BOOL isLeft) {
+	return CreateMinion(knd, pos, isLeft);
 }
 
 //お宝の座標を設定する

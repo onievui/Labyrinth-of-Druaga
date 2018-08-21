@@ -68,6 +68,21 @@ struct Treasure {
 	Graph graph;	//表示画像情報
 };
 
+//召喚モンスター構造体
+struct Minion {
+	MinionPattern knd;	//種類
+	int state;			//状態
+	int hp;				//体力
+	Vector2DF pos;		//座標
+	RectF col;			//当たり判定の相対座標
+	Vector2DF vel;		//移動量
+	BOOL is_left;		//左向きかどうか
+	Graph graph;		//表示画像情報
+	int sprite_num;		//スプライト番号
+	int anime_count;	//アニメーション用カウンタ
+	int summon_time;	//召喚にかかる時間
+};
+
 //動く矩形の衝突判定用構造体
 struct BoxCollider {
 	int *state;			//オブジェクトの状態

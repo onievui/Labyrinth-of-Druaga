@@ -19,6 +19,8 @@ enum SPR_ID {
 	SPR_STAGESELECT_BG,		//ステージセレクト背景スプライト
 	SPR_STAGESELECT_ICON,	//ステージセレクトアイコンスプライト
 	SPR_STD_GIL,			//プレイヤー基準スプライト
+	SPR_STD_SWORD,			//剣基準スプライト
+	SPR_STD_MONSTER,		//モンスター基準スプライト
 	SPR_MAPCHIP1_1,			//マップチップ1スプライト1
 	SPR_MAPCHIP1_2,			//マップチップ1スプライト2
 	SPR_MAPCHIP1_3,			//マップチップ1スプライト3

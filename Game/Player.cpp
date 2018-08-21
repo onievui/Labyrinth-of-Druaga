@@ -10,10 +10,15 @@
 
 //ヘッダーファイルの読み込み
 #include "GameObjectStruct.h"
+#include "ScenePlay.h"
 #include "Mediator.h"
 #include "Key.h"
 #include <math.h>
 
+
+
+//定数の定義
+#define SUMMON_FAILED_TIME	(32)	//召喚に失敗したときの待ち時間
 
 
 //プロトタイプ宣言
@@ -27,7 +32,9 @@ void AnimatePlayer();
 
 
 //グローバル変数の宣言
-Player g_player;
+Player g_player;		//プレイヤーオブジェクト
+Graph g_sword;			//剣オブジェクト
+int g_summon_time;		//召喚動作に必要な時間
 
 
 //プレイヤーの初期化
@@ -43,6 +50,12 @@ void InitializePlayer() {
 	g_player.anime_count = 0;
 	
 	g_player.graph.sprite.rect = GetSpriteRect(SPR_STD_GIL, 6);
+
+	g_sword = Graph{ g_sprite[SPR_STD_SWORD],1.0,0.0 };
+
+	g_sword.sprite.rect = GetSpriteRect(SPR_STD_SWORD, 6);
+
+	g_summon_time = 0;
 }
 
 
@@ -134,8 +147,17 @@ void PlayerActStand() {
 		MessageBox(NULL, "プレイヤー入力エラー", "", MB_OK);
 		break;
 	}
+	//召喚したなら召喚状態に遷移する
+	if (CheckHitKeyDown(KEY_INPUT_X)) {
+		g_player.state = PLAYER_STATE_SUMMON;
+		if (!(g_summon_time = OrderCreateMinion(MINION_SLIME, g_player.pos, g_player.is_left))) {
+			g_summon_time = SUMMON_FAILED_TIME;
+		}
+		g_player.vel.x = 0;
+		g_player.anime_count = 0;
+	}
 	//ジャンプしたなら上方向に加速してジャンプ状態に遷移する
-	if (CheckHitKeyDown(KEY_INPUT_Z) && g_player.is_ground) {
+	else if (CheckHitKeyDown(KEY_INPUT_Z) && g_player.is_ground) {
 		g_player.state = PLAYER_STATE_JUMP;
 		g_player.vel.y = PLAYER_JUMP_SPEED;
 	}
@@ -165,19 +187,41 @@ void PlayerActJump() {
 		MessageBox(NULL, "プレイヤー入力エラー", "", MB_OK);
 		break;
 	}
+	//召喚したなら召喚状態に遷移する
+	if (CheckHitKeyDown(KEY_INPUT_X)) {
+		g_player.state = PLAYER_STATE_SUMMON;
+		if (!(g_summon_time = OrderCreateMinion(MINION_SLIME, g_player.pos, g_player.is_left))) {
+			g_summon_time = SUMMON_FAILED_TIME;
+		}		g_player.vel.x = 0;
+		g_player.anime_count = 0;
+	}
 	//地上にいたなら立ち状態にする
-	if (g_player.is_ground) {
+	else if (g_player.is_ground) {
 		g_player.state = PLAYER_STATE_STAND;
 	}
 }
 
 //プレイヤーの召喚状態
 void PlayerActSummon() {
-
+	//召喚中
+	if (g_summon_time > g_player.anime_count) {
+		g_player.anime_count++;
+	}
+	//終了処理
+	else {
+		if (g_player.is_ground) {
+			g_player.state = PLAYER_STATE_STAND;
+		}
+		else {
+			g_player.state = PLAYER_STATE_JUMP;
+		}
+		g_player.anime_count = 0;
+	}
 }
 
 //プレイヤーのクリア状態
 void PlayerActClear() {
+	g_player.vel.x = 0;
 	g_player.anime_count++;
 }
 
@@ -226,6 +270,17 @@ void AnimatePlayer() {
 		break;
 	//召喚しているなら
 	case PLAYER_STATE_SUMMON:
+		sprite_num = g_player.anime_count * 16 / g_summon_time;
+		//逆向きにアニメーションさせる
+		if (sprite_num >= 8) {
+			sprite_num = 15 - sprite_num;
+		}
+		//画像の都合で調整
+		if (sprite_num >= 6) {
+			sprite_num = sprite_num == 6 ? 7 : 6;
+		}
+		//向きによって変える
+		sprite_num += g_player.is_left ? 24 : 32;
 		break;
 	//クリア状態なら
 	case PLAYER_STATE_CLEAR:
@@ -246,20 +301,28 @@ void AnimatePlayer() {
 	if (g_player.sprite_num != sprite_num) {
 		//スプライト番号の変更
 		g_player.sprite_num = sprite_num;
-		//スプライトの変更
-		g_player.graph.sprite.rect = GetSpriteRect(SPR_STD_GIL, g_player.sprite_num);
+		//召喚状態でないときはプレイヤーのスプライトを変更しない
+		if (g_player.state != PLAYER_STATE_SUMMON) {
+			//スプライトの変更
+			g_player.graph.sprite.rect = GetSpriteRect(SPR_STD_GIL, g_player.sprite_num);
+		}
+		//剣スプライトの変更
+		g_sword.sprite.rect = GetSpriteRect(SPR_STD_SWORD, g_player.sprite_num);
 	}
 }
 
 //プレイヤーの描画
 void DrawPlayer() {
 	if (g_player.state) {
-		DrawGraphicToMap(g_player.pos, &g_player.graph);
-		//RectF rect = { g_player.pos.x + g_player.col.left,
-		//	g_player.pos.y + g_player.col.top,
-		//	g_player.pos.x + g_player.col.right,
-		//	g_player.pos.y + g_player.col.bottom };
-		//DrawBoxAA(rect.left, rect.top, rect.right, rect.bottom, COLOR_RED, 0);
+		//向きによって表示順を変える
+		if (g_player.is_left && g_player.state != PLAYER_STATE_CLEAR) {
+			DrawGraphicToMap(g_player.pos, &g_sword);
+			DrawGraphicToMap(g_player.pos, &g_player.graph);
+		}
+		else {
+			DrawGraphicToMap(g_player.pos, &g_player.graph);
+			DrawGraphicToMap(g_player.pos, &g_sword);
+		}
 	}
 }
 
@@ -288,7 +351,10 @@ void SetPlayerCollider(BoxCollider *collider) {
 
 //プレイヤーがお宝を取得したときの処理
 void PlayerGetTreasure() {
+	//プレイヤーをクリア状態にする
 	g_player.state = PLAYER_STATE_CLEAR;
+	//ステージクリアの通知
+	RequestStageClear();
 }
 
 //プレイヤーが敵と衝突したときの処理

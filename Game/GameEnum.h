@@ -36,7 +36,12 @@ enum PlayerState {
 	PLAYER_STATE_NUM,		//プレイヤーの状態の種類数
 };
 
-
+//召喚モンスターの種類
+enum MinionPattern {
+	MINION_SLIME,	//スライム
+	MINION_GHOST,	//ゴースト
+	MINION_PATTERN_NUM,		//召喚モンスターの種類数
+};
 
 
 

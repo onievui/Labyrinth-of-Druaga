@@ -49,6 +49,8 @@ void LoadResources() {
 	g_texture[GRP_TITLE] = LoadGraph("Resources/Textures/Protected/title.png");
 	g_texture[GRP_TITLE_BG] = LoadGraph("Resources/Textures/Protected/title_bg.png");
 	g_texture[GRP_GIL] = LoadGraph("Resources/Textures/Protected/gil.png");
+	g_texture[GRP_SWORD] = LoadGraph("Resources/Textures/Protected/sword.png");
+	g_texture[GRP_MONSTER] = LoadGraph("Resources/Textures/Protected/monster.png");
 	g_texture[GRP_MAPCHIP1] = LoadGraph("Resources/Textures/Protected/mapchip1.png");
 	g_texture[GRP_OBJECT_OTHER] = LoadGraph("Resources/Textures/Protected/object_other.png");
 

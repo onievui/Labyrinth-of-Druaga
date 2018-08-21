@@ -11,6 +11,7 @@
 #include "ScenePlay.h"
 #include "Map.h"
 #include "Player.h"
+#include "MinionManager.h"
 #include "Treasure.h"
 #include "Collision.h"
 #include "Shader.h"
@@ -21,14 +22,21 @@
 
 // 定数の定義 ==============================================================
 
+//プレイシーンの状態
+enum ScenePlayState {
+	PLAY_STATE_PLAY,	//プレイ状態
+	PLAY_STATE_PAUSE,	//ポーズ状態
+	PLAY_STATE_FAILED,	//ステージ失敗状態
+	PLAY_STATE_CLEAR,	//ステージクリア状態
+};
 
 
 
 // グローバル変数の定義 ====================================================
-int g_count;			//シーンが開始してからのカウント数
-int g_play_state;		//プレイシーンの状態
-int g_select_mode;		//コンティニュー確認画面での選択状態
-int g_wait_time;		//コンティニューの確認を表示するまでの待ち時間
+int g_count;					//シーンが開始してからのカウント数
+ScenePlayState g_play_state;	//プレイシーンの状態
+int g_select_mode;				//コンティニュー確認画面での選択状態
+int g_wait_time;				//次の状態へ移行するための待ち時間
 
 
 // 関数の宣言 ==============================================================
@@ -39,6 +47,7 @@ void FinalizePlay(void);    // プレイシーンの終了処理
 void PlayProcess();
 void PauseProcess();
 void StageFailedProcess();
+void StageClearProcess();
 
 
 
@@ -56,6 +65,9 @@ void InitializePlay(void)
 	//プレイヤーの初期化
 	InitializePlayer();
 
+	//召喚モンスターの初期化
+	InitializeMinions();
+
 	//お宝の初期化
 	InitializeTreasure();
 
@@ -69,7 +81,7 @@ void InitializePlay(void)
 	g_count = 0;
 
 	//状態の初期化
-	g_play_state = 0;
+	g_play_state = PLAY_STATE_PLAY;
 	g_select_mode = 0;
 	g_wait_time = 0;
 }
@@ -88,20 +100,20 @@ void UpdatePlay(void)
 
 	switch (g_play_state) {
 	//プレイ状態
-	case 0:
+	case PLAY_STATE_PLAY:
 		PlayProcess();
 		break;
 	//ポーズ状態
-	case 1:
-		
+	case PLAY_STATE_PAUSE:
+		PauseProcess();
 		break;
 	//ゲーム失敗状態
-	case 2:
-		
+	case PLAY_STATE_FAILED:
+		StageFailedProcess();
 		break;
 	//ステージクリア状態
-	case 3:
-		
+	case PLAY_STATE_CLEAR:
+		StageClearProcess();
 		break;
 	default:
 		MessageBox(NULL, "プレイシーンの状態で不正な値が渡されました", "", MB_OK);
@@ -128,6 +140,9 @@ void RenderPlay(void)
 	//お宝の描画
 	DrawTreasure();
 
+	//召喚モンスターの描画
+	DrawMinions();
+
 	//プレイヤーの描画
 	DrawPlayer();
 
@@ -152,6 +167,9 @@ void PlayProcess()
 {
 	//プレイヤーの更新
 	UpdatePlayer();
+
+	//召喚モンスターの更新
+	UpdateMinions();
 
 	//お宝の更新
 	UpdateTreasure();
@@ -186,11 +204,29 @@ void StageFailedProcess()
 //ステージクリアへの移行
 void RequestStageClear() 
 {
-	
+	//クリアタイムの記録
+	SetClearTime(g_count);
+	//クリア状態へ移行
+	g_play_state = PLAY_STATE_CLEAR;
+	//3秒間待つ
+	g_wait_time = 180;
 }
 
 //ステージクリア処理
 void StageClearProcess() 
 {
+	if (g_wait_time) {
 
+		//プレイヤーの更新
+		UpdatePlayer();
+
+		//カメラのオフセットの更新
+		UpdateCameraOffset();
+
+		g_wait_time--;
+	}
+	else {
+		//待ち時間が終わったらリザルト画面へ移行
+		RequestScene(SCENE_RESULT);
+	}
 }

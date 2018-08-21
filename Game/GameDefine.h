@@ -51,6 +51,10 @@
 #define PLAYER_JUMP_SPEED	(-24)	//プレイヤーのジャンプ速度
 
 
+//召喚モンスター関係
+#define MINION_MAX	(20)	//召喚できるモンスターの最大数
+
+
 //お宝関係
 #define TREASURE_MAX	(1)		//お宝の数
 
