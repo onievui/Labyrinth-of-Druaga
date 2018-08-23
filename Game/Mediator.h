@@ -30,6 +30,9 @@ Vector2DF OrderGetPlayerPos();
 //プレイヤーの座標を設定する依頼
 void OrderSetPlayerPos(Vector2DF pos);
 
+//プレイヤーの召喚可能モンスターを設定する依頼
+void OrderSetPlayerSummonable(BOOL summonable[]);
+
 //プレイヤーの地面判定を設定する依頼
 void OrderSetPlayerIsGround(BOOL isGround);
 
@@ -40,7 +43,10 @@ void OrderSetPlayerCollider(BoxCollider *collider);
 void OrderPlayerGetTreasure();
 
 //召喚モンスターの生成依頼
-int OrderCreateMinion(MinionPattern knd, Vector2DF pos, BOOL isLeft);
+int OrderCreateMinion(MinionPattern knd, Vector2DF pos, RectF pl_col, BOOL isLeft);
+
+//召喚モンスターの当たり判定の設定依頼
+void OrderSetMinionsCollider(BoxCollider collider[]);
 
 //お宝の座標を設定する
 void OrderSetTreasurePos(Vector2DF pos);

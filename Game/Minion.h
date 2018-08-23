@@ -24,10 +24,10 @@ void DrawMinionSlime(Minion *minion);
 void DrawMinionGhost(Minion *minion);
 
 //スライムのダメージ処理
-void DamageMinionSlime(Minion *minion, int power);
+BOOL DamageMinionSlime(Minion *minion, int power);
 
 //ゴーストのダメージ処理
-void DamageMinionGhost(Minion *minion, int power);
+BOOL DamageMinionGhost(Minion *minion, int power);
 
 //スライムの消滅
 void DestroyMinionSlime(Minion *minion);

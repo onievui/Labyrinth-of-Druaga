@@ -157,9 +157,18 @@ void LoadMapData(const StageId stageId, MapData *mapdata) {
 				num = 0;
 			}
 			break;
-		//マップデータ
+		//召喚可能なモンスター
 		case 3:
-			//map_data[x + y*MAP_WIDTH_MAX] = atoi(inputc);
+			mapdata->summonable[num] = atoi(inputc);
+			num++;
+			if (input[i] == '\n' || num == MINION_PATTERN_NUM) {
+				knd = 4;
+				num = 0;
+			}
+
+			break;
+		//マップデータ
+		case 4:
 			mapdata->map[x][y].knd = (SPR_ID)atoi(inputc);
 			if (input[i] == '\n') {
 				x = 0;

@@ -29,6 +29,9 @@ Vector2DF GetPlayerPos();
 //プレイヤーの座標を設定する
 void SetPlayerPos(Vector2DF pos);
 
+//プレイヤーの召喚可能モンスターを設定する
+void SetPlayerSummonable(BOOL summonable[]);
+
 //プレイヤーの地面判定を設定する
 void SetPlayerIsGround(BOOL isGround);
 

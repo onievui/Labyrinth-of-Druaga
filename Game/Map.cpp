@@ -31,6 +31,9 @@ Vector2DF g_camera_offset;		//カメラのオフセット
 void InitializeMap() {
 	int i, j;
 
+	//マップデータの初期化
+	memset(&g_mapdata, 0, sizeof(g_mapdata));
+
 	//マップデータの読み込み
 	LoadMapData(GetSelectStage(), &g_mapdata);
 
@@ -38,6 +41,8 @@ void InitializeMap() {
 	MulVector2DF(g_mapdata.player_init_pos, MAPCHIP_SIZE);
 	AddVector2DF(g_mapdata.player_init_pos, Vector2DF{ MAP_OFFSET_X,MAP_OFFSET_Y });
 	OrderSetPlayerPos(g_mapdata.player_init_pos);
+	//プレイヤーの召喚可能なモンスターを設定する
+	OrderSetPlayerSummonable(g_mapdata.summonable);
 
 	//お宝の初期座標を設定する
 	MulVector2DF(g_mapdata.treasure_pos, MAPCHIP_SIZE);

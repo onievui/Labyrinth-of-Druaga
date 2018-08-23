@@ -10,19 +10,28 @@
 
 
 //マクロの定義
-//動く矩形の当たり判定をオブジェクトの数分ループさせるマクロ
+//動く矩形の当たり判定を総当たりさせるマクロ
 #define MR_COLLISION_MACRO(col1, len1, i, col2, len2, j, check)			\
-	for (i = 0; i < len1; i++)											\
+	for (i = len1 - 1; i >= 0; i--)										\
 		if (*col1[i].state)												\
-			for (j = 0; j < len2; j++)									\
+			for (j = len2 - 1; j >= 0; j--)								\
 				if (*col2[j].state)										\
 					if (check = CollisionMovingAABB(&col1[i], &col2[j]))	
+
+//動く矩形の当たり判定をオブジェクトの数^2/2分ループさせるマクロ
+#define MR_COLLISION_MACRO2(col, len, i, j, check)						\
+	for (i = 0; i < len - 1; i++)										\
+		if (*col[i].state)												\
+			for (j = i + 1; j < len; j++)								\
+				if (*col[j].state)										\
+					if (check = CollisionMovingAABB(&col[i], &col[j]))	
 
 
 
 //グローバル変数の宣言
 BoxCollider g_player_collider[PLAYER_MAX];			//プレイヤーの当たり判定
 BoxCollider g_treasure_collider[TREASURE_MAX];		//お宝の当たり判定	
+BoxCollider g_minion_collider[MINION_MAX];			//召喚モンスターの当たり判定
 
 
 //プロトタイプ宣言
@@ -34,6 +43,7 @@ int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2);
 void InitializeCollision() {
 	OrderSetPlayerCollider(g_player_collider);
 	OrderSetTreasureCollider(g_treasure_collider);
+	OrderSetMinionsCollider(g_minion_collider);
 }
 
 //当たり判定
@@ -52,6 +62,19 @@ void UpdateCollision() {
 		//お宝を取得した時の処理を行う
 		OrderPlayerGetTreasure();
 	}
+	
+	//召喚モンスター同士の当たり判定
+	MR_COLLISION_MACRO2(g_minion_collider, MINION_MAX, i, j, check) {
+
+	}
+
+	//プレイヤーと召喚モンスターの当たり判定
+	MR_COLLISION_MACRO(g_player_collider, PLAYER_MAX, i, g_minion_collider, MINION_MAX, j, check) {
+		if (check & ISGROUND) {
+			OrderSetPlayerIsGround(TRUE);
+		}
+	}
+
 	
 
 }
@@ -229,12 +252,13 @@ int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
 	//X方向の速度が0なら当たっているかを求める
 	else {	
 		if (point.x >= rect.left && point.x <= rect.right) {
-			if (point.x == rect.left || point.x == rect.right) {
+			/*if (point.x == rect.left || point.x == rect.right) {
 				xflag = FALSE;
 			}
 			else {
 				xflag = TRUE;
-			}
+			}*/
+			xflag = TRUE;
 		}
 	}
 
@@ -259,19 +283,24 @@ int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
 	}
 
 	//衝突しているなら
-	if (xflag && yflag && t != 999) {
-		//X方向に先に衝突したなら
-		if (t == tx) {
-			obj1->vel->x *= tx;
-			obj2->vel->x *= tx;
-		}
-		//Y方向に先に衝突したなら
-		if (t == ty) {
-			obj1->vel->y *= ty;
-			obj2->vel->y *= ty;
-			//obj1の下側と衝突したなら
-			if (obj1->pos->y < obj2->pos->y) {
-				return ISGROUND;
+	if (xflag && yflag) {
+		if (t != 999) {
+			//X方向に先に衝突したなら
+			if (t == tx) {
+				obj1->vel->x *= tx;
+				obj2->vel->x *= tx;
+			}
+			//Y方向に先に衝突したなら
+			if (t == ty) {
+				obj1->vel->y *= ty;
+				obj2->vel->y *= ty;
+				//obj1の下側と衝突したなら
+				if (obj1->pos->y < obj2->pos->y) {
+					return ISGROUND;
+				}
+				else {
+					return ISCEILING;
+				}
 			}
 		}
 		return TRUE;

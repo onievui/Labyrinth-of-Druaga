@@ -45,13 +45,6 @@ void UpdateTreasure() {
 void DrawTreasure() {
 	if (g_treasure.state) {
 		DrawGraphicToMap(g_treasure.pos, &g_treasure.graph);
-		/*Vector2DF pos = g_treasure.pos;
-		SubVector2DF(pos, OrderGetCameraOffset());
-		RectF rect = { pos.x + g_treasure.col.left,
-			pos.y + g_treasure.col.top,
-			pos.x + g_treasure.col.right,
-			pos.y + g_treasure.col.bottom };
-		DrawBoxAA(rect.left, rect.top, rect.right, rect.bottom, COLOR_RED, 0);*/
 	}
 }
 

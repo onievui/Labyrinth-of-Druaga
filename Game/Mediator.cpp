@@ -61,6 +61,11 @@ void OrderSetPlayerIsGround(BOOL isGround) {
 	SetPlayerIsGround(isGround);
 }
 
+//プレイヤーの召喚可能モンスターを設定する依頼
+void OrderSetPlayerSummonable(BOOL summonable[]) {
+	SetPlayerSummonable(summonable);
+}
+
 //プレイヤーの当たり判定を設定する依頼
 void OrderSetPlayerCollider(BoxCollider *collider) {
 	SetPlayerCollider(collider);
@@ -72,8 +77,13 @@ void OrderPlayerGetTreasure() {
 }
 
 //召喚モンスターの生成依頼
-int OrderCreateMinion(MinionPattern knd, Vector2DF pos, BOOL isLeft) {
-	return CreateMinion(knd, pos, isLeft);
+int OrderCreateMinion(MinionPattern knd, Vector2DF pos, RectF pl_col, BOOL isLeft) {
+	return CreateMinion(knd, pos, pl_col, isLeft);
+}
+
+//召喚モンスターの当たり判定の設定依頼
+void OrderSetMinionsCollider(BoxCollider collider[]) {
+	SetMinionsCollider(collider);
 }
 
 //お宝の座標を設定する

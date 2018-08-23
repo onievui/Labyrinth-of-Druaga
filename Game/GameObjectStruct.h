@@ -44,6 +44,7 @@ struct MapData {
 	int height;								//マップの縦幅
 	Vector2DF player_init_pos;				//プレイヤーの初期座標
 	Vector2DF treasure_pos;					//お宝の座標
+	BOOL summonable[MINION_PATTERN_NUM];	//召喚できるモンスターの種類
 };
 
 // プレイヤー構造体

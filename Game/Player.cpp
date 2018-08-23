@@ -29,12 +29,16 @@ void PlayerActJump();
 void PlayerActSummon();
 void PlayerActClear();
 void AnimatePlayer();
+void SummonMinion();
+
 
 
 //グローバル変数の宣言
-Player g_player;		//プレイヤーオブジェクト
-Graph g_sword;			//剣オブジェクト
-int g_summon_time;		//召喚動作に必要な時間
+Player g_player;						//プレイヤーオブジェクト
+Graph g_sword;							//剣オブジェクト
+int g_summon_time;						//召喚動作に必要な時間
+BOOL g_summonable[MINION_PATTERN_NUM];	//召喚可能なモンスターのリスト
+int g_select_summon_type;				//選択中の召喚タイプ
 
 
 //プレイヤーの初期化
@@ -48,14 +52,14 @@ void InitializePlayer() {
 	g_player.sprite_num = 6;
 	g_player.graph = Graph{ g_sprite[SPR_STD_GIL],1.0,0.0 };
 	g_player.anime_count = 0;
-	
 	g_player.graph.sprite.rect = GetSpriteRect(SPR_STD_GIL, 6);
 
 	g_sword = Graph{ g_sprite[SPR_STD_SWORD],1.0,0.0 };
-
 	g_sword.sprite.rect = GetSpriteRect(SPR_STD_SWORD, 6);
 
 	g_summon_time = 0;
+	memset(g_summonable, 0, sizeof(g_summonable));
+	g_select_summon_type = -1;
 }
 
 
@@ -150,9 +154,7 @@ void PlayerActStand() {
 	//召喚したなら召喚状態に遷移する
 	if (CheckHitKeyDown(KEY_INPUT_X)) {
 		g_player.state = PLAYER_STATE_SUMMON;
-		if (!(g_summon_time = OrderCreateMinion(MINION_SLIME, g_player.pos, g_player.is_left))) {
-			g_summon_time = SUMMON_FAILED_TIME;
-		}
+		SummonMinion();
 		g_player.vel.x = 0;
 		g_player.anime_count = 0;
 	}
@@ -190,9 +192,8 @@ void PlayerActJump() {
 	//召喚したなら召喚状態に遷移する
 	if (CheckHitKeyDown(KEY_INPUT_X)) {
 		g_player.state = PLAYER_STATE_SUMMON;
-		if (!(g_summon_time = OrderCreateMinion(MINION_SLIME, g_player.pos, g_player.is_left))) {
-			g_summon_time = SUMMON_FAILED_TIME;
-		}		g_player.vel.x = 0;
+		SummonMinion();
+		g_player.vel.x = 0;
 		g_player.anime_count = 0;
 	}
 	//地上にいたなら立ち状態にする
@@ -311,6 +312,13 @@ void AnimatePlayer() {
 	}
 }
 
+//モンスターの召喚処理
+void SummonMinion() {
+	if (!(g_summon_time = OrderCreateMinion(MINION_SLIME, g_player.pos, g_player.col, g_player.is_left))) {
+		g_summon_time = SUMMON_FAILED_TIME;
+	}
+}
+
 //プレイヤーの描画
 void DrawPlayer() {
 	if (g_player.state) {
@@ -334,6 +342,14 @@ Vector2DF GetPlayerPos() {
 //プレイヤーの座標を設定する
 void SetPlayerPos(Vector2DF pos) {
 	g_player.pos = pos;
+}
+
+//プレイヤーの召喚可能モンスターを設定する
+void SetPlayerSummonable(BOOL summonable[]) {
+	int i;
+	for (i = 0; i < MINION_PATTERN_NUM; i++) {
+		g_summonable[i] = summonable[i];
+	}
 }
 
 //プレイヤーの地面判定を設定する

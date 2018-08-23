@@ -41,7 +41,8 @@
 
 #define GRAVITY		(2.4f)	//重力
 
-#define ISGROUND	(8)		//地面に接しているかのマクロ
+#define ISCEILING	(4)		//天井（上側）に接しているかのマクロ
+#define ISGROUND	(8)		//地面（下側）に接しているかのマクロ
 
 
 //プレイヤー関係

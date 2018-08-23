@@ -11,7 +11,7 @@
 void InitializeMinions();
 
 //召喚モンスターの生成
-int CreateMinion(MinionPattern knd, Vector2DF pos, BOOL isLeft);
+int CreateMinion(MinionPattern knd, Vector2DF pos, RectF pl_col, BOOL isLeft);
 
 //召喚モンスターの更新
 void UpdateMinions();
@@ -20,7 +20,7 @@ void UpdateMinions();
 void DrawMinions();
 
 //召喚モンスターの当たり判定の設定
-void SetEnemysCollider(BoxCollider collider[]);
+void SetMinionsCollider(BoxCollider collider[]);
 
 //召喚モンスターのダメージ処理
 void DamageMinion(int i, int power);

@@ -49,7 +49,7 @@ RECT GetSpriteRect(const SPR_ID sprId, const int num) {
 		break;
 	//モンスタースプライト
 	case SPR_STD_MONSTER:
-		rect = RECT{ 8 + (num % 12)*(64 + 8),8 + (num / 12)*(96 + 8),64,64 };
+		rect = RECT{ 8 + (num % 12)*(64 + 8),8 + (num / 12)*(64 + 8),64,64 };
 		break;
 	default:
 		MessageBox(NULL, "スプライトの切り出し位置の取得で不正な値が渡されました", "", MB_OK);
