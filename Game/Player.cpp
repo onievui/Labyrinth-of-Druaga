@@ -25,6 +25,10 @@
 #define SLIST_DIST_X		(70)	//召喚可能なモンスターのリストのX方向の間隔
 #define SUMMON_FAILED_TIME	(32)	//召喚に失敗したときの待ち時間
 
+#define KEY_INPUT_JUMP		(KEY_INPUT_Z)		//ジャンプキー
+#define KEY_INPUT_SUMMON	(KEY_INPUT_X)		//召喚/消滅キー
+#define KEY_INPUT_SELECT	(KEY_INPUT_LSHIFT)	//召喚モンスター選択キー
+
 
 //プロトタイプ宣言
 void ActPlayer();
@@ -134,7 +138,7 @@ void ActPlayer() {
 	}
 
 	//召喚タイプの選択
-	if (CheckHitKeyDown(KEY_INPUT_LSHIFT)) {
+	if (CheckHitKeyDown(KEY_INPUT_SELECT)) {
 		g_select_summon_type = (g_select_summon_type + 1) % g_slist_active_num;
 	}
 
@@ -169,14 +173,14 @@ void PlayerActStand() {
 		break;
 	}
 	//召喚したなら召喚状態に遷移する
-	if (CheckHitKeyDown(KEY_INPUT_X)) {
+	if (CheckHitKeyDown(KEY_INPUT_SUMMON)) {
 		g_player.state = PLAYER_STATE_SUMMON;
 		SummonMinion();
 		g_player.vel.x = 0;
 		g_player.anime_count = 0;
 	}
 	//ジャンプしたなら上方向に加速してジャンプ状態に遷移する
-	else if (CheckHitKeyDown(KEY_INPUT_Z) && g_player.is_ground) {
+	else if (CheckHitKeyDown(KEY_INPUT_JUMP) && g_player.is_ground) {
 		g_player.state = PLAYER_STATE_JUMP;
 		g_player.vel.y = PLAYER_JUMP_SPEED;
 	}
@@ -207,7 +211,7 @@ void PlayerActJump() {
 		break;
 	}
 	//召喚したなら召喚状態に遷移する
-	if (CheckHitKeyDown(KEY_INPUT_X)) {
+	if (CheckHitKeyDown(KEY_INPUT_SUMMON)) {
 		g_player.state = PLAYER_STATE_SUMMON;
 		SummonMinion();
 		g_player.vel.x = 0;
@@ -331,21 +335,29 @@ void AnimatePlayer() {
 
 //モンスターの召喚処理
 void SummonMinion() {
-	//召喚コストの取得
-	int cost = OrderGetSummonCost(MINION_SLIME);
-	//SPが足りるかの確認
-	if (g_player.sp >= cost) {
+	//消滅モードでないなら召喚
+	if (g_summonable[g_select_summon_type].knd != MINION_PATTERN_NUM) {
+		//召喚コストの取得
+		int cost = OrderGetSummonCost(g_summonable[g_select_summon_type].knd);
+		//SPが足りるかの確認
+		if (g_player.sp >= cost) {
+			//召喚に失敗してもモーションを行う
+			if (!(g_summon_time = OrderCreateMinion(g_summonable[g_select_summon_type].knd, g_player.pos, g_player.col, g_player.is_left))) {
+				g_summon_time = SUMMON_FAILED_TIME;
+			}
+			//成功したらSPを減らす
+			else {
+				g_player.sp -= cost;
+			}
+		}
 		//召喚に失敗してもモーションを行う
-		if (!(g_summon_time = OrderCreateMinion(MINION_SLIME, g_player.pos, g_player.col, g_player.is_left))) {
+		else {
 			g_summon_time = SUMMON_FAILED_TIME;
 		}
-		//成功したらSPを減らす
-		else {
-			g_player.sp -= cost;
-		}
 	}
-	//召喚に失敗してもモーションを行う
+	//モンスターの消滅処理
 	else {
+		OrderDeleteMinion(&g_player.pos, &g_player.col, g_player.is_left);
 		g_summon_time = SUMMON_FAILED_TIME;
 	}
 }
@@ -382,7 +394,7 @@ void DrawPlayerUI() {
 			pos.y - 32 * g_summonable[index].graph.exrate,
 			pos.x + 32 * g_summonable[index].graph.exrate,
 			pos.y + 32 * g_summonable[index].graph.exrate,
-			COLOR_WHITE,
+			COLOR_AQUA,
 			TRUE);
 		//消滅モードは画像を表示しない
 		if (index != 0) {
@@ -425,6 +437,11 @@ void SetPlayerCollider(BoxCollider *collider) {
 	collider->pos = &g_player.pos;
 	collider->vel = &g_player.vel;
 	collider->col = &g_player.col;
+}
+
+//プレイヤーのSPを回復する
+void AddPlayerSp(int plus) {
+	g_player.sp += plus;
 }
 
 //プレイヤーがお宝を取得したときの処理

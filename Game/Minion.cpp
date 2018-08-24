@@ -8,6 +8,8 @@
 #include <math.h>
 
 
+//定数の定義
+#define GHOST_SPEED		(3)		//ゴーストの移動速度
 
 
 
@@ -38,7 +40,7 @@ void InitializePrototypeMinion(Minion proto_minion[]) {
 		1,
 		1,
 		{ 0,0 },
-		{ -32,-32,32,32 },
+		{ -29,-29,29,25 },
 		{ 0,0 },
 		TRUE,
 		{ g_sprite[SPR_STD_MONSTER],1.0,0.0 },
@@ -70,25 +72,44 @@ void UpdateMinionGhost(Minion *minion) {
 	//移動量を座標に足す
 	AddVector2DF(minion->pos, minion->vel);
 
+	//移動処理
+	if (minion->is_left) {
+		minion->vel.x = -GHOST_SPEED;
+	}
+	else {
+		minion->vel.x = GHOST_SPEED;
+	}
+
 	//マップとの当たり判定
-	OrderCollisionObjectMap(&minion->pos, &minion->vel, &minion->col);
+	int collision = OrderCollisionObjectMap(&minion->pos, &minion->vel, &minion->col);
+	if (minion->is_left  && (collision & ISLEFT )) {
+		minion->is_left = !minion->is_left;
+		minion->sprite_num++;
+		minion->graph.sprite.rect = GetSpriteRect(SPR_STD_MONSTER, minion->sprite_num);
+	}
+	else if (!minion->is_left && (collision & ISRIGHT)) {
+		minion->is_left = !minion->is_left;
+		minion->sprite_num--;
+		minion->graph.sprite.rect = GetSpriteRect(SPR_STD_MONSTER, minion->sprite_num);
+	}
 }
 
 //スライムの描画
 void DrawMinionSlime(Minion *minion) {
 	DrawGraphicToMap(minion->pos, &minion->graph);
-	/*Vector2DF pos = minion->pos;
-	SubVector2DF(pos, OrderGetCameraOffset());
-	RectF rect = { pos.x + minion->col.left,
-	pos.y + minion->col.top,
-	pos.x + minion->col.right,
-	pos.y + minion->col.bottom };
-	DrawBoxAA(rect.left, rect.top, rect.right, rect.bottom, COLOR_RED, 0);*/
+	
 }
 
 //ゴーストの描画
 void DrawMinionGhost(Minion *minion) {
 	DrawGraphicToMap(minion->pos, &minion->graph);
+	Vector2DF pos = minion->pos;
+	SubVector2DF(pos, OrderGetCameraOffset());
+	RectF rect = { pos.x + minion->col.left,
+	pos.y + minion->col.top,
+	pos.x + minion->col.right,
+	pos.y + minion->col.bottom };
+	DrawBoxAA(rect.left, rect.top, rect.right, rect.bottom, COLOR_RED, 0);
 }
 
 //スライムのダメージ処理
@@ -114,11 +135,13 @@ BOOL DamageMinionGhost(Minion *minion, int power) {
 //スライムの消滅
 void DestroyMinionSlime(Minion *minion) {
 	minion->state = 0;
+	OrderAddPlayerSp(minion->s_dat.cost);
 }
 
 //ゴーストの消滅
 void DestroyMinionGhost(Minion *minion) {
 	minion->state = 0;
+	OrderAddPlayerSp(minion->s_dat.cost);
 }
 
 

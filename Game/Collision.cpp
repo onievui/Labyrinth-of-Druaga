@@ -36,6 +36,7 @@ BoxCollider g_minion_collider[MINION_MAX];			//召喚モンスターの当たり判定
 
 //プロトタイプ宣言
 int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2);
+BOOL CollisionAABB(Vector2DF *pos1, RectF *col1, Vector2DF *pos2, RectF *col2);
 
 
 
@@ -139,7 +140,6 @@ int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
 }
 
 
-
 //オブジェクトと動く矩形同士の当たり判定
 //BOOL CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
 //	Vector2DF vel = *obj1->vel;		//相対速度の計算
@@ -218,7 +218,25 @@ int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
 //}
 
 
-//オブジェクトと動く矩形同士の当たり判定
+
+//オブジェクトと召喚モンスターの当たり判定
+BOOL CollisionObjectMinions(Vector2DF *pos, RectF *col) {
+	BOOL ret = FALSE;
+	int i;
+	for (i = MINION_MAX - 1; i >= 0; i--) {
+		if (*g_minion_collider[i].state) {
+			//衝突しているかどうか
+			if (CollisionAABB(pos, col, g_minion_collider[i].pos, g_minion_collider[i].col)) {
+				//衝突していたら消滅させる
+				OrderDestroyMinion(i);
+				ret = TRUE;
+			}
+		}
+	}
+	return ret;
+}
+
+//動く矩形同士の当たり判定
 int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
 	Vector2DF vel = *obj1->vel;		//相対速度の計算
 	SubVector2DF(vel, *obj2->vel);
@@ -308,68 +326,15 @@ int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
 	return FALSE;
 }
 
-/*
-//オブジェクトと動く矩形同士の当たり判定
-BOOL CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
-	Vector2DF vel = *obj1->vel;		//相対速度の計算
-	SubVector2DF(vel, *obj2->vel);
-
-	Vector2DF pos1 = *obj1->pos;	//移動後の座標の計算
-	Vector2DF pos2 = *obj2->pos;
-	AddVector2DF(pos1, *obj1->vel);
-	AddVector2DF(pos2, *obj2->vel);
-
-	BOOL ret = FALSE;				//当たったかどうかの判定
-
-	float sinkX, sinkY;				//めりこみ量
-	float distX, distY;				//移動前の距離
-
-	//obj1の方が左なら
-	if (obj1->pos->x < obj2->pos->x) {
-		sinkX = (obj1->col->right - obj2->col->left) - (pos2.x - pos1.x);
-		distX = (obj2->pos->x - obj1->pos->x) - (obj1->col->right - obj2->col->left);
-	}
-	//obj1の方が右なら
-	else {
-		sinkX = (obj2->col->right - obj1->col->left) - (pos1.x - pos2.x);
-		distX = (obj1->pos->x - obj2->pos->x) - (obj2->col->right - obj1->col->left);
+//動かない矩形同士の当たり判定
+BOOL CollisionAABB(Vector2DF *pos1, RectF *col1, Vector2DF *pos2, RectF *col2) {
+	if (
+		fabsf(pos1->x - pos2->x) < (pos1->x < pos2->x ? col1->right - col2->left : col2->right - col1->left) &&
+		fabsf(pos1->y - pos2->y) < (pos1->y < pos2->y ? col1->bottom - col2->top : col2->bottom - col1->top)
+		)
+	{
+		return TRUE;
 	}
 
-	//obj1の方が上なら
-	if (obj1->pos->y < obj2->pos->y) {
-		sinkY = (obj1->col->bottom - obj2->col->top) - (pos2.y - pos1.y);
-		distY = (obj2->pos->y - obj1->pos->y) - (obj1->col->bottom - obj2->col->top);
-	}
-	//obj1の方が下なら
-	else {
-		sinkY = (obj2->col->bottom - obj1->col->top) - (pos1.y - pos2.y);
-		distY = (obj1->pos->y - obj2->pos->y) - (obj2->col->bottom - obj1->col->top);
-	}
-
-	//衝突しているなら
-	if (sinkX >= 0 && sinkY >= 0) {
-		//obj1->vel->x=
-	}
+	return FALSE;
 }
-
-//オブジェクトと動く矩形同士の当たり判定
-BOOL CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
-	Vector2DF vel = *obj1->vel;		//相対速度の計算
-	SubVector2DF(vel, *obj2->vel);
-
-	Vector2DF pos1 = *obj1->pos;	//移動後の座標の計算
-	Vector2DF pos2 = *obj2->pos;
-	AddVector2DF(pos1, *obj1->vel);
-	AddVector2DF(pos2, *obj2->vel);
-
-	BOOL lrflag = pos1.x < pos2.x;
-	BOOL tbflag = pos1.y < pos2.y;
-
-	if (lrflag) {
-		if (tbflag) {
-
-		}
-	}
-}
-
-*/

@@ -41,6 +41,9 @@ void SetPlayerIsGround(BOOL isGround);
 //プレイヤーの当たり判定を設定する
 void SetPlayerCollider(BoxCollider *collider);
 
+//プレイヤーのSPを回復する
+void AddPlayerSp(int plus);
+
 //プレイヤーがお宝を取得したときの処理
 void PlayerGetTreasure();
 

@@ -102,6 +102,19 @@ int CreateMinion(MinionPattern knd, Vector2DF pl_pos, RectF pl_col, BOOL isLeft)
 	return FALSE;
 }
 
+//召喚モンスターを消す
+void DeleteMinion(Vector2DF *pl_pos, RectF *pl_col, BOOL isLeft) {
+
+	//消す範囲の作成
+	Vector2DF pos = *pl_pos;
+	RectF col = { -32,-32,32,32 };
+	pos.x += isLeft ? pl_col->left - 32: pl_col->right + 32;
+
+	//敵との当たり判定
+	OrderCollisionObjectMinions(&pos, &col);
+
+}
+
 //召喚コストの取得
 int GetSummonCost(MinionPattern knd) {
 
