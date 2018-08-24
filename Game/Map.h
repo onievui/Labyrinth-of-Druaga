@@ -3,7 +3,7 @@
 //!
 //! @brief  マップ関連のヘッダファイル
 //!
-//! @date   2018/08/18
+//! @date   2018/08/23
 //__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
 
 #pragma once
@@ -26,8 +26,14 @@ void DrawMap();
 //マップを取得する
 MapData GetMap();
 
+//指定した座標をマップ座標に変換する
+void GetMapPosWithPos(Vector2DF pos, int *x, int *y);
+
+//指定したマップ座標を座標に変換する
+Vector2DF GetPosWithMapPos(int x, int y);
+
 //指定した座標が通過不可マスかどうか
-BOOL IsMapPosWall(float x, float y);
+BOOL IsWallWithPos(float x, float y);
 
 //カメラのオフセットを取得する
 Vector2DF GetCameraOffset();

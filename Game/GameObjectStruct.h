@@ -42,7 +42,8 @@ struct MapData {
 	Map map[MAP_WIDTH_MAX][MAP_HEIGHT_MAX];	//各マスの情報
 	int width;								//マップの横幅
 	int height;								//マップの縦幅
-	Vector2DF player_init_pos;				//プレイヤーの初期座標
+	Vector2DF player_pos;					//プレイヤーの初期座標
+	int player_sp;							//プレイヤーの初期SP
 	Vector2DF treasure_pos;					//お宝の座標
 	BOOL summonable[MINION_PATTERN_NUM];	//召喚できるモンスターの種類
 };
@@ -56,8 +57,16 @@ struct Player {
 	BOOL is_left;		//左向きかどうか
 	BOOL is_ground;		//地面に接しているかどうか
 	Graph graph;		//表示画像情報
+	int sp;				//召喚に必要なポイント
 	int sprite_num;		//スプライト番号
 	int anime_count;	//アニメーション用カウンタ
+};
+
+//召喚可能なモンスターのリスト構造体
+struct SummonableList {
+	BOOL is_use;			//使用フラグ
+	MinionPattern knd;		//種類
+	Graph graph;			//表示画像情報
 };
 
 //お宝構造体
@@ -67,6 +76,12 @@ struct Treasure {
 	RectF col;		//当たり判定の相対座標
 	Vector2DF vel;	//移動量
 	Graph graph;	//表示画像情報
+};
+
+//モンスター召喚用データ
+struct SummonData {
+	int cost;
+	int time;
 };
 
 //召喚モンスター構造体
@@ -81,7 +96,7 @@ struct Minion {
 	Graph graph;		//表示画像情報
 	int sprite_num;		//スプライト番号
 	int anime_count;	//アニメーション用カウンタ
-	int summon_time;	//召喚にかかる時間
+	SummonData s_dat;	//召喚用データ
 };
 
 //動く矩形の衝突判定用構造体

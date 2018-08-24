@@ -23,6 +23,9 @@ void UpdatePlayer();
 //プレイヤーの描画
 void DrawPlayer();
 
+//SPと召喚可能なモンスターのリストの描画
+void DrawPlayerUI();
+
 //プレイヤーの座標を取得する
 Vector2DF GetPlayerPos();
 

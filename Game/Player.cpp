@@ -18,6 +18,11 @@
 
 
 //定数の定義
+#define SP_POS_X			(670)	//SPの表示X座標
+#define SP_POS_Y			(10)	//SPの表示Y座標
+#define SLIST_POS_X			(50)	//召喚可能なモンスターのリストの表示X座標
+#define SLIST_POS_Y			(40)	//召喚可能なモンスターのリストの表示Y座標
+#define SLIST_DIST_X		(70)	//召喚可能なモンスターのリストのX方向の間隔
 #define SUMMON_FAILED_TIME	(32)	//召喚に失敗したときの待ち時間
 
 
@@ -34,11 +39,16 @@ void SummonMinion();
 
 
 //グローバル変数の宣言
-Player g_player;						//プレイヤーオブジェクト
-Graph g_sword;							//剣オブジェクト
-int g_summon_time;						//召喚動作に必要な時間
-BOOL g_summonable[MINION_PATTERN_NUM];	//召喚可能なモンスターのリスト
-int g_select_summon_type;				//選択中の召喚タイプ
+Player g_player;									//プレイヤーオブジェクト
+Graph g_sword;										//剣オブジェクト
+int g_summon_time;									//召喚動作に必要な時間
+SummonableList g_summonable[MINION_PATTERN_NUM+1];	//召喚可能なモンスターのリスト
+int g_slist_active_num;								//リストで使用中の要素数
+int g_select_summon_type;							//選択中の召喚タイプ
+
+
+extern HFNT g_font_g40;
+
 
 
 //プレイヤーの初期化
@@ -49,6 +59,7 @@ void InitializePlayer() {
 	g_player.vel = Vector2DF{ 0,0 };
 	g_player.is_left = TRUE;
 	g_player.is_ground = FALSE;
+	g_player.sp = 20;
 	g_player.sprite_num = 6;
 	g_player.graph = Graph{ g_sprite[SPR_STD_GIL],1.0,0.0 };
 	g_player.anime_count = 0;
@@ -59,7 +70,10 @@ void InitializePlayer() {
 
 	g_summon_time = 0;
 	memset(g_summonable, 0, sizeof(g_summonable));
-	g_select_summon_type = -1;
+	g_summonable[0].is_use = TRUE;
+	g_summonable[0].knd = MINION_PATTERN_NUM;
+	g_slist_active_num = 1;
+	g_select_summon_type = 0;
 }
 
 
@@ -119,7 +133,10 @@ void ActPlayer() {
 		g_player.is_ground = FALSE;
 	}
 
-
+	//召喚タイプの選択
+	if (CheckHitKeyDown(KEY_INPUT_LSHIFT)) {
+		g_select_summon_type = (g_select_summon_type + 1) % g_slist_active_num;
+	}
 
 }
 
@@ -314,7 +331,21 @@ void AnimatePlayer() {
 
 //モンスターの召喚処理
 void SummonMinion() {
-	if (!(g_summon_time = OrderCreateMinion(MINION_SLIME, g_player.pos, g_player.col, g_player.is_left))) {
+	//召喚コストの取得
+	int cost = OrderGetSummonCost(MINION_SLIME);
+	//SPが足りるかの確認
+	if (g_player.sp >= cost) {
+		//召喚に失敗してもモーションを行う
+		if (!(g_summon_time = OrderCreateMinion(MINION_SLIME, g_player.pos, g_player.col, g_player.is_left))) {
+			g_summon_time = SUMMON_FAILED_TIME;
+		}
+		//成功したらSPを減らす
+		else {
+			g_player.sp -= cost;
+		}
+	}
+	//召喚に失敗してもモーションを行う
+	else {
 		g_summon_time = SUMMON_FAILED_TIME;
 	}
 }
@@ -334,6 +365,32 @@ void DrawPlayer() {
 	}
 }
 
+//SPと召喚可能なモンスターのリストの描画
+void DrawPlayerUI() {
+	//SPの描画
+	DrawFormatStringFToHandle(SP_POS_X, SP_POS_Y, COLOR_BLUE, g_font_g40, "SP:%d", g_player.sp);
+	//召喚可能なモンスターのリストの描画
+	int i;
+	for (i = 0; i < g_slist_active_num; i++) {
+		int index = (g_select_summon_type + i) % g_slist_active_num;
+		//先頭は大きく表示する
+		g_summonable[index].graph.exrate = (i == 0) ? 1.0f : 0.75f;
+		//表示位置
+		Vector2DF pos = { (float)(SLIST_POS_X + i * SLIST_DIST_X),(float)(SLIST_POS_Y) };
+		//枠の描画
+		DrawBoxAA(pos.x - 32 * g_summonable[index].graph.exrate,
+			pos.y - 32 * g_summonable[index].graph.exrate,
+			pos.x + 32 * g_summonable[index].graph.exrate,
+			pos.y + 32 * g_summonable[index].graph.exrate,
+			COLOR_WHITE,
+			TRUE);
+		//消滅モードは画像を表示しない
+		if (index != 0) {
+			DrawGraphic(pos, &g_summonable[index].graph);
+		}
+	}
+}
+
 //プレイヤーの座標を取得する
 Vector2DF GetPlayerPos() {
 	return g_player.pos;
@@ -348,7 +405,12 @@ void SetPlayerPos(Vector2DF pos) {
 void SetPlayerSummonable(BOOL summonable[]) {
 	int i;
 	for (i = 0; i < MINION_PATTERN_NUM; i++) {
-		g_summonable[i] = summonable[i];
+		if (g_summonable[i + 1].is_use = summonable[i]) {
+			g_summonable[i + 1].knd = MinionPattern(i);
+			g_summonable[i + 1].graph = { g_sprite[SPR_STD_MONSTER],1.0,0.0 };
+			g_summonable[i + 1].graph.sprite = OrderGetMinionSprite(MinionPattern(i));
+			g_slist_active_num++;
+		}
 	}
 }
 

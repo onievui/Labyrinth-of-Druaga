@@ -81,6 +81,16 @@ int OrderCreateMinion(MinionPattern knd, Vector2DF pos, RectF pl_col, BOOL isLef
 	return CreateMinion(knd, pos, pl_col, isLeft);
 }
 
+//召喚コストの取得依頼
+int OrderGetSummonCost(MinionPattern knd) {
+	return GetSummonCost(knd);
+}
+
+//召喚モンスターの画像取得依頼
+Sprite OrderGetMinionSprite(MinionPattern knd) {
+	return GetMinionSprite(knd);
+}
+
 //召喚モンスターの当たり判定の設定依頼
 void OrderSetMinionsCollider(BoxCollider collider[]) {
 	SetMinionsCollider(collider);
@@ -106,9 +116,19 @@ MapData OrderGetMap() {
 	return GetMap();
 }
 
+//指定した座標をマップ座標に変換する依頼
+void OrderGetMapPosWithPos(Vector2DF pos, int *x, int *y) {
+	GetMapPosWithPos(pos, x, y);
+}
+
+//指定したマップ座標を座標に変換する依頼
+Vector2DF OrderGetPosWithMapPos(int x, int y) {
+	return GetPosWithMapPos(x, y);
+}
+
 //指定した座標が通過不可マスかどうかの依頼
-BOOL OrderIsMapPosWall(float x, float y) {
-	return IsMapPosWall(x, y);
+BOOL OrderIsWallWithPos(float x, float y) {
+	return IsWallWithPos(x, y);
 }
 
 //オブジェクトとマップの当たり判定依頼

@@ -99,16 +99,16 @@ int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
 	};
 
 	//マップ縦横方向判定
-	BOOL mL = OrderIsMapPosWall(rect1.left,rect0.top)     || OrderIsMapPosWall(rect1.left, rect0.bottom);
-	BOOL mR = OrderIsMapPosWall(rect1.right, rect0.top)   || OrderIsMapPosWall(rect1.right, rect0.bottom);
-	BOOL mU = OrderIsMapPosWall(rect0.left, rect1.top)    || OrderIsMapPosWall(rect0.right, rect1.top);
-	BOOL mD = OrderIsMapPosWall(rect0.left, rect1.bottom) || OrderIsMapPosWall(rect0.right, rect1.bottom);
+	BOOL mL = OrderIsWallWithPos(rect1.left,rect0.top)     || OrderIsWallWithPos(rect1.left, rect0.bottom);
+	BOOL mR = OrderIsWallWithPos(rect1.right, rect0.top)   || OrderIsWallWithPos(rect1.right, rect0.bottom);
+	BOOL mU = OrderIsWallWithPos(rect0.left, rect1.top)    || OrderIsWallWithPos(rect0.right, rect1.top);
+	BOOL mD = OrderIsWallWithPos(rect0.left, rect1.bottom) || OrderIsWallWithPos(rect0.right, rect1.bottom);
 
 	//マップ斜め方向判定
-	if (!mL && !mU) { mL = mU = OrderIsMapPosWall(rect1.left, rect1.top); }
-	if (!mL && !mD) { mL = mD = OrderIsMapPosWall(rect1.left, rect1.bottom); }
-	if (!mR && !mU) { mR = mU = OrderIsMapPosWall(rect1.right, rect1.top); }
-	if (!mR && !mD) { mR = mD = OrderIsMapPosWall(rect1.right, rect1.bottom); }
+	if (!mL && !mU) { mL = mU = OrderIsWallWithPos(rect1.left, rect1.top); }
+	if (!mL && !mD) { mL = mD = OrderIsWallWithPos(rect1.left, rect1.bottom); }
+	if (!mR && !mU) { mR = mU = OrderIsWallWithPos(rect1.right, rect1.top); }
+	if (!mR && !mD) { mR = mD = OrderIsWallWithPos(rect1.right, rect1.bottom); }
 
 	//座標をブロックの縁に合わせる
 	if (mL && !mR) {

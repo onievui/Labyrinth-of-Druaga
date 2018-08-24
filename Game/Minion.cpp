@@ -27,8 +27,9 @@ void InitializePrototypeMinion(Minion proto_minion[]) {
 		{ g_sprite[SPR_STD_MONSTER],1.0,0.0 },
 		12,
 		0,
-		32
+		{ 1,32 }
 	};
+	proto_minion[MINION_SLIME].graph.sprite.rect = GetSpriteRect(SPR_STD_MONSTER, proto_minion[MINION_SLIME].sprite_num);
 
 	//ÉSÅ[ÉXÉg
 	proto_minion[MINION_GHOST] =
@@ -43,8 +44,9 @@ void InitializePrototypeMinion(Minion proto_minion[]) {
 		{ g_sprite[SPR_STD_MONSTER],1.0,0.0 },
 		66,
 		0,
-		64
+		{ 3,64 }
 	};
+	proto_minion[MINION_GHOST].graph.sprite.rect = GetSpriteRect(SPR_STD_MONSTER, proto_minion[MINION_GHOST].sprite_num);
 }
 
 

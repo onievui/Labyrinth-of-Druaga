@@ -45,6 +45,12 @@ void OrderPlayerGetTreasure();
 //召喚モンスターの生成依頼
 int OrderCreateMinion(MinionPattern knd, Vector2DF pos, RectF pl_col, BOOL isLeft);
 
+//召喚コストの取得依頼
+int OrderGetSummonCost(MinionPattern knd);
+
+//召喚モンスターの画像取得依頼
+Sprite OrderGetMinionSprite(MinionPattern knd);
+
 //召喚モンスターの当たり判定の設定依頼
 void OrderSetMinionsCollider(BoxCollider collider[]);
 
@@ -60,8 +66,14 @@ void OrderCollisionTreasure();
 //マップを取得する依頼
 MapData OrderGetMap();
 
+//指定した座標をマップ座標に変換する依頼
+void OrderGetMapPosWithPos(Vector2DF pos, int *x, int *y);
+
+//指定したマップ座標を座標に変換する依頼
+Vector2DF OrderGetPosWithMapPos(int x, int y);
+
 //指定した座標が通過不可マスかどうかの依頼
-BOOL OrderIsMapPosWall(float x, float y);
+BOOL OrderIsWallWithPos(float x, float y);
 
 //オブジェクトとマップの当たり判定依頼
 int OrderCollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col);

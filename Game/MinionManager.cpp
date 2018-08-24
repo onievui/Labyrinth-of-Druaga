@@ -9,9 +9,6 @@
 
 
 
-//定数の定義
-#define SUMMON_POS_OFFSET_X	(-3)		//モンスターの召喚位置のオフセット
-
 
 
 //プロトタイプ宣言
@@ -74,34 +71,59 @@ int CreateMinion(MinionPattern knd, Vector2DF pl_pos, RectF pl_col, BOOL isLeft)
 	if (g_active_minion_num != MINION_MAX) {
 		//召喚スペースがあるかどうか
 		Vector2DF s_pos = pl_pos;
-		Vector2DF s_vel = { 0,0 };
-		if (isLeft) {
-			s_pos.x += pl_col.left - g_prototype_minion[knd].col.right + SUMMON_POS_OFFSET_X;
-		}
-		else {
-			s_pos.x += pl_col.right - g_prototype_minion[knd].col.left - SUMMON_POS_OFFSET_X;
-		}
-		if (OrderCollisionObjectMap(&s_pos, &s_vel, &g_prototype_minion[knd].col)) {
+		int mx, my;
+		s_pos.x += isLeft ? pl_col.left : pl_col.right;
+		OrderGetMapPosWithPos(s_pos, &mx, &my);
+		mx += isLeft ? -1 : 1;
+		s_pos = OrderGetPosWithMapPos(mx, my);
+		if (OrderIsWallWithPos(s_pos.x, s_pos.y)) {
 			//スペースがないなら失敗
 			return FALSE;
 		}
+		
 		//召喚モンスターの初期化
 		g_minion[g_active_minion_num] = g_prototype_minion[knd];
 		g_minion[g_active_minion_num].pos = s_pos;
 		g_minion[g_active_minion_num].is_left = isLeft;
+		//向きで画像が変わる場合
 		if (!isLeft && knd == MINION_GHOST) {
 			g_minion[g_active_minion_num].sprite_num++;
+			//スプライトの再設定
+			g_minion[g_active_minion_num].graph.sprite.rect = GetSpriteRect(SPR_STD_MONSTER, g_minion[g_active_minion_num].sprite_num);
 		}
-		//スプライトの設定
-		g_minion[g_active_minion_num].graph.sprite.rect = GetSpriteRect(SPR_STD_MONSTER, g_minion[g_active_minion_num].sprite_num);
+		
 
 		//使用中の数を増やす
 		g_active_minion_num++;
 
-		return g_minion[g_active_minion_num].summon_time;
+		return g_prototype_minion[knd].s_dat.time;
 	}
 	
 	return FALSE;
+}
+
+//召喚コストの取得
+int GetSummonCost(MinionPattern knd) {
+
+	//エラーチェック
+	if (knd < 0 || knd >= MINION_PATTERN_NUM) {
+		MessageBox(NULL, "召喚モンスターのコスト取得で不正な値が渡されました", "", MB_OK);
+		return FALSE;
+	}
+
+	return g_prototype_minion[knd].s_dat.cost;
+}
+
+//召喚モンスターの画像取得
+Sprite GetMinionSprite(MinionPattern knd) {
+
+	//エラーチェック
+	if (knd < 0 || knd >= MINION_PATTERN_NUM) {
+		MessageBox(NULL, "召喚モンスターの画像取得で不正な値が渡されました", "", MB_OK);
+		return g_sprite[SPR_STD_MONSTER];
+	}
+
+	return g_prototype_minion[knd].graph.sprite;
 }
 
 //召喚モンスターの更新

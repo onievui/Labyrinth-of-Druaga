@@ -13,6 +13,12 @@ void InitializeMinions();
 //召喚モンスターの生成
 int CreateMinion(MinionPattern knd, Vector2DF pos, RectF pl_col, BOOL isLeft);
 
+//召喚コストの取得
+int GetSummonCost(MinionPattern knd);
+
+//召喚モンスターの画像取得
+Sprite GetMinionSprite(MinionPattern knd);
+
 //召喚モンスターの更新
 void UpdateMinions();
 

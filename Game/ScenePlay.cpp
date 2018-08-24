@@ -146,6 +146,9 @@ void RenderPlay(void)
 	//プレイヤーの描画
 	DrawPlayer();
 
+	//SPと召喚可能なモンスターのリストの描画
+	DrawPlayerUI();
+
 }
 
 

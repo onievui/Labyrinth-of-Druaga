@@ -14,8 +14,8 @@
 
 
 //定数の定義
-#define MAP_OFFSET_X	(32)	//マップのオフセット
-#define MAP_OFFSET_Y	(32)	//マップのオフセット
+//#define MAP_OFFSET_X	(32)	//マップのオフセット
+//#define MAP_OFFSET_Y	(32)	//マップのオフセット
 
 
 //プロトタイプ宣言
@@ -38,15 +38,15 @@ void InitializeMap() {
 	LoadMapData(GetSelectStage(), &g_mapdata);
 
 	//プレイヤーの初期座標を設定する
-	MulVector2DF(g_mapdata.player_init_pos, MAPCHIP_SIZE);
-	AddVector2DF(g_mapdata.player_init_pos, Vector2DF{ MAP_OFFSET_X,MAP_OFFSET_Y });
-	OrderSetPlayerPos(g_mapdata.player_init_pos);
+	MulVector2DF(g_mapdata.player_pos, MAPCHIP_SIZE);
+	AddVector2DF(g_mapdata.player_pos, Vector2DF{ MAPCHIP_SIZE_HALF,MAPCHIP_SIZE_HALF });
+	OrderSetPlayerPos(g_mapdata.player_pos);
 	//プレイヤーの召喚可能なモンスターを設定する
 	OrderSetPlayerSummonable(g_mapdata.summonable);
 
 	//お宝の初期座標を設定する
 	MulVector2DF(g_mapdata.treasure_pos, MAPCHIP_SIZE);
-	AddVector2DF(g_mapdata.treasure_pos, Vector2DF{ MAP_OFFSET_X,MAP_OFFSET_Y });
+	AddVector2DF(g_mapdata.treasure_pos, Vector2DF{ MAPCHIP_SIZE_HALF,MAPCHIP_SIZE_HALF });
 	OrderSetTreasurePos(g_mapdata.treasure_pos);
 
 
@@ -59,7 +59,7 @@ void InitializeMap() {
 			else {
 				g_mapdata.map[i][j].knd = (SPR_ID)(SPR_MAPCHIP1_2 + g_mapdata.map[i][j].knd);
 			}
-			g_mapdata.map[i][j].pos = Vector2DF{ (float)(i*MAPCHIP_SIZE + MAP_OFFSET_X),(float)(j*MAPCHIP_SIZE + MAP_OFFSET_Y) };
+			g_mapdata.map[i][j].pos = Vector2DF{ (float)(i*MAPCHIP_SIZE + MAPCHIP_SIZE_HALF),(float)(j*MAPCHIP_SIZE + MAPCHIP_SIZE_HALF) };
 			g_mapdata.map[i][j].graphp = GraphP{ &g_sprite[g_mapdata.map[i][j].knd],1.0,0.0 };
 		}
 	}
@@ -118,8 +118,22 @@ MapData GetMap() {
 	return g_mapdata;
 }
 
+//指定した座標をマップ座標に変換する
+void GetMapPosWithPos(Vector2DF pos, int *x, int *y) {
+	*x = (int)(pos.x / MAPCHIP_SIZE);
+	*y = (int)(pos.y / MAPCHIP_SIZE);
+}
+
+//指定したマップ座標を座標に変換する
+Vector2DF GetPosWithMapPos(int x, int y) {
+	Vector2DF ret;
+	ret.x = (float)(x*MAPCHIP_SIZE + MAPCHIP_SIZE_HALF);
+	ret.y = (float)(y*MAPCHIP_SIZE + MAPCHIP_SIZE_HALF);
+	return ret;
+}
+
 //指定した座標が通過不可マスかどうか
-BOOL IsMapPosWall(float x, float y) {
+BOOL IsWallWithPos(float x, float y) {
 	int ix = (int)(x / MAPCHIP_SIZE);
 	int iy = (int)(y / MAPCHIP_SIZE);
 	//範囲外かどうか
@@ -132,6 +146,7 @@ BOOL IsMapPosWall(float x, float y) {
 		return FALSE;
 	}
 	return TRUE;
+	
 }
 
 //カメラのオフセットを取得する

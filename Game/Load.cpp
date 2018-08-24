@@ -136,11 +136,11 @@ void LoadMapData(const StageId stageId, MapData *mapdata) {
 		//プレイヤーの初期座標
 		case 1:
 			if (num == 0) {
-				mapdata->player_init_pos.x = (float)atof(inputc);
+				mapdata->player_pos.x = (float)atof(inputc);
 				num++;
 			}
 			else {
-				mapdata->player_init_pos.y = (float)atof(inputc);
+				mapdata->player_pos.y = (float)atof(inputc);
 				knd = 2;
 				num = 0;
 			}
@@ -167,8 +167,13 @@ void LoadMapData(const StageId stageId, MapData *mapdata) {
 			}
 
 			break;
-		//マップデータ
+		//初期SP
 		case 4:
+			mapdata->player_sp = atoi(inputc);
+			knd = 5;
+			break;
+		//マップデータ
+		case 5:
 			mapdata->map[x][y].knd = (SPR_ID)atoi(inputc);
 			if (input[i] == '\n') {
 				x = 0;
