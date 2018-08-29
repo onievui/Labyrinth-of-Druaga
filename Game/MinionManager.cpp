@@ -143,7 +143,12 @@ Sprite GetMinionSprite(MinionPattern knd) {
 void UpdateMinions() {
 	int i;
 	for (i = 0; i < g_active_minion_num; i++) {
+		//更新処理
 		g_update_minion[g_minion[i].knd](&g_minion[i]);
+		//マップ外判定
+		if (OrderIsOutsideMap(&g_minion[i].pos, &g_minion[i].col)) {
+			DestroyMinion(i);
+		}
 	}
 }
 
@@ -161,8 +166,9 @@ void SetMinionsCollider(BoxCollider collider[]) {
 	for (i = 0; i < MINION_MAX; i++) {
 		collider[i].state = &g_minion[i].state;
 		collider[i].pos = &g_minion[i].pos;
-		collider[i].vel = &g_minion[i].vel;
 		collider[i].col = &g_minion[i].col;
+		collider[i].vel = &g_minion[i].vel;
+		collider[i].is_ground = &g_minion[i].is_ground;
 	}
 }
 

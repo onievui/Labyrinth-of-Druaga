@@ -42,12 +42,12 @@ void FinalizeResult(void);    // プレイシーンの終了処理
 void InitializeResult(void)
 {
 	//背景オブジェクトの初期化
-	/*g_result_back_object.pos = Vector2DF{ (float)(SCREEN_CENTER_X),(float)(SCREEN_CENTER_Y) };
+	g_result_back_object.pos = Vector2DF{ (float)(SCREEN_CENTER_X),(float)(SCREEN_CENTER_Y) };
 	g_result_back_object.vel = Vector2DF{ 0,0 };
 	g_result_back_object.state = 1;
 	g_result_back_object.speed = 0;
 	g_result_back_object.angle = 0;
-	g_result_back_object.graph = Graph{ g_sprite[SPR_BG] , 1.3f, 0.0f };*/
+	g_result_back_object.graph = Graph{ g_sprite[SPR_BG] , 1.0f, 0.0f };
 
 	//SetBGM(BGM_1);
 
@@ -87,7 +87,7 @@ void UpdateResult(void)
 void RenderResult(void)
 {
 	//リザルト背景の描画
-	//DrawGraphic(g_result_back_object.pos, &g_result_back_object.graph);
+	DrawGraphic(g_result_back_object.pos, &g_result_back_object.graph);
 
 	//クリアタイムの表示
 	int time = GetClearTime();

@@ -24,6 +24,7 @@ void InitializeTreasure() {
 	g_treasure.pos = Vector2DF{ (float)FIELD_CENTER_X,(float)FIELD_HEIGHT - 100 };
 	g_treasure.col = RectF{ -32,-13,20,24 };
 	g_treasure.vel = Vector2DF{ 0,0 };
+	g_treasure.is_ground = FALSE;
 	g_treasure.graph = Graph{ g_sprite[SPR_OBJECT_TREASURE],1.0,0.0 };
 	
 }
@@ -57,8 +58,9 @@ void SetTreasurePos(Vector2DF pos) {
 void SetTreasureCollider(BoxCollider *collider) {
 	collider->state = &g_treasure.state;
 	collider->pos = &g_treasure.pos;
-	collider->vel = &g_treasure.vel;
 	collider->col = &g_treasure.col;
+	collider->vel = &g_treasure.vel;
+	collider->is_ground = &g_treasure.is_ground;
 }
 
 //‚¨•ó‚ªƒvƒŒƒCƒ„[‚ÆÕ“Ë‚µ‚½‚Æ‚«‚Ìˆ—

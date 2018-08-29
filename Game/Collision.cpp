@@ -66,13 +66,21 @@ void UpdateCollision() {
 	
 	//召喚モンスター同士の当たり判定
 	MR_COLLISION_MACRO2(g_minion_collider, MINION_MAX, i, j, check) {
-
+		if (check & ISGROUND) {
+			*g_minion_collider[i].is_ground = TRUE;
+		}
+		else if (check & ISCEILING) {
+			*g_minion_collider[j].is_ground = TRUE;
+		}
 	}
 
 	//プレイヤーと召喚モンスターの当たり判定
 	MR_COLLISION_MACRO(g_player_collider, PLAYER_MAX, i, g_minion_collider, MINION_MAX, j, check) {
 		if (check & ISGROUND) {
-			OrderSetPlayerIsGround(TRUE);
+			*g_player_collider->is_ground = TRUE;
+		}
+		else if (check & ISCEILING) {
+			*g_minion_collider[j].is_ground = TRUE;
 		}
 	}
 
@@ -114,19 +122,23 @@ int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
 	//座標をブロックの縁に合わせる
 	if (mL && !mR) {
 		tempF = ceilf(rect1.left / MAPCHIP_SIZE) * MAPCHIP_SIZE - col->left;		//左
-		if (pos->x > tempF)pos->x = tempF;
+		//if (pos->x > tempF)pos->x = tempF;
+		if (pos->x > tempF)vel->x = tempF - pos->x;
 	}
 	if (!mL && mR ) {
 		tempF = floorf(rect1.right / MAPCHIP_SIZE) * MAPCHIP_SIZE - col->right;	//右
-		if (pos->x < tempF)pos->x = tempF;
+		//if (pos->x < tempF)pos->x = tempF;
+		if (pos->x < tempF)vel->x = tempF - pos->x;
 	}
 	if (mU && !mD) {
 		tempF = ceilf(rect1.top / MAPCHIP_SIZE) * MAPCHIP_SIZE - col->top;		//上
 		if (pos->y > tempF)pos->y = tempF;
+		//if (pos->y > tempF)vel->y = tempF - pos->y;
 	}
 	if (!mU && mD) {
 		tempF = floorf(rect1.bottom / MAPCHIP_SIZE) * MAPCHIP_SIZE - col->bottom;	//下
 		if (pos->y < tempF)pos->y = tempF;
+		//if (pos->y < tempF)vel->y = tempF - pos->y;
 	}
 
 	//判定による加速停止処理
@@ -310,14 +322,34 @@ int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
 			}
 			//Y方向に先に衝突したなら
 			if (t == ty) {
-				obj1->vel->y *= ty;
-				obj2->vel->y *= ty;
+				if (obj1->vel->y*obj2->vel->y > 0) {
+					if (obj1->vel->y > 0) {
+						(obj1->pos->y < obj2->pos->y ? obj1->vel->y : obj2->vel->y) *= ty;
+					}
+					else {
+						(obj1->pos->y > obj2->pos->y ? obj1->vel->y : obj2->vel->y) *= ty;
+					}
+				}
+				else {
+					obj1->vel->y *= ty;
+					obj2->vel->y *= ty;
+				}
 				//obj1の下側と衝突したなら
 				if (obj1->pos->y < obj2->pos->y) {
 					return ISGROUND;
 				}
 				else {
 					return ISCEILING;
+				}
+			}
+		}
+		else {
+			if (vel.y == 0) {
+				if (obj1->vel->y > 0) {
+					(obj1->pos->y < obj2->pos->y ? obj1->vel->y : obj2->vel->y) = 0;
+				}
+				else {
+					(obj1->pos->y > obj2->pos->y ? obj1->vel->y : obj2->vel->y) = 0;
 				}
 			}
 		}

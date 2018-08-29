@@ -26,6 +26,7 @@ void InitializePrototypeMinion(Minion proto_minion[]) {
 		{ -21,-12,21,12 },
 		{ 0,0 },
 		TRUE,
+		FALSE,
 		{ g_sprite[SPR_STD_MONSTER],1.0,0.0 },
 		12,
 		0,
@@ -43,6 +44,7 @@ void InitializePrototypeMinion(Minion proto_minion[]) {
 		{ -29,-29,29,25 },
 		{ 0,0 },
 		TRUE,
+		FALSE,
 		{ g_sprite[SPR_STD_MONSTER],1.0,0.0 },
 		66,
 		0,
@@ -55,14 +57,28 @@ void InitializePrototypeMinion(Minion proto_minion[]) {
 //スライムの更新
 void UpdateMinionSlime(Minion *minion) {
 
+	
+
 	//移動量を座標に足す
 	AddVector2DF(minion->pos, minion->vel);
+
+	//着地していたなら速度を0にする
+	if (minion->is_ground && minion->vel.y > 0) {
+		minion->vel.y = 0;
+	}
 
 	//重力を加える
 	minion->vel.y += GRAVITY;
 
+	
 	//マップとの当たり判定
-	OrderCollisionObjectMap(&minion->pos, &minion->vel, &minion->col);
+	if (OrderCollisionObjectMap(&minion->pos, &minion->vel, &minion->col) & ISGROUND) {
+		minion->is_ground = TRUE;
+	}
+	else {
+
+		minion->is_ground = FALSE;
+	}
 	
 }
 
@@ -103,13 +119,13 @@ void DrawMinionSlime(Minion *minion) {
 //ゴーストの描画
 void DrawMinionGhost(Minion *minion) {
 	DrawGraphicToMap(minion->pos, &minion->graph);
-	Vector2DF pos = minion->pos;
+	/*Vector2DF pos = minion->pos;
 	SubVector2DF(pos, OrderGetCameraOffset());
 	RectF rect = { pos.x + minion->col.left,
 	pos.y + minion->col.top,
 	pos.x + minion->col.right,
 	pos.y + minion->col.bottom };
-	DrawBoxAA(rect.left, rect.top, rect.right, rect.bottom, COLOR_RED, 0);
+	DrawBoxAA(rect.left, rect.top, rect.right, rect.bottom, COLOR_RED, 0);*/
 }
 
 //スライムのダメージ処理

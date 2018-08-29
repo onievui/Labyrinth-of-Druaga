@@ -35,8 +35,8 @@ void SetPlayerPos(Vector2DF pos);
 //プレイヤーの召喚可能モンスターを設定する
 void SetPlayerSummonable(BOOL summonable[]);
 
-//プレイヤーの地面判定を設定する
-void SetPlayerIsGround(BOOL isGround);
+//プレイヤーのSPを設定する
+void SetPlayerSp(int sp);
 
 //プレイヤーの当たり判定を設定する
 void SetPlayerCollider(BoxCollider *collider);

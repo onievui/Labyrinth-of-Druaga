@@ -17,7 +17,7 @@ enum GRP_ID {
 	GRP_LOGO1,				//ロゴ画像1
 	GRP_LOGO2,				//ロゴ画像2
 	GRP_TITLE,				//タイトル画像
-	GRP_TITLE_BG,			//タイトル背景
+	GRP_BG,					//背景画像
 	GRP_STAGESELECT_BG,		//ステージセレクト背景
 	GRP_STAGESELECT_ICON,	//ステージセレクトアイコン
 	GRP_GIL,				//プレイヤー画像

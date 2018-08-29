@@ -50,7 +50,7 @@ void InitializeStageSelect(void)
 	g_stageselect_back_object.state = 1;
 	g_stageselect_back_object.speed = 0;
 	g_stageselect_back_object.angle = 0;
-	g_stageselect_back_object.graph = Graph{ g_sprite[SPR_STAGESELECT_BG] , 1.0f, 0.0f };
+	g_stageselect_back_object.graph = Graph{ g_sprite[SPR_BG] , 1.0f, 0.0f };
 
 	//アイコンオブジェクトの初期化
 	g_stageselect_icon_object.pos = Vector2DF{ (float)(SCREEN_WIDTH * 1 / 10),(float)(SCREEN_HEIGHT / 5) };
@@ -139,7 +139,7 @@ void UpdateStageSelect(void)
 void RenderStageSelect(void)
 {
 	//ステージセレクト背景の描画
-	//DrawGraphic(g_stageselect_back_object.pos, &g_stageselect_back_object.graph);
+	DrawGraphic(g_stageselect_back_object.pos, &g_stageselect_back_object.graph);
 
 	//選択するステージ名の表示
 	Vector2DF pos = g_stageselect_icon_object.pos;

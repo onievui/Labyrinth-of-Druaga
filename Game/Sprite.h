@@ -15,7 +15,7 @@ enum SPR_ID {
 	SPR_LOGO1,				//ロゴスプライト1
 	SPR_LOGO2,				//ロゴスプライト2
 	SPR_TITLE,				//タイトルスプライト
-	SPR_TITLE_BG,			//タイトル背景スプライト
+	SPR_BG,					//背景スプライト
 	SPR_STAGESELECT_BG,		//ステージセレクト背景スプライト
 	SPR_STAGESELECT_ICON,	//ステージセレクトアイコンスプライト
 	SPR_STD_GIL,			//プレイヤー基準スプライト

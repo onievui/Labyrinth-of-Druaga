@@ -38,4 +38,6 @@ BOOL IsWallWithPos(float x, float y);
 //カメラのオフセットを取得する
 Vector2DF GetCameraOffset();
 
+//マップ外にいるかの判定
+BOOL IsOutsideMap(Vector2DF *pos, RectF *col);
 

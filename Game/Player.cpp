@@ -98,6 +98,11 @@ void ActPlayer() {
 	//移動量を座標に足す
 	AddVector2DF(g_player.pos, g_player.vel);
 
+	//着地していたなら速度を0にする
+	if (g_player.is_ground) {
+		g_player.vel.y = 0;
+	}
+
 	//プレイヤーの状態で分岐する
 	switch (g_player.state) {
 		//死んでいるなら
@@ -426,17 +431,18 @@ void SetPlayerSummonable(BOOL summonable[]) {
 	}
 }
 
-//プレイヤーの地面判定を設定する
-void SetPlayerIsGround(BOOL isGround) {
-	g_player.is_ground = isGround;
+//プレイヤーのSPを設定する
+void SetPlayerSp(int sp) {
+	g_player.sp = sp;
 }
 
 //プレイヤーの当たり判定を設定する
 void SetPlayerCollider(BoxCollider *collider) {
 	collider->state = (int*)&g_player.state;
 	collider->pos = &g_player.pos;
-	collider->vel = &g_player.vel;
 	collider->col = &g_player.col;
+	collider->vel = &g_player.vel;
+	collider->is_ground = &g_player.is_ground;
 }
 
 //プレイヤーのSPを回復する

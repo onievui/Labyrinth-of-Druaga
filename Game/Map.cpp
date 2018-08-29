@@ -43,6 +43,8 @@ void InitializeMap() {
 	OrderSetPlayerPos(g_mapdata.player_pos);
 	//プレイヤーの召喚可能なモンスターを設定する
 	OrderSetPlayerSummonable(g_mapdata.summonable);
+	//プレイヤーのSPを設定する
+	OrderSetPlayerSp(g_mapdata.player_sp);
 
 	//お宝の初期座標を設定する
 	MulVector2DF(g_mapdata.treasure_pos, MAPCHIP_SIZE);
@@ -154,5 +156,17 @@ Vector2DF GetCameraOffset() {
 	return g_camera_offset;
 }
 
+//マップ外にいるかの判定
+BOOL IsOutsideMap(Vector2DF *pos, RectF *col) {
+	if (
+		pos->x + col->right<0 ||
+		pos->x + col->left> g_mapdata.width*MAPCHIP_SIZE ||
+		pos->y + col->bottom < 0 ||
+		pos->y + col->top > g_mapdata.height*MAPCHIP_SIZE
+		) {
+		return TRUE;
+	}
+	return FALSE;
+}
 
 

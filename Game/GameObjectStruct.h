@@ -75,6 +75,7 @@ struct Treasure {
 	Vector2DF pos;	//座標
 	RectF col;		//当たり判定の相対座標
 	Vector2DF vel;	//移動量
+	BOOL is_ground;	//地面に接しているかどうか
 	Graph graph;	//表示画像情報
 };
 
@@ -93,6 +94,7 @@ struct Minion {
 	RectF col;			//当たり判定の相対座標
 	Vector2DF vel;		//移動量
 	BOOL is_left;		//左向きかどうか
+	BOOL is_ground;		//地面に接しているかどうか
 	Graph graph;		//表示画像情報
 	int sprite_num;		//スプライト番号
 	int anime_count;	//アニメーション用カウンタ
@@ -105,6 +107,7 @@ struct BoxCollider {
 	Vector2DF *pos;		//座標
 	RectF *col;			//当たり判定の相対座標
 	Vector2DF *vel;		//速度
+	BOOL *is_ground;	//地面に接しているかどうか
 };
 
 

@@ -33,8 +33,8 @@ void OrderSetPlayerPos(Vector2DF pos);
 //プレイヤーの召喚可能モンスターを設定する依頼
 void OrderSetPlayerSummonable(BOOL summonable[]);
 
-//プレイヤーの地面判定を設定する依頼
-void OrderSetPlayerIsGround(BOOL isGround);
+//プレイヤーのSPを設定する依頼
+void OrderSetPlayerSp(int sp);
 
 //プレイヤーの当たり判定を設定する依頼
 void OrderSetPlayerCollider(BoxCollider *collider);
@@ -92,4 +92,9 @@ BOOL OrderCollisionObjectMinions(Vector2DF *pos, RectF *col);
 
 //カメラのオフセットを取得する依頼
 Vector2DF OrderGetCameraOffset();
+
+//マップ外にいるかの判定依頼
+BOOL OrderIsOutsideMap(Vector2DF *pos, RectF *col);
+
+
 

@@ -56,14 +56,14 @@ void OrderSetPlayerPos(Vector2DF pos) {
 	SetPlayerPos(pos);
 }
 
-//プレイヤーの地面判定を設定する依頼
-void OrderSetPlayerIsGround(BOOL isGround) {
-	SetPlayerIsGround(isGround);
-}
-
 //プレイヤーの召喚可能モンスターを設定する依頼
 void OrderSetPlayerSummonable(BOOL summonable[]) {
 	SetPlayerSummonable(summonable);
+}
+
+//プレイヤーのSPを設定する依頼
+void OrderSetPlayerSp(int sp) {
+	SetPlayerSp(sp);
 }
 
 //プレイヤーの当たり判定を設定する依頼
@@ -161,4 +161,8 @@ Vector2DF OrderGetCameraOffset() {
 	return GetCameraOffset();
 }
 
+//マップ外にいるかの判定依頼
+BOOL OrderIsOutsideMap(Vector2DF *pos, RectF *col) {
+	return IsOutsideMap(pos, col);
+}
 
