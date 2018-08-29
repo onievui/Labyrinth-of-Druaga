@@ -95,11 +95,21 @@ void UpdatePlayer() {
 //プレイヤーの行動
 void ActPlayer() {
 
+	BOOL ground_flag;
+
+	//マップとの当たり判定
+	if (OrderCollisionObjectMap(&g_player.pos, &g_player.vel, &g_player.col) & ISGROUND) {
+		ground_flag = TRUE;
+	}
+	else {
+		ground_flag = FALSE;
+	}
+
 	//移動量を座標に足す
 	AddVector2DF(g_player.pos, g_player.vel);
 
 	//着地していたなら速度を0にする
-	if (g_player.is_ground) {
+	if (g_player.is_ground && g_player.vel.y > 0) {
 		g_player.vel.y = 0;
 	}
 
@@ -134,13 +144,7 @@ void ActPlayer() {
 	//重力を加える
 	g_player.vel.y += GRAVITY;
 
-	//マップとの当たり判定
-	if (OrderCollisionObjectMap(&g_player.pos, &g_player.vel, &g_player.col) & ISGROUND) {
-		g_player.is_ground = TRUE;
-	}
-	else {
-		g_player.is_ground = FALSE;
-	}
+	g_player.is_ground = ground_flag;
 
 	//召喚タイプの選択
 	if (CheckHitKeyDown(KEY_INPUT_SELECT)) {

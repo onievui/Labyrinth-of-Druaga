@@ -57,7 +57,16 @@ void InitializePrototypeMinion(Minion proto_minion[]) {
 //スライムの更新
 void UpdateMinionSlime(Minion *minion) {
 
-	
+	BOOL ground_flag;
+
+	//マップとの当たり判定
+	if (OrderCollisionObjectMap(&minion->pos, &minion->vel, &minion->col) & ISGROUND) {
+		ground_flag = TRUE;
+	}
+	else {
+
+		ground_flag = FALSE;
+	}
 
 	//移動量を座標に足す
 	AddVector2DF(minion->pos, minion->vel);
@@ -66,19 +75,15 @@ void UpdateMinionSlime(Minion *minion) {
 	if (minion->is_ground && minion->vel.y > 0) {
 		minion->vel.y = 0;
 	}
+	minion->is_ground = ground_flag;
+
+
 
 	//重力を加える
 	minion->vel.y += GRAVITY;
 
 	
-	//マップとの当たり判定
-	if (OrderCollisionObjectMap(&minion->pos, &minion->vel, &minion->col) & ISGROUND) {
-		minion->is_ground = TRUE;
-	}
-	else {
-
-		minion->is_ground = FALSE;
-	}
+	
 	
 }
 
