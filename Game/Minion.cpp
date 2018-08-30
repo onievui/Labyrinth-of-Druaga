@@ -27,6 +27,7 @@ void InitializePrototypeMinion(Minion proto_minion[]) {
 		{ 0,0 },
 		TRUE,
 		FALSE,
+		FALSE,
 		{ g_sprite[SPR_STD_MONSTER],1.0,0.0 },
 		12,
 		0,
@@ -45,6 +46,7 @@ void InitializePrototypeMinion(Minion proto_minion[]) {
 		{ 0,0 },
 		TRUE,
 		FALSE,
+		FALSE,
 		{ g_sprite[SPR_STD_MONSTER],1.0,0.0 },
 		66,
 		0,
@@ -57,16 +59,16 @@ void InitializePrototypeMinion(Minion proto_minion[]) {
 //スライムの更新
 void UpdateMinionSlime(Minion *minion) {
 
-	BOOL ground_flag;
+	//BOOL ground_flag;
 
-	//マップとの当たり判定
-	if (OrderCollisionObjectMap(&minion->pos, &minion->vel, &minion->col) & ISGROUND) {
-		ground_flag = TRUE;
-	}
-	else {
+	////マップとの当たり判定
+	//if (OrderCollisionObjectMap(&minion->pos, &minion->vel, &minion->col) & ISGROUND) {
+	//	ground_flag = TRUE;
+	//}
+	//else {
 
-		ground_flag = FALSE;
-	}
+	//	ground_flag = FALSE;
+	//}
 
 	//移動量を座標に足す
 	AddVector2DF(minion->pos, minion->vel);
@@ -75,7 +77,7 @@ void UpdateMinionSlime(Minion *minion) {
 	if (minion->is_ground && minion->vel.y > 0) {
 		minion->vel.y = 0;
 	}
-	minion->is_ground = ground_flag;
+	minion->is_ground = minion->ground_flag;
 
 
 

@@ -32,14 +32,13 @@ void InitializeTreasure() {
 //お宝の更新
 void UpdateTreasure() {
 
+	//移動量を座標に足す
+	AddVector2DF(g_treasure.pos, g_treasure.vel);
+
 	//重力を加える
 	g_treasure.vel.y += GRAVITY;
 
-	//マップとの当たり判定
-	OrderCollisionObjectMap(&g_treasure.pos, &g_treasure.vel, &g_treasure.col);
-
-	//移動量を座標に足す
-	AddVector2DF(g_treasure.pos, g_treasure.vel);
+	
 }
 
 //お宝の描画

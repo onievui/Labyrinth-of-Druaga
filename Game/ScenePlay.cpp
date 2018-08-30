@@ -223,6 +223,9 @@ void StageClearProcess()
 		//プレイヤーの更新
 		UpdatePlayer();
 
+		//当たり判定の更新
+		UpdateCollision();
+
 		//カメラのオフセットの更新
 		UpdateCameraOffset();
 

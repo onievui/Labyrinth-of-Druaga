@@ -61,6 +61,7 @@ void InitializePlayer() {
 	g_player.pos = Vector2DF{ (float)FIELD_CENTER_X,(float)FIELD_HEIGHT-100 };
 	g_player.col = RectF{ -14,-31,14,31 };
 	g_player.vel = Vector2DF{ 0,0 };
+	g_player.ride = nullptr;
 	g_player.is_left = TRUE;
 	g_player.is_ground = FALSE;
 	g_player.sp = 20;
@@ -94,16 +95,6 @@ void UpdatePlayer() {
 
 //プレイヤーの行動
 void ActPlayer() {
-
-	BOOL ground_flag;
-
-	//マップとの当たり判定
-	if (OrderCollisionObjectMap(&g_player.pos, &g_player.vel, &g_player.col) & ISGROUND) {
-		ground_flag = TRUE;
-	}
-	else {
-		ground_flag = FALSE;
-	}
 
 	//移動量を座標に足す
 	AddVector2DF(g_player.pos, g_player.vel);
@@ -144,7 +135,12 @@ void ActPlayer() {
 	//重力を加える
 	g_player.vel.y += GRAVITY;
 
-	g_player.is_ground = ground_flag;
+	//乗っているオブジェクトの速度を加える
+	if (g_player.ride) {
+		AddVector2DF(g_player.vel, *g_player.ride);
+	}
+
+	g_player.is_ground = g_player.ground_flag;
 
 	//召喚タイプの選択
 	if (CheckHitKeyDown(KEY_INPUT_SELECT)) {
@@ -234,6 +230,7 @@ void PlayerActJump() {
 
 //プレイヤーの召喚状態
 void PlayerActSummon() {
+	g_player.vel.x = 0;
 	//召喚中
 	if (g_summon_time > g_player.anime_count) {
 		g_player.anime_count++;
@@ -446,7 +443,9 @@ void SetPlayerCollider(BoxCollider *collider) {
 	collider->pos = &g_player.pos;
 	collider->col = &g_player.col;
 	collider->vel = &g_player.vel;
+	collider->ride = &g_player.ride;
 	collider->is_ground = &g_player.is_ground;
+	collider->ground_flag = &g_player.ground_flag;
 }
 
 //プレイヤーのSPを回復する

@@ -169,6 +169,7 @@ void SetMinionsCollider(BoxCollider collider[]) {
 		collider[i].col = &g_minion[i].col;
 		collider[i].vel = &g_minion[i].vel;
 		collider[i].is_ground = &g_minion[i].is_ground;
+		collider[i].ground_flag = &g_minion[i].ground_flag;
 	}
 }
 

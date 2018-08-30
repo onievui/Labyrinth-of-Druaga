@@ -35,6 +35,7 @@ BoxCollider g_minion_collider[MINION_MAX];			//召喚モンスターの当たり判定
 
 
 //プロトタイプ宣言
+int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col);
 int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2);
 BOOL CollisionAABB(Vector2DF *pos1, RectF *col1, Vector2DF *pos2, RectF *col2);
 
@@ -56,6 +57,7 @@ void UpdateCollision() {
 	int check = 0;
 
 
+
 	//プレイヤーとお宝の当たり判定
 	MR_COLLISION_MACRO(g_player_collider, PLAYER_MAX, i, g_treasure_collider, TREASURE_MAX, j, check) {
 		//お宝を消す
@@ -63,6 +65,7 @@ void UpdateCollision() {
 		//お宝を取得した時の処理を行う
 		OrderPlayerGetTreasure();
 	}
+	
 	
 	//召喚モンスター同士の当たり判定
 	MR_COLLISION_MACRO2(g_minion_collider, MINION_MAX, i, j, check) {
@@ -74,10 +77,35 @@ void UpdateCollision() {
 		}
 	}
 
+	//マップとの当たり判定
+	if (CollisionObjectMap(g_player_collider->pos, g_player_collider->vel, g_player_collider->col) & ISGROUND) {
+		*g_player_collider->ground_flag = TRUE;
+	}
+	else {
+		*g_player_collider->ground_flag = FALSE;
+	}
+	if (CollisionObjectMap(g_treasure_collider->pos, g_treasure_collider->vel, g_treasure_collider->col) & ISGROUND) {
+		*g_treasure_collider->is_ground = TRUE;
+	}
+	else {
+		*g_treasure_collider->is_ground = FALSE;
+	}
+	for (i = 0; i < MINION_MAX; i++) {
+		if (CollisionObjectMap(g_minion_collider[i].pos, g_minion_collider[i].vel, g_minion_collider[i].col) & ISGROUND) {
+			*g_minion_collider[i].ground_flag = TRUE;
+		}
+		else {
+			*g_minion_collider[i].ground_flag = FALSE;
+		}
+	}
+
+
 	//プレイヤーと召喚モンスターの当たり判定
+	*g_player_collider->ride = nullptr;
 	MR_COLLISION_MACRO(g_player_collider, PLAYER_MAX, i, g_minion_collider, MINION_MAX, j, check) {
 		if (check & ISGROUND) {
 			*g_player_collider->is_ground = TRUE;
+			*g_player_collider->ride = g_minion_collider[j].vel;
 		}
 		else if (check & ISCEILING) {
 			*g_minion_collider[j].is_ground = TRUE;
@@ -347,9 +375,11 @@ int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
 			if (vel.y == 0) {
 				if (obj1->vel->y > 0) {
 					(obj1->pos->y < obj2->pos->y ? obj1->vel->y : obj2->vel->y) = 0;
+					return ISGROUND;
 				}
 				else {
 					(obj1->pos->y > obj2->pos->y ? obj1->vel->y : obj2->vel->y) = 0;
+					return ISCEILING;
 				}
 			}
 		}
