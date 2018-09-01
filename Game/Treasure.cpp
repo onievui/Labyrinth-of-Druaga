@@ -24,6 +24,7 @@ void InitializeTreasure() {
 	g_treasure.pos = Vector2DF{ (float)FIELD_CENTER_X,(float)FIELD_HEIGHT - 100 };
 	g_treasure.col = RectF{ -32,-13,20,24 };
 	g_treasure.vel = Vector2DF{ 0,0 };
+	g_treasure.ride = NULL;
 	g_treasure.is_ground = FALSE;
 	g_treasure.graph = Graph{ g_sprite[SPR_OBJECT_TREASURE],1.0,0.0 };
 	
@@ -37,6 +38,11 @@ void UpdateTreasure() {
 
 	//重力を加える
 	g_treasure.vel.y += GRAVITY;
+
+	//乗っているオブジェクトの速度を加える
+	if (g_treasure.ride) {
+		AddVector2DF(g_treasure.vel, *g_treasure.ride);
+	}
 
 	
 }
@@ -59,6 +65,7 @@ void SetTreasureCollider(BoxCollider *collider) {
 	collider->pos = &g_treasure.pos;
 	collider->col = &g_treasure.col;
 	collider->vel = &g_treasure.vel;
+	collider->ride = &g_treasure.ride;
 	collider->is_ground = &g_treasure.is_ground;
 }
 

@@ -73,12 +73,13 @@ struct SummonableList {
 
 //お宝構造体
 struct Treasure {
-	int state;		//状態
-	Vector2DF pos;	//座標
-	RectF col;		//当たり判定の相対座標
-	Vector2DF vel;	//移動量
-	BOOL is_ground;	//地面に接しているかどうか
-	Graph graph;	//表示画像情報
+	int state;			//状態
+	Vector2DF pos;		//座標
+	RectF col;			//当たり判定の相対座標
+	Vector2DF vel;		//移動量
+	Vector2DF *ride;	//乗っているオブジェクトの速度
+	BOOL is_ground;		//地面に接しているかどうか
+	Graph graph;		//表示画像情報
 };
 
 //モンスター召喚用データ
@@ -95,6 +96,7 @@ struct Minion {
 	Vector2DF pos;		//座標
 	RectF col;			//当たり判定の相対座標
 	Vector2DF vel;		//移動量
+	Vector2DF *ride;	//乗っているオブジェクトの速度
 	BOOL is_left;		//左向きかどうか
 	BOOL is_ground;		//地面に接しているかどうか
 	BOOL ground_flag;	//マップに着地したかどうか

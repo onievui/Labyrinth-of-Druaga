@@ -66,42 +66,23 @@ void UpdateCollision() {
 		OrderPlayerGetTreasure();
 	}
 	
-	
 	//召喚モンスター同士の当たり判定
+	for (i = 0; i < MINION_MAX; i++) {
+		*g_minion_collider[i].ride = NULL;
+	}
 	MR_COLLISION_MACRO2(g_minion_collider, MINION_MAX, i, j, check) {
 		if (check & ISGROUND) {
 			*g_minion_collider[i].is_ground = TRUE;
+			*g_minion_collider[i].ride = g_minion_collider[j].vel;
 		}
 		else if (check & ISCEILING) {
 			*g_minion_collider[j].is_ground = TRUE;
+			*g_minion_collider[j].ride = g_minion_collider[i].vel;
 		}
 	}
-
-	//マップとの当たり判定
-	if (CollisionObjectMap(g_player_collider->pos, g_player_collider->vel, g_player_collider->col) & ISGROUND) {
-		*g_player_collider->ground_flag = TRUE;
-	}
-	else {
-		*g_player_collider->ground_flag = FALSE;
-	}
-	if (CollisionObjectMap(g_treasure_collider->pos, g_treasure_collider->vel, g_treasure_collider->col) & ISGROUND) {
-		*g_treasure_collider->is_ground = TRUE;
-	}
-	else {
-		*g_treasure_collider->is_ground = FALSE;
-	}
-	for (i = 0; i < MINION_MAX; i++) {
-		if (CollisionObjectMap(g_minion_collider[i].pos, g_minion_collider[i].vel, g_minion_collider[i].col) & ISGROUND) {
-			*g_minion_collider[i].ground_flag = TRUE;
-		}
-		else {
-			*g_minion_collider[i].ground_flag = FALSE;
-		}
-	}
-
 
 	//プレイヤーと召喚モンスターの当たり判定
-	*g_player_collider->ride = nullptr;
+	*g_player_collider->ride = NULL;
 	MR_COLLISION_MACRO(g_player_collider, PLAYER_MAX, i, g_minion_collider, MINION_MAX, j, check) {
 		if (check & ISGROUND) {
 			*g_player_collider->is_ground = TRUE;
@@ -109,8 +90,39 @@ void UpdateCollision() {
 		}
 		else if (check & ISCEILING) {
 			*g_minion_collider[j].is_ground = TRUE;
+			*g_minion_collider[j].ride = g_minion_collider[i].vel;
 		}
 	}
+
+	//プレイヤーとマップの当たり判定
+	if (CollisionObjectMap(g_player_collider->pos, g_player_collider->vel, g_player_collider->col) & ISGROUND) {
+		*g_player_collider->ground_flag = TRUE;
+	}
+	else {
+		*g_player_collider->ground_flag = FALSE;
+	}
+
+	//お宝とマップの当たり判定
+	if (CollisionObjectMap(g_treasure_collider->pos, g_treasure_collider->vel, g_treasure_collider->col) & ISGROUND) {
+		*g_treasure_collider->is_ground = TRUE;
+	}
+	else {
+		*g_treasure_collider->is_ground = FALSE;
+	}
+
+	//召喚モンスターとマップの当たり判定
+	for (i = 0; i < MINION_MAX; i++) {
+		if (*g_minion_collider[i].state) {
+			if (CollisionObjectMap(g_minion_collider[i].pos, g_minion_collider[i].vel, g_minion_collider[i].col) & ISGROUND) {
+				*g_minion_collider[i].ground_flag = TRUE;
+			}
+			else {
+				//*g_minion_collider[i].ground_flag = FALSE;
+			}
+		}
+	}
+
+	
 
 	
 
@@ -150,24 +162,25 @@ int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
 	//座標をブロックの縁に合わせる
 	if (mL && !mR) {
 		tempF = ceilf(rect1.left / MAPCHIP_SIZE) * MAPCHIP_SIZE - col->left;		//左
-		//if (pos->x > tempF)pos->x = tempF;
-		if (pos->x > tempF)vel->x = tempF - pos->x;
+		if (pos->x > tempF)pos->x = tempF;
+		//if (pos->x >= tempF)vel->x = tempF - pos->x;
 	}
 	if (!mL && mR ) {
 		tempF = floorf(rect1.right / MAPCHIP_SIZE) * MAPCHIP_SIZE - col->right;	//右
-		//if (pos->x < tempF)pos->x = tempF;
-		if (pos->x < tempF)vel->x = tempF - pos->x;
+		if (pos->x < tempF)pos->x = tempF;
+		//if (pos->x < tempF)vel->x = tempF - pos->x;
 	}
 	if (mU && !mD) {
 		tempF = ceilf(rect1.top / MAPCHIP_SIZE) * MAPCHIP_SIZE - col->top;		//上
 		if (pos->y > tempF)pos->y = tempF;
-		//if (pos->y > tempF)vel->y = tempF - pos->y;
+		//if (pos->y >= tempF)vel->y = tempF - pos->y;
 	}
-	if (!mU && mD) {
+	if ((!mU || vel->y>0) && mD) {
 		tempF = floorf(rect1.bottom / MAPCHIP_SIZE) * MAPCHIP_SIZE - col->bottom;	//下
 		if (pos->y < tempF)pos->y = tempF;
-		//if (pos->y < tempF)vel->y = tempF - pos->y;
+		//if (pos->y <= tempF)vel->y = tempF - pos->y;
 	}
+
 
 	//判定による加速停止処理
 	if (mL) if (vel->x<0)vel->x = 0;

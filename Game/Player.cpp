@@ -61,7 +61,7 @@ void InitializePlayer() {
 	g_player.pos = Vector2DF{ (float)FIELD_CENTER_X,(float)FIELD_HEIGHT-100 };
 	g_player.col = RectF{ -14,-31,14,31 };
 	g_player.vel = Vector2DF{ 0,0 };
-	g_player.ride = nullptr;
+	g_player.ride = NULL;
 	g_player.is_left = TRUE;
 	g_player.is_ground = FALSE;
 	g_player.sp = 20;
@@ -140,6 +140,7 @@ void ActPlayer() {
 		AddVector2DF(g_player.vel, *g_player.ride);
 	}
 
+	//マップとの着地判定の適用
 	g_player.is_ground = g_player.ground_flag;
 
 	//召喚タイプの選択
