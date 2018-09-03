@@ -39,6 +39,7 @@ void PlayerActSummon();
 void PlayerActClear();
 void AnimatePlayer();
 void SummonMinion();
+void PlayerDead();
 
 
 
@@ -84,12 +85,21 @@ void InitializePlayer() {
 
 //プレイヤーの更新
 void UpdatePlayer() {
+	//プレイヤーが生きている場合
 	if (g_player.state) {
 		//プレイヤーの行動
 		ActPlayer();
-		//プレイヤーのアニメーション
-		AnimatePlayer();
+		//マップでの死亡判定
+		if (g_player.pos.y + g_player.col.top > FIELD_HEIGHT || CheckHitKeyDown(KEY_INPUT_Q)) {
+			PlayerDead();
+		}
 	}
+	//プレイヤーが死んでいる場合
+	else {
+		PlayerActDead();
+	}
+	//プレイヤーのアニメーション
+	AnimatePlayer();
 }
 
 
@@ -106,10 +116,6 @@ void ActPlayer() {
 
 	//プレイヤーの状態で分岐する
 	switch (g_player.state) {
-		//死んでいるなら
-	case PLAYER_STATE_DEAD:
-		PlayerActDead();
-		break;
 		//立っているなら
 	case PLAYER_STATE_STAND:
 		PlayerActStand();
@@ -152,7 +158,19 @@ void ActPlayer() {
 
 //プレイヤーの死に状態
 void PlayerActDead() {
+	//上に飛んで落下する
+	if (g_player.anime_count == 0) {
+		g_player.vel.y = PLAYER_JUMP_SPEED;
+	}
+	else {
+		g_player.vel.y += GRAVITY;
+	}
 
+	//移動量を座標に足す
+	AddVector2DF(g_player.pos, g_player.vel);
+
+	g_player.vel.x = 0;
+	g_player.anime_count++;
 }
 
 //プレイヤーの立ち状態
@@ -264,6 +282,8 @@ void AnimatePlayer() {
 	switch (g_player.state) {
 	//死んでいるなら
 	case PLAYER_STATE_DEAD:
+		sprite_num = g_player.sprite_num;
+		g_player.graph.angle += PI2 / 20.0f;
 		break;
 	//立っているなら
 	case PLAYER_STATE_STAND:
@@ -371,22 +391,23 @@ void SummonMinion() {
 
 //プレイヤーの描画
 void DrawPlayer() {
-	if (g_player.state) {
-		//向きによって表示順を変える
-		if (g_player.is_left && g_player.state != PLAYER_STATE_CLEAR) {
-			DrawGraphicToMap(g_player.pos, &g_sword);
-			DrawGraphicToMap(g_player.pos, &g_player.graph);
-		}
-		else {
-			DrawGraphicToMap(g_player.pos, &g_player.graph);
-			DrawGraphicToMap(g_player.pos, &g_sword);
-		}
+	//向きによって表示順を変える
+	if (g_player.is_left && g_player.state != PLAYER_STATE_CLEAR) {
+		DrawGraphicToMap(g_player.pos, &g_sword);
+		DrawGraphicToMap(g_player.pos, &g_player.graph);
+	}
+	else {
+		DrawGraphicToMap(g_player.pos, &g_player.graph);
+		DrawGraphicToMap(g_player.pos, &g_sword);
 	}
 }
 
 //SPと召喚可能なモンスターのリストの描画
 void DrawPlayerUI() {
 	//SPの描画
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
+	DrawBox(SP_POS_X - 10, SP_POS_Y, SP_POS_X + 100, SP_POS_Y + 35, COLOR_AQUA, TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	DrawFormatStringFToHandle(SP_POS_X, SP_POS_Y, COLOR_BLUE, g_font_g40, "SP:%d", g_player.sp);
 	//召喚可能なモンスターのリストの描画
 	int i;
@@ -458,8 +479,18 @@ void AddPlayerSp(int plus) {
 void PlayerGetTreasure() {
 	//プレイヤーをクリア状態にする
 	g_player.state = PLAYER_STATE_CLEAR;
+	g_player.anime_count = 0;
 	//ステージクリアの通知
 	RequestStageClear();
+}
+
+//プレイヤーが死んだ時の処理
+void PlayerDead() {
+	//プレイヤーを死に状態にする
+	g_player.state = PLAYER_STATE_DEAD;
+	g_player.anime_count = 0;
+	//ステージ失敗の通知
+	RequestStageFailed();
 }
 
 //プレイヤーが敵と衝突したときの処理

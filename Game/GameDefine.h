@@ -20,8 +20,8 @@
 #define SCREEN_CENTER_Y (SCREEN_HEIGHT / 2)    // 画面の中央(Y座標)
 
 //マップ関係
-#define MAP_WIDTH_MAX	(15)	//マップの最大横幅
-#define MAP_HEIGHT_MAX	(15)	//マップの最大縦幅
+#define MAP_WIDTH_MAX	(20)	//マップの最大横幅
+#define MAP_HEIGHT_MAX	(20)	//マップの最大縦幅
 
 #define MAPCHIP_SIZE		(64)	//マップチップの大きさ
 #define MAPCHIP_SIZE_HALF	(32)	//マップチップの大きさの半分
@@ -39,7 +39,7 @@
 #define PI	(DX_PI_F)	//円周率
 #define PI2	(PI * 2)	//円周率*2
 
-#define GRAVITY		(2.4f)	//重力
+#define GRAVITY		(2.0f)	//重力
 
 #define ISLEFT		(1)		//左側に接しているかのマクロ
 #define ISRIGHT		(2)		//右側に接しているかのマクロ
@@ -51,7 +51,7 @@
 #define PLAYER_MAX	(1)		//プレイヤーの数
 
 #define PLAYER_WALK_SPEED	(5)		//プレイヤーの移動速度
-#define PLAYER_JUMP_SPEED	(-24)	//プレイヤーのジャンプ速度
+#define PLAYER_JUMP_SPEED	(-22)	//プレイヤーのジャンプ速度
 
 
 //召喚モンスター関係

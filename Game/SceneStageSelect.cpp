@@ -142,17 +142,25 @@ void RenderStageSelect(void)
 	DrawGraphic(g_stageselect_back_object.pos, &g_stageselect_back_object.graph);
 
 	//選択するステージ名の表示
+	int i;
 	Vector2DF pos = g_stageselect_icon_object.pos;
-	for (int i = 0; i < STAGE_NUM; i++) {
+	for (i = 0; i < STAGE_NUM; i++) {
 		//DrawGraphic(pos, &g_stageselect_back_object.graph);
 		DrawBoxAA(pos.x - 60, pos.y - 40, pos.x + 60, pos.y + 40, COLOR_BLUE, TRUE);
 
-		pos.x += SCREEN_WIDTH * 4 / 20;
+		if (i % 5 != 4) {
+			pos.x += SCREEN_WIDTH * 4 / 20;
+		}
+		else {
+			pos.x = g_stageselect_icon_object.pos.x;
+			pos.y += SCREEN_HEIGHT * 4 / 20;
+		}
+
 	}
 
 	//選択中のステージを表すカーソルの表示
-	pos.x = g_stageselect_icon_object.pos.x + (SCREEN_WIDTH * 4 / 20)*(g_select_stage % 5);
-	pos.y = g_stageselect_icon_object.pos.y + (SCREEN_WIDTH * 4 / 20)*(g_select_stage / 5);
+	pos.x = g_stageselect_icon_object.pos.x + (SCREEN_WIDTH  * 4 / 20)*(g_select_stage % 5);
+	pos.y = g_stageselect_icon_object.pos.y + (SCREEN_HEIGHT * 4 / 20)*(g_select_stage / 5);
 	DrawBoxAA(pos.x - 70, pos.y - 50, pos.x + 70, pos.y + 50, COLOR_RED, FALSE, 3);
 	
 }

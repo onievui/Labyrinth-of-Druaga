@@ -35,7 +35,7 @@ enum ScenePlayState {
 // グローバル変数の定義 ====================================================
 int g_count;					//シーンが開始してからのカウント数
 ScenePlayState g_play_state;	//プレイシーンの状態
-int g_select_mode;				//コンティニュー確認画面での選択状態
+int g_select_mode;				//ポーズ/リトライ確認画面での選択状態
 int g_wait_time;				//次の状態へ移行するための待ち時間
 
 
@@ -134,6 +134,14 @@ void UpdatePlay(void)
 //----------------------------------------------------------------------
 void RenderPlay(void)
 {
+	BOOL is_change_bright = FALSE;
+
+	//ポーズ/リトライ確認画面では暗くする
+	if (g_play_state == PLAY_STATE_PAUSE || (g_play_state == PLAY_STATE_FAILED && g_wait_time == 0)) {
+		SetDrawBright(70, 70, 70);
+		is_change_bright = TRUE;
+	}
+
 	//マップの描画
 	DrawMap();
 
@@ -148,6 +156,25 @@ void RenderPlay(void)
 
 	//SPと召喚可能なモンスターのリストの描画
 	DrawPlayerUI();
+
+	//画面の明るさを戻す
+	if (is_change_bright) {
+		SetDrawBright(255, 255, 255);
+
+		//リトライ確認画面なら選択肢を表示する
+		if (g_play_state == PLAY_STATE_FAILED && g_wait_time == 0) {
+			Vector2DF pos = { (float)SCREEN_CENTER_X/2,(float)SCREEN_CENTER_Y };
+			DrawBoxAA(pos.x - 120, pos.y - 80, pos.x + 120, pos.y + 80, COLOR_AQUA, TRUE);
+			DrawFormatStringFToHandle(pos.x - 105, pos.y - 30, COLOR_RED, g_font_g70, "RETRY");
+			pos.x += SCREEN_CENTER_X;
+			DrawBoxAA(pos.x - 120, pos.y - 80, pos.x + 120, pos.y + 80, COLOR_AQUA, TRUE);
+			DrawFormatStringFToHandle(pos.x - 120, pos.y - 30, COLOR_PURPLE, g_font_g70, "GIVE UP");
+			
+			pos.x = g_select_mode == 0 ? SCREEN_CENTER_X / 2 : pos.x;
+			DrawBoxAA(pos.x - 140, pos.y - 100, pos.x + 140, pos.y + 100, COLOR_RED, FALSE, 6);
+		}
+
+	}	
 
 }
 
@@ -195,13 +222,47 @@ void PauseProcess()
 //ステージ失敗状態への移行
 void RequestStageFailed() 
 {
-	
+	//ステージ失敗状態へ移行
+	g_play_state = PLAY_STATE_FAILED;
+	//2秒間待つ
+	g_wait_time = 120;
+	//カーソルの初期化
+	g_select_mode = 0;
 }
 
 //ステージ失敗処理
 void StageFailedProcess() 
 {
-	
+	//ステージ失敗時の演出
+	if (g_wait_time) {
+
+		//プレイヤーの更新
+		UpdatePlayer();
+
+		//カメラのオフセットの更新
+		UpdateCameraOffset();
+
+		g_wait_time--;
+	}
+	//リトライ確認
+	else {
+		//左右キーでカーソル移動
+		if (CheckHitKeyDown(KEY_INPUT_LEFT) || CheckHitKeyDown(KEY_INPUT_RIGHT)) {
+			g_select_mode = 1 - g_select_mode;
+		}
+		//ZキーかXキーで選択
+		if (CheckHitKeyDown(KEY_INPUT_Z) || CheckHitKeyDown(KEY_INPUT_X)) {
+			//リトライならシーンプレイをやり直す
+			if (g_select_mode == 0) {
+				SetSelectStage(GetSelectStage());
+				RequestScene(SCENE_PLAY);
+			}
+			//ギブアップならステージセレクトに戻る
+			else {
+				RequestScene(SCENE_STAGESELECT);
+			}
+		}
+	}
 }
 
 //ステージクリアへの移行
