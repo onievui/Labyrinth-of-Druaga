@@ -22,6 +22,9 @@
 
 // 定数の定義 ==============================================================
 
+//ポーズキー
+#define KEY_INPUT_PAUSE2 KEY_INPUT_TAB
+
 //プレイシーンの状態
 enum ScenePlayState {
 	PLAY_STATE_PLAY,	//プレイ状態
@@ -161,7 +164,24 @@ void RenderPlay(void)
 	if (is_change_bright) {
 		SetDrawBright(255, 255, 255);
 
-		//リトライ確認画面なら選択肢を表示する
+		//ポーズ画面の選択肢を表示する
+		if (g_play_state == PLAY_STATE_PAUSE) {
+			Vector2DF pos = { (float)SCREEN_WIDTH / 6,(float)SCREEN_CENTER_Y };
+			DrawBoxAA(pos.x - 80, pos.y - 50, pos.x + 80, pos.y + 50, COLOR_AQUA, TRUE);
+			DrawFormatStringFToHandle(pos.x - 70, pos.y - 20, COLOR_BLUE, g_font_g40, "RESUME");
+			pos.x += SCREEN_WIDTH / 3;
+			DrawBoxAA(pos.x - 80, pos.y - 50, pos.x + 80, pos.y + 50, COLOR_AQUA, TRUE);
+			DrawFormatStringFToHandle(pos.x - 58, pos.y - 20, COLOR_RED, g_font_g40, "RETRY");
+			pos.x += SCREEN_WIDTH / 3;
+			DrawBoxAA(pos.x - 80, pos.y - 50, pos.x + 80, pos.y + 50, COLOR_AQUA, TRUE);
+			DrawFormatStringFToHandle(pos.x - 72, pos.y - 33, COLOR_PURPLE, g_font_g40, "STAGE");
+			DrawFormatStringFToHandle(pos.x - 62, pos.y - 3,  COLOR_PURPLE, g_font_g40, "SELECT");
+
+			pos.x = (float)(SCREEN_WIDTH / 6 + SCREEN_WIDTH / 3 * g_select_mode);
+			DrawBoxAA(pos.x - 100, pos.y - 70, pos.x + 100, pos.y + 70, COLOR_RED, FALSE, 6);
+		}
+
+		//リトライ確認画面の選択肢を表示する
 		if (g_play_state == PLAY_STATE_FAILED && g_wait_time == 0) {
 			Vector2DF pos = { (float)SCREEN_CENTER_X/2,(float)SCREEN_CENTER_Y };
 			DrawBoxAA(pos.x - 120, pos.y - 80, pos.x + 120, pos.y + 80, COLOR_AQUA, TRUE);
@@ -173,7 +193,6 @@ void RenderPlay(void)
 			pos.x = g_select_mode == 0 ? SCREEN_CENTER_X / 2 : pos.x;
 			DrawBoxAA(pos.x - 140, pos.y - 100, pos.x + 140, pos.y + 100, COLOR_RED, FALSE, 6);
 		}
-
 	}	
 
 }
@@ -210,13 +229,62 @@ void PlayProcess()
 	//カメラのオフセットの更新
 	UpdateCameraOffset();
 
+
+	//ポーズボタンを押したらポーズ状態にする
+	if (CheckHitKeyDown(KEY_INPUT_PAUSE2)) {
+		g_play_state = PLAY_STATE_PAUSE;
+	}
+
 	g_count++;
 }
 
 //ポーズ画面処理
 void PauseProcess() 
 {
+	//ステージの選択
+	switch (CheckStateKeyLater(KEY_INPUT_LEFT, KEY_INPUT_RIGHT)) {
+		//何も押されていない
+	case 0:
+		break;
+		//左が押されている
+	case 1:
+		if (CheckStateKey(KEY_INPUT_LEFT) % CURSOR_SPEED == 1) {
+			g_select_mode = (g_select_mode + 2) % 3;
+		}
+		break;
+		//右が押されている
+	case 2:
+		if (CheckStateKey(KEY_INPUT_RIGHT) % CURSOR_SPEED == 1) {
+			g_select_mode = (g_select_mode + 1) % 3;
+		}
+		break;
+	default:
+		MessageBox(NULL, "ポーズ画面のキー入力で不正な値が渡されました", "", MB_OK);
+		break;
+	}
 
+	//ZキーかXキーで選択
+	if (CheckHitKeyDown(KEY_INPUT_Z) || CheckHitKeyDown(KEY_INPUT_X)) {
+		switch (g_select_mode) {
+			//再開
+		case 0:
+			g_play_state = PLAY_STATE_PLAY;
+			break;
+			//リトライ
+		case 1:
+			SetSelectStage(GetSelectStage());
+			RequestScene(SCENE_PLAY);
+			break;
+			//ステージセレクトに戻る
+		case 2:
+			RequestScene(SCENE_STAGESELECT);
+			break;
+		default:
+			MessageBox(NULL, "ポーズ画面の選択で不正な値が渡されました", "", MB_OK);
+			break;
+		}
+		g_select_mode = 0;
+	}
 }
 
 //ステージ失敗状態への移行

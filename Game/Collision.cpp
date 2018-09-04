@@ -270,10 +270,22 @@ int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
 //	return FALSE;
 //}
 
-
-
 //オブジェクトと召喚モンスターの当たり判定
 BOOL CollisionObjectMinions(Vector2DF *pos, RectF *col) {
+	int i;
+	for (i = MINION_MAX - 1; i >= 0; i--) {
+		if (*g_minion_collider[i].state) {
+			//衝突しているかどうか
+			if (CollisionAABB(pos, col, g_minion_collider[i].pos, g_minion_collider[i].col)) {
+				return TRUE;
+			}
+		}
+	}
+	return FALSE;
+}
+
+//オブジェクトと召喚モンスターの当たり判定（当たったものは消す）
+BOOL CollisionDeleteObjectMinions(Vector2DF *pos, RectF *col) {
 	BOOL ret = FALSE;
 	int i;
 	for (i = MINION_MAX - 1; i >= 0; i--) {

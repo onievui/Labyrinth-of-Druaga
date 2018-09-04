@@ -90,6 +90,9 @@ int OrderCollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col);
 //オブジェクトと召喚モンスターの当たり判定依頼
 BOOL OrderCollisionObjectMinions(Vector2DF *pos, RectF *col);
 
+//オブジェクトと召喚モンスターの当たり判定依頼（当たったものは消す）
+BOOL OrderCollisionDeleteObjectMinions(Vector2DF *pos, RectF *col);
+
 //カメラのオフセットを取得する依頼
 Vector2DF OrderGetCameraOffset();
 

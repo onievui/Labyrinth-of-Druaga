@@ -76,7 +76,7 @@ int CreateMinion(MinionPattern knd, Vector2DF pl_pos, RectF pl_col, BOOL isLeft)
 		OrderGetMapPosWithPos(s_pos, &mx, &my);
 		mx += isLeft ? -1 : 1;
 		s_pos = OrderGetPosWithMapPos(mx, my);
-		if (OrderIsWallWithPos(s_pos.x, s_pos.y)) {
+		if (OrderIsWallWithPos(s_pos.x, s_pos.y) || OrderCollisionObjectMinions(&s_pos,&g_prototype_minion[knd].col)) {
 			//ƒXƒy[ƒX‚ª‚È‚¢‚È‚çŽ¸”s
 			return FALSE;
 		}
@@ -111,7 +111,10 @@ void DeleteMinion(Vector2DF *pl_pos, RectF *pl_col, BOOL isLeft) {
 	pos.x += isLeft ? pl_col->left - 32: pl_col->right + 32;
 
 	//“G‚Æ‚Ì“–‚½‚è”»’è
-	OrderCollisionObjectMinions(&pos, &col);
+	OrderCollisionDeleteObjectMinions(&pos, &col);
+
+
+
 
 }
 

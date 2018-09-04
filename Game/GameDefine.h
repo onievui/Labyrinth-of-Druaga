@@ -47,6 +47,10 @@
 #define ISGROUND	(8)		//地面（下側）に接しているかのマクロ
 
 
+//UI関係
+#define CURSOR_SPEED	(15)	//カーソルを動かす時間の間隔
+
+
 //プレイヤー関係
 #define PLAYER_MAX	(1)		//プレイヤーの数
 

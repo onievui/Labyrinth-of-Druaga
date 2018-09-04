@@ -186,7 +186,15 @@ void LoadMapData(const StageId stageId, MapData *mapdata) {
 				x++;
 				if (x == mapdata->width) {
 					while (FileRead_getc(fp) != '\n');
+					x = 0;
+					y++;
+					if (y == mapdata->height) {
+						knd = -1;
+					}
 				}
+			}
+			if (mapdata->width == 0) {
+				break;
 			}
 			break;
 		case -1:

@@ -15,6 +15,9 @@ int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col);
 //オブジェクトと召喚モンスターの当たり判定
 BOOL CollisionObjectMinions(Vector2DF *pos, RectF *col);
 
+//オブジェクトと召喚モンスターの当たり判定（当たったものは消す）
+BOOL CollisionDeleteObjectMinions(Vector2DF *pos, RectF *col);
+
 
 
 

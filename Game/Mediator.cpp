@@ -156,6 +156,11 @@ BOOL OrderCollisionObjectMinions(Vector2DF *pos, RectF *col) {
 	return CollisionObjectMinions(pos, col);
 }
 
+//オブジェクトと召喚モンスターの当たり判定依頼（当たったものは消す）
+BOOL OrderCollisionDeleteObjectMinions(Vector2DF *pos, RectF *col) {
+	return CollisionDeleteObjectMinions(pos, col);
+}
+
 //カメラのオフセットを取得する依頼
 Vector2DF OrderGetCameraOffset() {
 	return GetCameraOffset();
