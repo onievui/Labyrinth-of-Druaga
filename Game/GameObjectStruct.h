@@ -71,6 +71,16 @@ struct SummonableList {
 	Graph graph;			//表示画像情報
 };
 
+//モンスターの召喚範囲情報構造体
+struct SummonAreaData {
+	BOOL is_available;	//召喚可能かどうか
+	int state;			//表示状態
+	MinionPattern knd;	//選択している召喚モンスター
+	Vector2DF pos;		//座標
+	RectF area;			//範囲
+	BOOL is_left;		//向き
+};
+
 //お宝構造体
 struct Treasure {
 	int state;			//状態

@@ -23,7 +23,7 @@
 // 定数の定義 ==============================================================
 
 //ポーズキー
-#define KEY_INPUT_PAUSE2 KEY_INPUT_TAB
+#define KEY_INPUT_PAUSE2 (KEY_INPUT_TAB)
 
 //プレイシーンの状態
 enum ScenePlayState {
@@ -157,7 +157,7 @@ void RenderPlay(void)
 	//プレイヤーの描画
 	DrawPlayer();
 
-	//SPと召喚可能なモンスターのリストの描画
+	//プレイヤー関係の情報の描画
 	DrawPlayerUI();
 
 	//画面の明るさを戻す
@@ -283,6 +283,11 @@ void PauseProcess()
 			MessageBox(NULL, "ポーズ画面の選択で不正な値が渡されました", "", MB_OK);
 			break;
 		}
+		g_select_mode = 0;
+	}
+	//ポーズキーで再開
+	else if (CheckHitKeyDown(KEY_INPUT_PAUSE2)) {
+		g_play_state = PLAY_STATE_PLAY;
 		g_select_mode = 0;
 	}
 }

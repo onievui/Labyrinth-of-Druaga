@@ -28,6 +28,7 @@
 #define KEY_INPUT_JUMP		(KEY_INPUT_Z)		//ジャンプキー
 #define KEY_INPUT_SUMMON	(KEY_INPUT_X)		//召喚/消滅キー
 #define KEY_INPUT_SELECT	(KEY_INPUT_LSHIFT)	//召喚モンスター選択キー
+#define KEY_INPUT_S_AREA	(KEY_INPUT_A)		//召喚・消滅範囲表示キー
 
 
 //プロトタイプ宣言
@@ -50,6 +51,8 @@ int g_summon_time;									//召喚動作に必要な時間
 SummonableList g_summonable[MINION_PATTERN_NUM+1];	//召喚可能なモンスターのリスト
 int g_slist_active_num;								//リストで使用中の要素数
 int g_select_summon_type;							//選択中の召喚タイプ
+SummonAreaData g_summon_area;						//召喚・消滅範囲情報
+BOOL g_use_summon_area;								//召喚・消滅範囲表示フラグ
 
 
 extern HFNT g_font_g40;
@@ -80,6 +83,8 @@ void InitializePlayer() {
 	g_summonable[0].knd = MINION_PATTERN_NUM;
 	g_slist_active_num = 1;
 	g_select_summon_type = 0;
+	memset(&g_summon_area, 0, sizeof(g_summon_area));
+	g_use_summon_area = GetUseSummonArea();
 }
 
 
@@ -90,8 +95,13 @@ void UpdatePlayer() {
 		//プレイヤーの行動
 		ActPlayer();
 		//マップでの死亡判定
-		if (g_player.pos.y + g_player.col.top > FIELD_HEIGHT || CheckHitKeyDown(KEY_INPUT_Q)) {
+		if (OrderIsUnderMap(&g_player.pos,&g_player.col) || CheckHitKeyDown(KEY_INPUT_Q)) {
 			PlayerDead();
+		}
+		//召喚・消滅範囲の表示切替
+		if (CheckHitKeyDown(KEY_INPUT_S_AREA)) {
+			g_use_summon_area = !g_use_summon_area;
+			SetUseSummonArea(g_use_summon_area);
 		}
 	}
 	//プレイヤーが死んでいる場合
@@ -113,6 +123,9 @@ void ActPlayer() {
 	if (g_player.is_ground && g_player.vel.y > 0) {
 		g_player.vel.y = 0;
 	}
+
+	//召喚・消滅範囲情報の取得
+	g_summon_area = OrderGetSummonAreaData(g_summonable[g_select_summon_type].knd, &g_player.pos, &g_player.col, g_player.is_left);
 
 	//プレイヤーの状態で分岐する
 	switch (g_player.state) {
@@ -160,7 +173,7 @@ void ActPlayer() {
 void PlayerActDead() {
 	//上に飛んで落下する
 	if (g_player.anime_count == 0) {
-		g_player.vel.y = PLAYER_JUMP_SPEED;
+		g_player.vel.y = PLAYER_JUMP_SPEED*1.5f;
 	}
 	else {
 		g_player.vel.y += GRAVITY;
@@ -369,7 +382,7 @@ void SummonMinion() {
 		//SPが足りるかの確認
 		if (g_player.sp >= cost) {
 			//召喚に失敗してもモーションを行う
-			if (!(g_summon_time = OrderCreateMinion(g_summonable[g_select_summon_type].knd, g_player.pos, g_player.col, g_player.is_left))) {
+			if (!(g_summon_time = OrderCreateMinion(&g_summon_area))) {
 				g_summon_time = SUMMON_FAILED_TIME;
 			}
 			//成功したらSPを減らす
@@ -384,7 +397,7 @@ void SummonMinion() {
 	}
 	//モンスターの消滅処理
 	else {
-		OrderDeleteMinion(&g_player.pos, &g_player.col, g_player.is_left);
+		OrderDeleteMinion(&g_summon_area);
 		g_summon_time = SUMMON_FAILED_TIME;
 	}
 }
@@ -402,13 +415,14 @@ void DrawPlayer() {
 	}
 }
 
-//SPと召喚可能なモンスターのリストの描画
+//プレイヤー関係の情報の描画
 void DrawPlayerUI() {
 	//SPの描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
 	DrawBox(SP_POS_X - 10, SP_POS_Y, SP_POS_X + 100, SP_POS_Y + 35, COLOR_AQUA, TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	DrawFormatStringFToHandle(SP_POS_X, SP_POS_Y, COLOR_BLUE, g_font_g40, "SP:%d", g_player.sp);
+
 	//召喚可能なモンスターのリストの描画
 	int i;
 	for (i = 0; i < g_slist_active_num; i++) {
@@ -427,6 +441,23 @@ void DrawPlayerUI() {
 		//消滅モードは画像を表示しない
 		if (index != 0) {
 			DrawGraphic(pos, &g_summonable[index].graph);
+		}
+	}
+
+	//召喚・消滅範囲情報の描画
+	if (g_use_summon_area) {
+		if (g_player.state == PLAYER_STATE_STAND || g_player.state == PLAYER_STATE_JUMP) {
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
+			int color = g_summon_area.state == 0 ? COLOR_BLUE : COLOR_RED;
+			Vector2DF pos = g_summon_area.pos;
+			SubVector2DF(pos, OrderGetCameraOffset());
+			DrawBoxAA(pos.x + g_summon_area.area.left,
+				pos.y + g_summon_area.area.top,
+				pos.x + g_summon_area.area.right,
+				pos.y + g_summon_area.area.bottom,
+				color,
+				TRUE);
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		}
 	}
 }

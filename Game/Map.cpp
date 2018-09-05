@@ -169,4 +169,12 @@ BOOL IsOutsideMap(Vector2DF *pos, RectF *col) {
 	return FALSE;
 }
 
+//‰æ–Ê‰º‚É‚¢‚é‚©‚Ì”»’è
+BOOL IsUnderMap(Vector2DF *pos, RectF *col) {
+	if (pos->y + col->top > g_mapdata.height*MAPCHIP_SIZE) {
+		return TRUE;
+	}
+	return FALSE;
+}
+
 

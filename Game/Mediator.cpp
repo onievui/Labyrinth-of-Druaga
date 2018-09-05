@@ -16,6 +16,7 @@
 //グローバル変数の宣言
 static StageId g_select_stage;	//選択中のステージ
 static int g_clear_time;		//ステージクリアまでの時間
+static BOOL g_use_summon_area;	//召喚・消滅範囲表示フラグ
 
 
 
@@ -24,6 +25,7 @@ static int g_clear_time;		//ステージクリアまでの時間
 void InitializeMediator() {
 	g_select_stage = (StageId)-1;
 	g_clear_time = -1;
+	g_use_summon_area = FALSE;
 }
 
 //選択中のステージの設定
@@ -44,6 +46,16 @@ void SetClearTime(int time) {
 //プレイ画面のクリア時間の取得
 int GetClearTime() {
 	return g_clear_time;
+}
+
+//召喚・消滅範囲表示フラグの設定
+void SetUseSummonArea(BOOL flag) {
+	g_use_summon_area = flag;
+}
+
+//召喚・消滅範囲表示フラグの取得
+BOOL GetUseSummonArea() {
+	return g_use_summon_area;
 }
 
 //プレイヤーの座標を取得する依頼
@@ -82,8 +94,8 @@ void OrderPlayerGetTreasure() {
 }
 
 //召喚モンスターの生成依頼
-int OrderCreateMinion(MinionPattern knd, Vector2DF pos, RectF pl_col, BOOL isLeft) {
-	return CreateMinion(knd, pos, pl_col, isLeft);
+int OrderCreateMinion(SummonAreaData *summon_area_data) {
+	return CreateMinion(summon_area_data);
 }
 
 //召喚コストの取得依頼
@@ -101,9 +113,14 @@ void OrderSetMinionsCollider(BoxCollider collider[]) {
 	SetMinionsCollider(collider);
 }
 
+//召喚モンスターの生成・消滅範囲情報の取得依頼
+SummonAreaData OrderGetSummonAreaData(MinionPattern knd, Vector2DF *pl_pos, RectF *pl_col, BOOL isLeft) {
+	return GetSummonAreaData(knd, pl_pos, pl_col, isLeft);
+}
+
 //召喚モンスターを消す依頼
-void OrderDeleteMinion(Vector2DF *pl_pos, RectF *pl_col, BOOL isLeft) {
-	DeleteMinion(pl_pos, pl_col, isLeft);
+void OrderDeleteMinion(SummonAreaData *summon_area_data) {
+	DeleteMinion(summon_area_data);
 }
 
 //召喚モンスターの消滅依頼
@@ -169,5 +186,10 @@ Vector2DF OrderGetCameraOffset() {
 //マップ外にいるかの判定依頼
 BOOL OrderIsOutsideMap(Vector2DF *pos, RectF *col) {
 	return IsOutsideMap(pos, col);
+}
+
+//画面下にいるかの判定依頼
+BOOL OrderIsUnderMap(Vector2DF *pos, RectF *col) {
+	return IsUnderMap(pos, col);
 }
 

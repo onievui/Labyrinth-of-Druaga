@@ -41,3 +41,7 @@ Vector2DF GetCameraOffset();
 //マップ外にいるかの判定
 BOOL IsOutsideMap(Vector2DF *pos, RectF *col);
 
+//画面下にいるかの判定
+BOOL IsUnderMap(Vector2DF *pos, RectF *col);
+
+

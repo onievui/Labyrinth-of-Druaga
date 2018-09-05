@@ -24,6 +24,12 @@ void SetClearTime(int time);
 //プレイ画面のクリア時間の取得
 int GetClearTime();
 
+//召喚・消滅範囲表示フラグの設定
+void SetUseSummonArea(BOOL flag);
+
+//召喚・消滅範囲表示フラグの取得
+BOOL GetUseSummonArea();
+
 //プレイヤーの座標を取得する依頼
 Vector2DF OrderGetPlayerPos();
 
@@ -46,7 +52,7 @@ void OrderAddPlayerSp(int plus);
 void OrderPlayerGetTreasure();
 
 //召喚モンスターの生成依頼
-int OrderCreateMinion(MinionPattern knd, Vector2DF pos, RectF pl_col, BOOL isLeft);
+int OrderCreateMinion(SummonAreaData *summon_area_data);
 
 //召喚コストの取得依頼
 int OrderGetSummonCost(MinionPattern knd);
@@ -57,8 +63,11 @@ Sprite OrderGetMinionSprite(MinionPattern knd);
 //召喚モンスターの当たり判定の設定依頼
 void OrderSetMinionsCollider(BoxCollider collider[]);
 
+//召喚モンスターの生成・消滅範囲情報の取得依頼
+SummonAreaData OrderGetSummonAreaData(MinionPattern knd, Vector2DF *pl_pos, RectF *pl_col, BOOL isLeft);
+
 //召喚モンスターを消す依頼
-void OrderDeleteMinion(Vector2DF *pl_pos, RectF *pl_col, BOOL isLeft);
+void OrderDeleteMinion(SummonAreaData *summon_area_data);
 
 //召喚モンスターの消滅依頼
 void OrderDestroyMinion(int i);
@@ -99,5 +108,7 @@ Vector2DF OrderGetCameraOffset();
 //マップ外にいるかの判定依頼
 BOOL OrderIsOutsideMap(Vector2DF *pos, RectF *col);
 
+//画面下にいるかの判定依頼
+BOOL OrderIsUnderMap(Vector2DF *pos, RectF *col);
 
 

@@ -58,35 +58,88 @@ void InitializeMinions() {
 	g_active_minion_num = 0;
 }
 
-//召喚モンスターの生成
-int CreateMinion(MinionPattern knd, Vector2DF pl_pos, RectF pl_col, BOOL isLeft) {
+//召喚モンスターの生成・消滅範囲情報の取得
+SummonAreaData GetSummonAreaData(MinionPattern knd, Vector2DF *pl_pos, RectF *pl_col, BOOL isLeft) {
+
+	SummonAreaData summon_area_data;
 
 	//エラーチェック
-	if (knd < 0 || knd >= MINION_PATTERN_NUM) {
+	if (knd < 0 || knd > MINION_PATTERN_NUM) {
+		MessageBox(NULL, "召喚モンスターの生成で不正な値が渡されました", "", MB_OK);
+		memset(&summon_area_data, 0, sizeof(summon_area_data));
+		return summon_area_data;
+	}
+
+	//召喚モードなら
+	if (knd != MINION_PATTERN_NUM) {
+		//召喚スペースの計算
+		Vector2DF s_pos = *pl_pos;
+		int mx, my;
+		s_pos.x += isLeft ? pl_col->left : pl_col->right;
+		OrderGetMapPosWithPos(s_pos, &mx, &my);
+		mx += isLeft ? -1 : 1;
+		s_pos = OrderGetPosWithMapPos(mx, my);
+		summon_area_data.pos = s_pos;
+		summon_area_data.area = g_prototype_minion[knd].col;
+		//スペースがないなら無効にする
+		if (OrderIsWallWithPos(s_pos.x, s_pos.y) || OrderCollisionObjectMinions(&s_pos, &g_prototype_minion[knd].col)) {
+			summon_area_data.is_available = FALSE;
+			summon_area_data.state = 1;
+		}
+		//スペースがあるなら有効にする
+		else {
+			summon_area_data.is_available = TRUE;
+			summon_area_data.state = 0;
+		}
+	}
+	//消滅モードなら
+	else {
+		//召喚スペースの計算
+		Vector2DF pos = *pl_pos;
+		RectF col = { -32,-32,32,32 };
+		pos.x += isLeft ? pl_col->left - 32 : pl_col->right + 32;
+		summon_area_data.pos = pos;
+		summon_area_data.area = col;
+		//対象があるなら有効にする
+		if (OrderCollisionObjectMinions(&pos, &col)) {
+			summon_area_data.is_available = TRUE;
+			summon_area_data.state = 0;
+		}
+		//対象がないなら有効にする
+		else {
+			summon_area_data.is_available = FALSE;
+			summon_area_data.state = 1;
+		}
+	}
+
+	summon_area_data.knd = knd;
+	summon_area_data.is_left = isLeft;
+
+	return summon_area_data;
+}
+
+//召喚モンスターの生成
+int CreateMinion(SummonAreaData *summon_area_data) {
+
+	//エラーチェック
+	if (summon_area_data->knd < 0 || summon_area_data->knd >= MINION_PATTERN_NUM) {
 		MessageBox(NULL, "召喚モンスターの生成で不正な値が渡されました", "", MB_OK);
 		return FALSE;
 	}
 
 	//召喚モンスターの空きがあるかどうか
 	if (g_active_minion_num != MINION_MAX) {
-		//召喚スペースがあるかどうか
-		Vector2DF s_pos = pl_pos;
-		int mx, my;
-		s_pos.x += isLeft ? pl_col.left : pl_col.right;
-		OrderGetMapPosWithPos(s_pos, &mx, &my);
-		mx += isLeft ? -1 : 1;
-		s_pos = OrderGetPosWithMapPos(mx, my);
-		if (OrderIsWallWithPos(s_pos.x, s_pos.y) || OrderCollisionObjectMinions(&s_pos,&g_prototype_minion[knd].col)) {
-			//スペースがないなら失敗
+		//範囲が無効なら失敗
+		if (!summon_area_data->is_available) {
 			return FALSE;
 		}
 		
 		//召喚モンスターの初期化
-		g_minion[g_active_minion_num] = g_prototype_minion[knd];
-		g_minion[g_active_minion_num].pos = s_pos;
-		g_minion[g_active_minion_num].is_left = isLeft;
+		g_minion[g_active_minion_num] = g_prototype_minion[summon_area_data->knd];
+		g_minion[g_active_minion_num].pos = summon_area_data->pos;
+		g_minion[g_active_minion_num].is_left = summon_area_data->is_left;
 		//向きで画像が変わる場合
-		if (!isLeft && knd == MINION_GHOST) {
+		if (!summon_area_data->is_left && summon_area_data->knd == MINION_GHOST) {
 			g_minion[g_active_minion_num].sprite_num++;
 			//スプライトの再設定
 			g_minion[g_active_minion_num].graph.sprite.rect = GetSpriteRect(SPR_STD_MONSTER, g_minion[g_active_minion_num].sprite_num);
@@ -96,25 +149,20 @@ int CreateMinion(MinionPattern knd, Vector2DF pl_pos, RectF pl_col, BOOL isLeft)
 		//使用中の数を増やす
 		g_active_minion_num++;
 
-		return g_prototype_minion[knd].s_dat.time;
+		return g_prototype_minion[summon_area_data->knd].s_dat.time;
 	}
 	
 	return FALSE;
 }
 
 //召喚モンスターを消す
-void DeleteMinion(Vector2DF *pl_pos, RectF *pl_col, BOOL isLeft) {
+void DeleteMinion(SummonAreaData *summon_area_data) {
 
-	//消す範囲の作成
-	Vector2DF pos = *pl_pos;
-	RectF col = { -32,-32,32,32 };
-	pos.x += isLeft ? pl_col->left - 32: pl_col->right + 32;
-
-	//敵との当たり判定
-	OrderCollisionDeleteObjectMinions(&pos, &col);
-
-
-
+	//範囲が有効なら処理を行う
+	if (summon_area_data->is_available) {
+		//敵との当たり判定
+		OrderCollisionDeleteObjectMinions(&summon_area_data->pos, &summon_area_data->area);
+	}
 
 }
 

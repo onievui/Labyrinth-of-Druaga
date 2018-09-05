@@ -11,7 +11,7 @@
 void InitializeMinions();
 
 //召喚モンスターの生成
-int CreateMinion(MinionPattern knd, Vector2DF pos, RectF pl_col, BOOL isLeft);
+int CreateMinion(SummonAreaData *summon_area_data);
 
 //召喚コストの取得
 int GetSummonCost(MinionPattern knd);
@@ -28,8 +28,11 @@ void DrawMinions();
 //召喚モンスターの当たり判定の設定
 void SetMinionsCollider(BoxCollider collider[]);
 
+//召喚モンスターの生成・消滅範囲情報の取得
+SummonAreaData GetSummonAreaData(MinionPattern knd, Vector2DF *pl_pos, RectF *pl_col, BOOL isLeft);
+
 //召喚モンスターを消す
-void DeleteMinion(Vector2DF *pl_pos, RectF *pl_col, BOOL isLeft);
+void DeleteMinion(SummonAreaData *summon_area_data);
 
 //召喚モンスターのダメージ処理
 void DamageMinion(int i, int power);
