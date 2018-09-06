@@ -476,10 +476,10 @@ void SetPlayerPos(Vector2DF pos) {
 void SetPlayerSummonable(BOOL summonable[]) {
 	int i;
 	for (i = 0; i < MINION_PATTERN_NUM; i++) {
-		if (g_summonable[i + 1].is_use = summonable[i]) {
-			g_summonable[i + 1].knd = MinionPattern(i);
-			g_summonable[i + 1].graph = { g_sprite[SPR_STD_MONSTER],1.0,0.0 };
-			g_summonable[i + 1].graph.sprite = OrderGetMinionSprite(MinionPattern(i));
+		if (g_summonable[g_slist_active_num].is_use = summonable[i]) {
+			g_summonable[g_slist_active_num].knd = MinionPattern(i);
+			g_summonable[g_slist_active_num].graph = { g_sprite[SPR_STD_MONSTER],1.0,0.0 };
+			g_summonable[g_slist_active_num].graph.sprite = OrderGetMinionSprite(MinionPattern(i));
 			g_slist_active_num++;
 		}
 	}
@@ -497,7 +497,7 @@ void SetPlayerCollider(BoxCollider *collider) {
 	collider->col = &g_player.col;
 	collider->vel = &g_player.vel;
 	collider->ride = &g_player.ride;
-	collider->is_ground = &g_player.is_ground;
+	collider->collision_state = &g_player.is_ground;
 	collider->ground_flag = &g_player.ground_flag;
 }
 

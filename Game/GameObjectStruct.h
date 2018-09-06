@@ -100,31 +100,31 @@ struct SummonData {
 
 //召喚モンスター構造体
 struct Minion {
-	MinionPattern knd;	//種類
-	int state;			//状態
-	int hp;				//体力
-	Vector2DF pos;		//座標
-	RectF col;			//当たり判定の相対座標
-	Vector2DF vel;		//移動量
-	Vector2DF *ride;	//乗っているオブジェクトの速度
-	BOOL is_left;		//左向きかどうか
-	BOOL is_ground;		//地面に接しているかどうか
-	BOOL ground_flag;	//マップに着地したかどうか
-	Graph graph;		//表示画像情報
-	int sprite_num;		//スプライト番号
-	int anime_count;	//アニメーション用カウンタ
-	SummonData s_dat;	//召喚用データ
+	MinionPattern knd;		//種類
+	int state;				//状態
+	int hp;					//体力
+	Vector2DF pos;			//座標
+	RectF col;				//当たり判定の相対座標
+	Vector2DF vel;			//移動量
+	Vector2DF *ride;		//乗っているオブジェクトの速度
+	BOOL is_left;			//左向きかどうか
+	int collision_state;	//他の物体にどう接しているか
+	BOOL ground_flag;		//マップに着地したかどうか
+	Graph graph;			//表示画像情報
+	int sprite_num;			//スプライト番号
+	int anime_count;		//アニメーション用カウンタ
+	SummonData s_dat;		//召喚用データ
 };
 
 //動く矩形の衝突判定用構造体
 struct BoxCollider {
-	int *state;			//オブジェクトの状態
-	Vector2DF *pos;		//座標
-	RectF *col;			//当たり判定の相対座標
-	Vector2DF *vel;		//速度
-	Vector2DF **ride;	//乗っているオブジェクトの速度
-	BOOL *is_ground;	//地面に接しているかどうか
-	BOOL *ground_flag;	//マップに着地したかどうか
+	int *state;				//オブジェクトの状態
+	Vector2DF *pos;			//座標
+	RectF *col;				//当たり判定の相対座標
+	Vector2DF *vel;			//速度
+	Vector2DF **ride;		//乗っているオブジェクトの速度
+	BOOL *collision_state;	//他の物体にどう接しているか
+	BOOL *ground_flag;		//マップに着地したかどうか
 };
 
 

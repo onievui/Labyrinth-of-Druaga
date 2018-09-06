@@ -27,7 +27,7 @@ void InitializePrototypeMinion(Minion proto_minion[]) {
 		{ 0,0 },
 		NULL,
 		TRUE,
-		FALSE,
+		0,
 		FALSE,
 		{ g_sprite[SPR_STD_MONSTER],1.0,0.0 },
 		12,
@@ -47,7 +47,7 @@ void InitializePrototypeMinion(Minion proto_minion[]) {
 		{ 0,0 },
 		NULL,
 		TRUE,
-		FALSE,
+		0,
 		FALSE,
 		{ g_sprite[SPR_STD_MONSTER],1.0,0.0 },
 		66,
@@ -65,7 +65,7 @@ void UpdateMinionSlime(Minion *minion) {
 	AddVector2DF(minion->pos, minion->vel);
 
 	//着地していたなら速度を0にする
-	if (minion->is_ground && minion->vel.y > 0) {
+	if ((minion->collision_state & ISGROUND) && minion->vel.y > 0) {
 		minion->vel.y = 0;
 	}
 	//上昇していたら地面から離れたとみなす
@@ -77,7 +77,7 @@ void UpdateMinionSlime(Minion *minion) {
 	minion->vel.x = 0;
 	
 	//マップとの着地判定の適用
-	if (minion->is_ground = minion->ground_flag) {
+	if ((minion->collision_state |= minion->ground_flag*ISGROUND) & ISGROUND) {
 		minion->vel.y = 0;
 	}
 	else {
@@ -107,16 +107,17 @@ void UpdateMinionGhost(Minion *minion) {
 	}
 
 	//マップとの当たり判定
-	int collision = OrderCollisionObjectMap(&minion->pos, &minion->vel, &minion->col);
-	if (minion->is_left  && (collision & ISLEFT )) {
+	if (minion->is_left && (minion->collision_state & ISLEFT)) {
 		minion->is_left = !minion->is_left;
 		minion->sprite_num++;
 		minion->graph.sprite.rect = GetSpriteRect(SPR_STD_MONSTER, minion->sprite_num);
+		minion->collision_state -= ISLEFT;
 	}
-	else if (!minion->is_left && (collision & ISRIGHT)) {
+	else if (!minion->is_left && (minion->collision_state & ISRIGHT)) {
 		minion->is_left = !minion->is_left;
 		minion->sprite_num--;
 		minion->graph.sprite.rect = GetSpriteRect(SPR_STD_MONSTER, minion->sprite_num);
+		minion->collision_state -= ISRIGHT;
 	}
 }
 

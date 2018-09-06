@@ -66,7 +66,7 @@ void SetTreasureCollider(BoxCollider *collider) {
 	collider->col = &g_treasure.col;
 	collider->vel = &g_treasure.vel;
 	collider->ride = &g_treasure.ride;
-	collider->is_ground = &g_treasure.is_ground;
+	collider->collision_state = &g_treasure.is_ground;
 }
 
 //‚¨•ó‚ªƒvƒŒƒCƒ„[‚ÆÕ“Ë‚µ‚½‚Æ‚«‚Ìˆ—

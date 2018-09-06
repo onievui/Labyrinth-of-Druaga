@@ -72,12 +72,22 @@ void UpdateCollision() {
 	}
 	MR_COLLISION_MACRO2(g_minion_collider, MINION_MAX, i, j, check) {
 		if (check & ISGROUND) {
-			*g_minion_collider[i].is_ground = TRUE;
+			*g_minion_collider[i].collision_state |= ISGROUND;
+			*g_minion_collider[j].collision_state |= ISCEILING;
 			*g_minion_collider[i].ride = g_minion_collider[j].vel;
 		}
 		else if (check & ISCEILING) {
-			*g_minion_collider[j].is_ground = TRUE;
+			*g_minion_collider[j].collision_state |= ISGROUND;
+			*g_minion_collider[i].collision_state |= ISCEILING;
 			*g_minion_collider[j].ride = g_minion_collider[i].vel;
+		}
+		if (check & ISLEFT) {
+			*g_minion_collider[i].collision_state |= ISLEFT;
+			*g_minion_collider[j].collision_state |= ISRIGHT;
+		}
+		else if (check & ISRIGHT) {
+			*g_minion_collider[j].collision_state |= ISLEFT;
+			*g_minion_collider[i].collision_state |= ISRIGHT;
 		}
 	}
 
@@ -85,12 +95,18 @@ void UpdateCollision() {
 	*g_player_collider->ride = NULL;
 	MR_COLLISION_MACRO(g_player_collider, PLAYER_MAX, i, g_minion_collider, MINION_MAX, j, check) {
 		if (check & ISGROUND) {
-			*g_player_collider->is_ground = TRUE;
+			*g_player_collider->collision_state = TRUE;
 			*g_player_collider->ride = g_minion_collider[j].vel;
 		}
 		else if (check & ISCEILING) {
-			*g_minion_collider[j].is_ground = TRUE;
+			*g_minion_collider[j].collision_state = TRUE;
 			*g_minion_collider[j].ride = g_minion_collider[i].vel;
+		}
+		if (check & ISLEFT) {
+			*g_minion_collider[j].collision_state |= ISRIGHT;
+		}
+		else if (check & ISRIGHT) {
+			*g_minion_collider[j].collision_state |= ISLEFT;
 		}
 	}
 
@@ -104,16 +120,16 @@ void UpdateCollision() {
 
 	//お宝とマップの当たり判定
 	if (CollisionObjectMap(g_treasure_collider->pos, g_treasure_collider->vel, g_treasure_collider->col) & ISGROUND) {
-		*g_treasure_collider->is_ground = TRUE;
+		*g_treasure_collider->collision_state = TRUE;
 	}
 	else {
-		*g_treasure_collider->is_ground = FALSE;
+		*g_treasure_collider->collision_state = FALSE;
 	}
 
 	//召喚モンスターとマップの当たり判定
 	for (i = 0; i < MINION_MAX; i++) {
 		if (*g_minion_collider[i].state) {
-			if (CollisionObjectMap(g_minion_collider[i].pos, g_minion_collider[i].vel, g_minion_collider[i].col) & ISGROUND) {
+			if ((*g_minion_collider[i].collision_state |= CollisionObjectMap(g_minion_collider[i].pos, g_minion_collider[i].vel, g_minion_collider[i].col)) & ISGROUND) {
 				*g_minion_collider[i].ground_flag = TRUE;
 			}
 			else {
@@ -370,8 +386,26 @@ int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
 		if (t != 999) {
 			//X方向に先に衝突したなら
 			if (t == tx) {
-				obj1->vel->x *= tx;
-				obj2->vel->x *= tx;
+				if (obj1->vel->x*obj2->vel->x > 0) {
+					if (obj1->vel->x > 0) {
+						(obj1->pos->x < obj2->pos->x ? obj1->vel->x : obj2->vel->x) *= tx;
+					}
+					else {
+						(obj1->pos->x > obj2->pos->x ? obj1->vel->x : obj2->vel->x) *= tx;
+					}
+				}
+				else {
+					obj1->vel->x *= tx;
+					obj2->vel->x *= tx;
+				}
+				//obj1の右側と衝突したなら
+				if (obj1->pos->x < obj2->pos->x) {
+					return ISRIGHT;
+				}
+				//obj1の左側と衝突したなら
+				else {
+					return ISLEFT;
+				}
 			}
 			//Y方向に先に衝突したなら
 			if (t == ty) {
@@ -391,6 +425,7 @@ int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
 				if (obj1->pos->y < obj2->pos->y) {
 					return ISGROUND;
 				}
+				//obj1の上側と衝突したなら
 				else {
 					return ISCEILING;
 				}
@@ -408,7 +443,7 @@ int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
 				}
 			}
 		}
-		return TRUE;
+		return ISTRUE;
 	}
 	return FALSE;
 }
