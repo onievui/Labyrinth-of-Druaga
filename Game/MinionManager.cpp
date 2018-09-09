@@ -190,6 +190,8 @@ Sprite GetMinionSprite(MinionPattern knd) {
 	return g_prototype_minion[knd].graph.sprite;
 }
 
+#include "Key.h"
+
 //召喚モンスターの更新
 void UpdateMinions() {
 	int i;

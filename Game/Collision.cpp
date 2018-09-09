@@ -129,7 +129,8 @@ void UpdateCollision() {
 	//召喚モンスターとマップの当たり判定
 	for (i = 0; i < MINION_MAX; i++) {
 		if (*g_minion_collider[i].state) {
-			if ((*g_minion_collider[i].collision_state |= CollisionObjectMap(g_minion_collider[i].pos, g_minion_collider[i].vel, g_minion_collider[i].col)) & ISGROUND) {
+			*g_minion_collider[i].collision_state |= check = CollisionObjectMap(g_minion_collider[i].pos, g_minion_collider[i].vel, g_minion_collider[i].col);
+			if (check & ISGROUND) {
 				*g_minion_collider[i].ground_flag = TRUE;
 			}
 			else {

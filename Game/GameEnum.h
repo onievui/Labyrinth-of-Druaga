@@ -28,6 +28,11 @@ enum StageId {
 	STAGE_8,
 	STAGE_9,
 	STAGE_10,
+	STAGE_11,
+	STAGE_12,
+	STAGE_13,
+	STAGE_14,
+	STAGE_15,
 	STAGE_NUM,
 };
 

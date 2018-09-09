@@ -56,7 +56,9 @@ void InitializeStageSelect(void)
 	g_stageselect_icon_object.angle = 0;
 	g_stageselect_icon_object.graph = Graph{ g_sprite[SPR_STAGESELECT_ICON] , 1.0f, 0.0f };
 
-	g_select_stage = 0;
+	g_select_stage = GetSelectStage();
+	if (!~g_select_stage)
+		g_select_stage = 0;
 }
 
 
@@ -79,17 +81,13 @@ void UpdateStageSelect(void)
 	//¶‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é
 	case 1:
 		if (CheckStateKey(KEY_INPUT_LEFT) % CURSOR_SPEED == 1) {
-			if (g_select_stage > 0) {
-				g_select_stage--;
-			}
+			g_select_stage += g_select_stage % 5 ? -1 : 4;
 		}
 		break;
 	//‰E‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é
 	case 2:
 		if (CheckStateKey(KEY_INPUT_RIGHT) % CURSOR_SPEED == 1) {
-			if (g_select_stage < STAGE_NUM - 1) {
-				g_select_stage++;
-			}
+			g_select_stage += g_select_stage % 5 != 4 ? 1 : -4;
 		}
 		break;
 	//ã‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é

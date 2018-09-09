@@ -61,6 +61,8 @@ void InitializePrototypeMinion(Minion proto_minion[]) {
 //スライムの更新
 void UpdateMinionSlime(Minion *minion) {
 
+
+
 	//移動量を座標に足す
 	AddVector2DF(minion->pos, minion->vel);
 
@@ -77,10 +79,15 @@ void UpdateMinionSlime(Minion *minion) {
 	minion->vel.x = 0;
 	
 	//マップとの着地判定の適用
-	if ((minion->collision_state |= minion->ground_flag*ISGROUND) & ISGROUND) {
+	if (minion->ground_flag) {
+		//着地している判定にする
+		minion->collision_state |= ISGROUND;
+		//速度を0にする
 		minion->vel.y = 0;
 	}
 	else {
+		//着地していない判定に戻す
+		minion->collision_state &= ~ISGROUND;
 		//重力を加える
 		minion->vel.y += GRAVITY;
 	}
