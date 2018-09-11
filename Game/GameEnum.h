@@ -48,8 +48,9 @@ enum PlayerState {
 
 //召喚モンスターの種類
 enum MinionPattern {
-	MINION_SLIME,	//スライム
-	MINION_GHOST,	//ゴースト
+	MINION_SLIME,			//スライム
+	MINION_GHOST,			//ゴースト
+	MINION_QUOX,			//クオックス（ドラゴン）
 	MINION_PATTERN_NUM,		//召喚モンスターの種類数
 };
 

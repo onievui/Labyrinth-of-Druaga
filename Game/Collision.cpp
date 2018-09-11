@@ -32,6 +32,7 @@
 BoxCollider g_player_collider[PLAYER_MAX];			//プレイヤーの当たり判定
 BoxCollider g_treasure_collider[TREASURE_MAX];		//お宝の当たり判定	
 BoxCollider g_minion_collider[MINION_MAX];			//召喚モンスターの当たり判定
+BoxCollider g_fire_collider[FIRE_MAX];				//ドラゴンの炎の当たり判定
 
 
 //プロトタイプ宣言
@@ -46,6 +47,7 @@ void InitializeCollision() {
 	OrderSetPlayerCollider(g_player_collider);
 	OrderSetTreasureCollider(g_treasure_collider);
 	OrderSetMinionsCollider(g_minion_collider);
+	OrderSetFireCollider(g_fire_collider);
 }
 
 //当たり判定
@@ -208,84 +210,6 @@ int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
 	//１方向でも衝突していたらTRUEを返す
 	return mL + mR*2 + mU*4 + mD*8;
 }
-
-
-//オブジェクトと動く矩形同士の当たり判定
-//BOOL CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
-//	Vector2DF vel = *obj1->vel;		//相対速度の計算
-//	SubVector2DF(vel, *obj2->vel);
-//
-//	float xtMin, xtMax, ytMin, ytMax, tMin, tMax;
-//	BOOL xFlag, yFlag;
-//
-//	if (vel.x != 0) {
-//		xtMin = (obj2->pos->x - obj1->pos->x - (obj1->col->right - obj2->col->left)) / vel.x;	// X軸についてのtの上限
-//		xtMax = (obj2->pos->x - obj1->pos->x + (obj2->col->right - obj1->col->left)) / vel.x;	// X軸についてのtの下限
-//		xFlag = TRUE;
-//		if (vel.x < 0) {	// 分母の符号が負だった場合の不等号反転への対処
-//			float swap = xtMin;
-//			xtMin = xtMax;
-//			xtMax = swap;
-//		}
-//	}
-//	else {
-//		xFlag = FALSE;
-//	}
-//	
-//
-//	if (vel.y != 0) {
-//		ytMin = (obj2->pos->y - obj1->pos->y - (obj1->col->bottom - obj2->col->top)) / vel.y;	// Y軸についてのtの上限
-//		ytMax = (obj2->pos->y - obj1->pos->y + (obj2->col->bottom - obj1->col->top)) / vel.y;	// Y軸についてのtの下限
-//		yFlag = TRUE;
-//		if (vel.y < 0) {	// 分母の符号が負だった場合の不等号反転への対処
-//			float swap = ytMin;
-//			ytMin = ytMax;
-//			ytMax = swap;
-//		}
-//	}
-//	else {
-//		yFlag = FALSE;
-//	}
-//	
-//
-//	if (!xFlag) {
-//		if (!yFlag) {
-//			//return CollisionAABB(obj1, obj2);	//速度0なら通常のAABBを行う
-//		}
-//		xtMin = ytMin;
-//		xtMax = ytMax;
-//	}
-//	else if (!yFlag) {
-//		ytMin = xtMin;
-//		ytMax = xtMax;
-//	}
-//
-//	// 下限同士、上限同士で範囲を絞り込む
-//	tMin = xtMin > ytMin ? xtMin : ytMin;
-//	tMax = xtMax < ytMax ? xtMax : ytMax;
-//
-//	// tMin < t < tMax と 0 < t < 1 に共通範囲があれば衝突
-//	if (tMin < tMax && tMin <= 1 && 0 <= tMax) {
-//		// この下にある速度調整処理用にtの下限が0未満の場合は0に設定
-//		tMin = tMin < 0 ? 0 : tMin;
-//		xtMin = xtMin < 0 ? 0 : xtMin;
-//		ytMin = ytMin < 0 ? 0 : ytMin;
-//
-//		// X軸方向の衝突の場合、速度のX成分のみを補正
-//		if (tMin == xtMin) {
-//			obj1->vel->x *= tMin;
-//			obj2->vel->x *= tMin;
-//		}
-//		// Y軸方向の衝突の場合、速度のY成分のみを補正
-//		if (tMin == ytMin) {
-//			obj1->vel->y *= tMin;
-//			obj2->vel->y *= tMin;
-//		}
-//		
-//		return TRUE;
-//	}
-//	return FALSE;
-//}
 
 //オブジェクトと召喚モンスターの当たり判定
 BOOL CollisionObjectMinions(Vector2DF *pos, RectF *col) {

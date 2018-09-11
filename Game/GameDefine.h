@@ -62,6 +62,9 @@
 //召喚モンスター関係
 #define MINION_MAX	(20)	//召喚できるモンスターの最大数
 
+//ドラゴンの炎関係
+#define FIRE_MAX	(5)		//ドラゴンの炎の最大出現数
+
 
 //お宝関係
 #define TREASURE_MAX	(1)		//お宝の数

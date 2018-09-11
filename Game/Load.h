@@ -23,6 +23,8 @@ enum GRP_ID {
 	GRP_GIL,				//プレイヤー画像
 	GRP_SWORD,				//剣画像
 	GRP_MONSTER,			//モンスター画像
+	GRP_DRAGON,				//ドラゴン画像
+	GRP_FIRE,				//ドラゴンの炎画像
 	GRP_MAPCHIP1,			//マップチップ画像1
 	GRP_OBJECT_OTHER,		//その他オブジェクト画像
 	GRP_ALL_NUM,			//読み込む画像ファイルの数

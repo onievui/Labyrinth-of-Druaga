@@ -12,6 +12,7 @@
 #include "Map.h"
 #include "Player.h"
 #include "MinionManager.h"
+#include "Fire.h"
 #include "Treasure.h"
 #include "Collision.h"
 #include "Shader.h"
@@ -70,6 +71,9 @@ void InitializePlay(void)
 
 	//召喚モンスターの初期化
 	InitializeMinions();
+
+	//ドラゴンの炎の初期化
+	InitializeFire();
 
 	//お宝の初期化
 	InitializeTreasure();
@@ -148,6 +152,9 @@ void RenderPlay(void)
 	//マップの描画
 	DrawMap();
 
+	//ドラゴンの炎の描画
+	DrawFire();
+
 	//お宝の描画
 	DrawTreasure();
 
@@ -216,6 +223,9 @@ void PlayProcess()
 {
 	//プレイヤーの更新
 	UpdatePlayer();
+
+	//ドラゴンの炎の更新
+	UpdateFire();
 
 	//召喚モンスターの更新
 	UpdateMinions();

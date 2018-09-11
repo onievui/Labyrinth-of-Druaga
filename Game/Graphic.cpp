@@ -21,7 +21,7 @@ void DrawGraphic(const Vector2DF pos, Graph *tex) {
 	DrawRectRotaGraphF(pos.x, pos.y,
 		sprite.rect.left, sprite.rect.top,
 		sprite.rect.right, sprite.rect.bottom,
-		tex->exrate, tex->angle, sprite.texture, true);
+		tex->exrate, tex->angle, sprite.texture, TRUE);
 	
 }
 
@@ -31,7 +31,7 @@ void DrawGraphicP(const Vector2DF pos, GraphP *tex) {
 	DrawRectRotaGraphF(pos.x, pos.y,
 		sprite.rect.left, sprite.rect.top,
 		sprite.rect.right, sprite.rect.bottom,
-		tex->exrate, tex->angle, sprite.texture, true);
+		tex->exrate, tex->angle, sprite.texture, TRUE);
 
 }
 
@@ -42,7 +42,18 @@ void DrawGraphicToMap(Vector2DF pos, Graph *tex) {
 	DrawRectRotaGraphF(pos.x, pos.y,
 		sprite.rect.left, sprite.rect.top,
 		sprite.rect.right, sprite.rect.bottom,
-		tex->exrate, tex->angle, sprite.texture, true);
+		tex->exrate, tex->angle, sprite.texture, TRUE);
+
+}
+
+//マップに対する左右反転グラフィックの描画
+void DrawTurnGraphicToMap(Vector2DF pos, Graph *tex) {
+	SubVector2DF(pos, OrderGetCameraOffset());
+	Sprite sprite = tex->sprite;
+	DrawRectRotaGraphF(pos.x, pos.y,
+		sprite.rect.left, sprite.rect.top,
+		sprite.rect.right, sprite.rect.bottom,
+		tex->exrate, tex->angle, sprite.texture, TRUE, TRUE);
 
 }
 
@@ -53,7 +64,7 @@ void DrawGraphicToMapP(Vector2DF pos, GraphP *tex) {
 	DrawRectRotaGraphF(pos.x, pos.y,
 		sprite.rect.left, sprite.rect.top,
 		sprite.rect.right, sprite.rect.bottom,
-		tex->exrate, tex->angle, sprite.texture, true);
+		tex->exrate, tex->angle, sprite.texture, TRUE);
 
 }
 

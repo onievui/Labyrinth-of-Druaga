@@ -44,14 +44,16 @@ void LoadResources() {
 
 
 	//âÊëúÇÃì«Ç›çûÇ›
-	g_texture[GRP_LOGO1] = LoadGraph("Resources/Textures/Protected/Logo.png");
-	g_texture[GRP_LOGO2] = LoadGraph("Resources/Textures/Protected/Logo2.png");
-	g_texture[GRP_TITLE] = LoadGraph("Resources/Textures/Protected/title.png");
-	g_texture[GRP_BG] = LoadGraph("Resources/Textures/Protected/bg.png");
-	g_texture[GRP_GIL] = LoadGraph("Resources/Textures/Protected/gil.png");
-	g_texture[GRP_SWORD] = LoadGraph("Resources/Textures/Protected/sword.png");
-	g_texture[GRP_MONSTER] = LoadGraph("Resources/Textures/Protected/monster.png");
-	g_texture[GRP_MAPCHIP1] = LoadGraph("Resources/Textures/Protected/mapchip1.png");
+	g_texture[GRP_LOGO1]        = LoadGraph("Resources/Textures/Protected/Logo.png");
+	g_texture[GRP_LOGO2]        = LoadGraph("Resources/Textures/Protected/Logo2.png");
+	g_texture[GRP_TITLE]        = LoadGraph("Resources/Textures/Protected/title.png");
+	g_texture[GRP_BG]           = LoadGraph("Resources/Textures/Protected/bg.png");
+	g_texture[GRP_GIL]          = LoadGraph("Resources/Textures/Protected/gil.png");
+	g_texture[GRP_SWORD]        = LoadGraph("Resources/Textures/Protected/sword.png");
+	g_texture[GRP_MONSTER]      = LoadGraph("Resources/Textures/Protected/monster.png");
+	g_texture[GRP_DRAGON]       = LoadGraph("Resources/Textures/Protected/dragon.png");
+	g_texture[GRP_FIRE]         = LoadGraph("Resources/Textures/Protected/fire.png");
+	g_texture[GRP_MAPCHIP1]     = LoadGraph("Resources/Textures/Protected/mapchip1.png");
 	g_texture[GRP_OBJECT_OTHER] = LoadGraph("Resources/Textures/Protected/object_other.png");
 
 

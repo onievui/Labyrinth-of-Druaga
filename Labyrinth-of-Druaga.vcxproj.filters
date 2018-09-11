@@ -127,6 +127,9 @@
     <ClCompile Include="Game\MinionManager.cpp">
       <Filter>ゲーム\オブジェクト関連</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Fire.cpp">
+      <Filter>ゲーム\オブジェクト関連</Filter>
+    </ClCompile>
   </ItemGroup>
   <!-- ヘッダファイル -->
   <ItemGroup>
@@ -221,6 +224,9 @@
       <Filter>ゲーム\オブジェクト関連</Filter>
     </ClInclude>
     <ClInclude Include="Game\MinionManager.h">
+      <Filter>ゲーム\オブジェクト関連</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Fire.h">
       <Filter>ゲーム\オブジェクト関連</Filter>
     </ClInclude>
   </ItemGroup>

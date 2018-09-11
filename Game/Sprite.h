@@ -21,6 +21,8 @@ enum SPR_ID {
 	SPR_STD_GIL,			//プレイヤー基準スプライト
 	SPR_STD_SWORD,			//剣基準スプライト
 	SPR_STD_MONSTER,		//モンスター基準スプライト
+	SPR_STD_DRAGON,			//ドラゴン基準スプライト
+	SPR_STD_FIRE,			//ドラゴンの炎基準スプライト
 	SPR_MAPCHIP1_1,			//マップチップ1スプライト1
 	SPR_MAPCHIP1_2,			//マップチップ1スプライト2
 	SPR_MAPCHIP1_3,			//マップチップ1スプライト3

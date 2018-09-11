@@ -8,6 +8,7 @@
 #include "Map.h"
 #include "Player.h"
 #include "MinionManager.h"
+#include "Fire.h"
 #include "Treasure.h"
 #include "Collision.h"
 
@@ -126,6 +127,11 @@ void OrderDeleteMinion(SummonAreaData *summon_area_data) {
 //召喚モンスターの消滅依頼
 void OrderDestroyMinion(int i) {
 	DestroyMinion(i);
+}
+
+//ドラゴンの炎の当たり判定の設定依頼
+void OrderSetFireCollider(BoxCollider collider[]) {
+	SetFireCollider(collider);
 }
 
 //お宝の座標を設定する

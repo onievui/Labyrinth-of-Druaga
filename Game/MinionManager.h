@@ -35,7 +35,7 @@ SummonAreaData GetSummonAreaData(MinionPattern knd, Vector2DF *pl_pos, RectF *pl
 void DeleteMinion(SummonAreaData *summon_area_data);
 
 //召喚モンスターのダメージ処理
-void DamageMinion(int i, int power);
+BOOL DamageMinion(int i, int power);
 
 //召喚モンスターの消滅
 void DestroyMinion(int i);

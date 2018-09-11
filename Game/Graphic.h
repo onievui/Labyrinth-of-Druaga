@@ -40,6 +40,9 @@ void DrawGraphicP(const Vector2DF pos, GraphP *tex);
 //マップに対するグラフィックの描画
 void DrawGraphicToMap(Vector2DF pos, Graph *tex);
 
+//マップに対する左右反転グラフィックの描画
+void DrawTurnGraphicToMap(Vector2DF pos, Graph *tex);
+
 //マップに対するグラフィックの描画（ポインタ版）
 void DrawGraphicToMapP(Vector2DF pos, GraphP *tex);
 

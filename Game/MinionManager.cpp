@@ -5,6 +5,7 @@
 //ヘッダファイルの読み込み
 #include "Minion.h"
 #include "Mediator.h"
+#include "Fire.h"
 
 
 
@@ -18,41 +19,47 @@ void DestroyMinion(int i);
 //グローバル変数の宣言
 Minion g_prototype_minion[MINION_PATTERN_NUM];	//召喚モンスターのプロトタイプ
 Minion g_minion[MINION_MAX];					//召喚モンスターオブジェクト
+SummonData g_summon_data[MINION_MAX];			//召喚用データ
 int g_active_minion_num;						//使用中の召喚モンスターの数
 
 //各召喚モンスターの更新処理の関数ポインタ
 void(*g_update_minion[MINION_PATTERN_NUM])(Minion *minion) = {
 	UpdateMinionSlime,
-	UpdateMinionGhost
+	UpdateMinionGhost,
+	UpdateMinionQuox
 };
 
 //各召喚モンスターの描画処理の関数ポインタ
 void(*g_draw_minion[MINION_PATTERN_NUM])(Minion *minion) = {
 	DrawMinionSlime,
-	DrawMinionGhost
+	DrawMinionGhost,
+	DrawMinionQuox
 };
 
 //各召喚モンスターのダメージ処理の関数ポインタ
 BOOL(*g_damage_minion[MINION_PATTERN_NUM])(Minion *minion, int power) = {
 	DamageMinionSlime,
-	DamageMinionGhost
+	DamageMinionGhost,
+	DamageMinionQuox
 };
 
 //各召喚モンスターの消滅処理の関数ポインタ
-void(*g_destroy_minion[MINION_PATTERN_NUM])(Minion *minion) = {
+void(*g_destroy_minion[MINION_PATTERN_NUM])(Minion *minion, SummonData *s_dat) = {
 	DestroyMinionSlime,
-	DestroyMinionGhost
+	DestroyMinionGhost,
+	DestroyMinionQuox
 };
 
 
 //召喚モンスターの初期化
 void InitializeMinions() {
 
-	//召喚モンスターオブジェクトの初期化
+	//データの初期化
 	memset(g_minion, 0, sizeof(g_minion));
+	memset(g_summon_data, 0, sizeof(g_summon_data));
 
 	//召喚モンスターのプロトタイプの初期化
-	InitializePrototypeMinion(g_prototype_minion);
+	InitializePrototypeMinion(g_prototype_minion,g_summon_data);
 
 	//カウンタのリセット
 	g_active_minion_num = 0;
@@ -77,7 +84,8 @@ SummonAreaData GetSummonAreaData(MinionPattern knd, Vector2DF *pl_pos, RectF *pl
 		int mx, my;
 		s_pos.x += isLeft ? pl_col->left : pl_col->right;
 		OrderGetMapPosWithPos(s_pos, &mx, &my);
-		mx += isLeft ? -1 : 1;
+		mx += isLeft ? -(int)g_summon_data[knd].offset.x : (int)g_summon_data[knd].offset.x;
+		my += (int)g_summon_data[knd].offset.y;
 		s_pos = OrderGetPosWithMapPos(mx, my);
 		summon_area_data.pos = s_pos;
 		summon_area_data.area = g_prototype_minion[knd].col;
@@ -139,17 +147,22 @@ int CreateMinion(SummonAreaData *summon_area_data) {
 		g_minion[g_active_minion_num].pos = summon_area_data->pos;
 		g_minion[g_active_minion_num].is_left = summon_area_data->is_left;
 		//向きで画像が変わる場合
-		if (!summon_area_data->is_left && summon_area_data->knd == MINION_GHOST) {
-			g_minion[g_active_minion_num].sprite_num++;
+		if (!summon_area_data->is_left && g_summon_data[summon_area_data->knd].turn_graph_num) {
+			g_minion[g_active_minion_num].sprite_num += g_summon_data[summon_area_data->knd].turn_graph_num;
 			//スプライトの再設定
-			g_minion[g_active_minion_num].graph.sprite.rect = GetSpriteRect(SPR_STD_MONSTER, g_minion[g_active_minion_num].sprite_num);
+			if (summon_area_data->knd != MINION_QUOX) {
+				g_minion[g_active_minion_num].graph.sprite.rect = GetSpriteRect(SPR_STD_MONSTER, g_minion[g_active_minion_num].sprite_num);
+			}
+			else {
+				g_minion[g_active_minion_num].graph.sprite.rect = GetSpriteRect(SPR_STD_DRAGON, g_minion[g_active_minion_num].sprite_num);
+			}
 		}
 		
 
 		//使用中の数を増やす
 		g_active_minion_num++;
 
-		return g_prototype_minion[summon_area_data->knd].s_dat.time;
+		return g_summon_data[summon_area_data->knd].time;
 	}
 	
 	return FALSE;
@@ -175,7 +188,7 @@ int GetSummonCost(MinionPattern knd) {
 		return FALSE;
 	}
 
-	return g_prototype_minion[knd].s_dat.cost;
+	return g_summon_data[knd].cost;
 }
 
 //召喚モンスターの画像取得
@@ -189,8 +202,6 @@ Sprite GetMinionSprite(MinionPattern knd) {
 
 	return g_prototype_minion[knd].graph.sprite;
 }
-
-#include "Key.h"
 
 //召喚モンスターの更新
 void UpdateMinions() {
@@ -228,7 +239,7 @@ void SetMinionsCollider(BoxCollider collider[]) {
 }
 
 //召喚モンスターのダメージ処理
-void DamageMinion(int i, int power) {
+BOOL DamageMinion(int i, int power) {
 
 	//エラーチェック
 	if (i < 0 || i >= g_active_minion_num) {
@@ -239,8 +250,9 @@ void DamageMinion(int i, int power) {
 	//体力が0なら消滅させる
 	if (g_damage_minion[g_minion[i].knd](&g_minion[i], power)) {
 		DestroyMinion(i);
+		return TRUE;
 	}
-
+	return FALSE;
 }
 
 //召喚モンスターの消滅
@@ -252,13 +264,17 @@ void DestroyMinion(int i) {
 		return;
 	}
 
-	g_destroy_minion[g_minion[i].knd](&g_minion[i]);
+	g_destroy_minion[g_minion[i].knd](&g_minion[i], &g_summon_data[g_minion[i].knd]);
 
 	//召喚モンスターオブジェクトの配列に隙間ができたかどうか
 	if (g_active_minion_num != 1 && i != g_active_minion_num - 1) {
 		//空いた場所と最後尾の召喚モンスターを入れ替える
 		g_minion[i] = g_minion[g_active_minion_num - 1];
 		g_minion[g_active_minion_num - 1].state = 0;
+		//入れ替えたオブジェクトがドラゴンなら子オブジェクトに通知する
+		if (g_minion[i].knd == MINION_QUOX) {
+			ChangeFireParentPt(&g_minion[g_active_minion_num - 1], &g_minion[i]);
+		}
 	}
 
 	//使用中の数を減らす

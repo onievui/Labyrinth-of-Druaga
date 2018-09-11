@@ -94,8 +94,10 @@ struct Treasure {
 
 //モンスター召喚用データ
 struct SummonData {
-	int cost;
-	int time;
+	int cost;				//召喚するのに必要なSP
+	int time;				//召喚にかかる時間
+	Vector2DF offset;		//プレイヤーから見た召喚位置の相対座標（マップ座標）
+	BOOL turn_graph_num;	//向きで画像が変わるときのスプライト番号の増加分
 };
 
 //召喚モンスター構造体
@@ -113,7 +115,19 @@ struct Minion {
 	Graph graph;			//表示画像情報
 	int sprite_num;			//スプライト番号
 	int anime_count;		//アニメーション用カウンタ
-	SummonData s_dat;		//召喚用データ
+};
+
+//ドラゴンの炎構造体
+struct Fire {
+	int state;				//状態
+	int count;				//出現してからの時間
+	Vector2DF pos;			//座標
+	RectF col;				//当たり判定の相対座標
+	Minion *parent;			//親オブジェクト
+	Vector2DF *parent_vel;	//親の速度
+	BOOL is_left;			//左向きかどうか	
+	Graph graph;			//表示画像情報
+	int sprite_num;			//スプライト番号
 };
 
 //動く矩形の衝突判定用構造体

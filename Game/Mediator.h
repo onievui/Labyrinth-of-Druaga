@@ -72,6 +72,9 @@ void OrderDeleteMinion(SummonAreaData *summon_area_data);
 //召喚モンスターの消滅依頼
 void OrderDestroyMinion(int i);
 
+//ドラゴンの炎の当たり判定の設定依頼
+void OrderSetFireCollider(BoxCollider collider[]);
+
 //お宝の座標を設定する
 void OrderSetTreasurePos(Vector2DF pos);
 
