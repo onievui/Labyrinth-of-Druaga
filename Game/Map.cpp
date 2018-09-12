@@ -46,6 +46,19 @@ void InitializeMap() {
 	//プレイヤーのSPを設定する
 	OrderSetPlayerSp(g_mapdata.player_sp);
 
+	//敵モンスターの初期座標を設定する
+	for (i = 0; i < ENEMY_MAX; i++) {
+		if (g_mapdata.enemy_list[i].is_use) {
+			MulVector2DF(g_mapdata.enemy_list[i].pos, MAPCHIP_SIZE);
+			AddVector2DF(g_mapdata.enemy_list[i].pos, Vector2DF{ MAPCHIP_SIZE_HALF,MAPCHIP_SIZE_HALF });
+		}
+		else {
+			break;
+		}
+	}
+	//敵モンスターの生成
+	OrderCreateEnemies(g_mapdata.enemy_list);
+
 	//お宝の初期座標を設定する
 	MulVector2DF(g_mapdata.treasure_pos, MAPCHIP_SIZE);
 	AddVector2DF(g_mapdata.treasure_pos, Vector2DF{ MAPCHIP_SIZE_HALF,MAPCHIP_SIZE_HALF });

@@ -89,6 +89,8 @@
   <!-- ソースファイル -->
   <ItemGroup>
     <ClCompile Include="Game\Collision.cpp" />
+    <ClCompile Include="Game\Enemy.cpp" />
+    <ClCompile Include="Game\EnemyManager.cpp" />
     <ClCompile Include="Game\Fire.cpp" />
     <ClCompile Include="Game\Graphic.cpp" />
     <ClCompile Include="Game\Key.cpp" />
@@ -119,6 +121,8 @@
   <!-- ヘッダファイル -->
   <ItemGroup>
     <ClInclude Include="Game\Collision.h" />
+    <ClInclude Include="Game\Enemy.h" />
+    <ClInclude Include="Game\EnemyManager.h" />
     <ClInclude Include="Game\Fire.h" />
     <ClInclude Include="Game\GameDefine.h" />
     <ClInclude Include="Game\GameEnum.h" />

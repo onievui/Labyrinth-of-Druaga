@@ -181,7 +181,7 @@ void LoadMapData(const StageId stageId, MapData *mapdata) {
 				x = 0;
 				y++;
 				if (y == mapdata->height) {
-					knd = -1;
+					knd = 6;
 				}
 			}
 			else {
@@ -191,13 +191,38 @@ void LoadMapData(const StageId stageId, MapData *mapdata) {
 					x = 0;
 					y++;
 					if (y == mapdata->height) {
-						knd = -1;
+						knd = 6;
 					}
 				}
 			}
 			if (mapdata->width == 0) {
 				break;
 			}
+			break;
+		//敵モンスター出現データ
+		case 6:
+			switch (num % 4) {
+			//種類
+			case 0:
+				mapdata->enemy_list[num / 4].is_use = TRUE;
+				mapdata->enemy_list[num / 4].knd = (EnemyPattern)atoi(inputc);
+			//X座標
+			case 1:
+				mapdata->enemy_list[num / 4].pos.x = (float)atoi(inputc);
+				break;
+			//Y座標
+			case 2:
+				mapdata->enemy_list[num / 4].pos.y = (float)atoi(inputc);
+				break;
+			//向き
+			case 3:
+				mapdata->enemy_list[num / 4].is_left = atoi(inputc);
+				break;
+			}
+			num++;
+			//最大登録数に到達したら処理を抜けさせる
+			if (num == ENEMY_MAX * 4)
+				knd = -1;
 			break;
 		case -1:
 			loop = 0;

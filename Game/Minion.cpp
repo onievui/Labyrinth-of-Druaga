@@ -6,7 +6,6 @@
 #include "GameObjectStruct.h"
 #include "Mediator.h"
 #include "Fire.h"
-#include <math.h>
 
 
 //’è”‚Ì’è‹`

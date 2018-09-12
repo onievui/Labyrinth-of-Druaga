@@ -26,6 +26,15 @@
 				if (*col[j].state)										\
 					if (check = CollisionMovingAABB(&col[i], &col[j]))	
 
+//動く矩形の当たり判定を総当たりさせるマクロ（移動無）
+#define MR_COLLISION_MACRO3(col1, len1, i, col2, len2, j, check)		\
+	for (i = len1 - 1; i >= 0; i--)										\
+		if (*col1[i].state)												\
+			for (j = len2 - 1; j >= 0; j--)								\
+				if (*col2[j].state)										\
+					if (check = CollisionMovingAABB2(&col1[i], &col2[j]))	
+
+
 
 
 //グローバル変数の宣言
@@ -33,11 +42,13 @@ BoxCollider g_player_collider[PLAYER_MAX];			//プレイヤーの当たり判定
 BoxCollider g_treasure_collider[TREASURE_MAX];		//お宝の当たり判定	
 BoxCollider g_minion_collider[MINION_MAX];			//召喚モンスターの当たり判定
 BoxCollider g_fire_collider[FIRE_MAX];				//ドラゴンの炎の当たり判定
+BoxCollider g_enemy_collider[ENEMY_MAX];			//敵モンスターの当たり判定
 
 
 //プロトタイプ宣言
 int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col);
 int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2);
+int CollisionMovingAABB2(BoxCollider *obj1, BoxCollider *obj2);
 BOOL CollisionAABB(Vector2DF *pos1, RectF *col1, Vector2DF *pos2, RectF *col2);
 
 
@@ -48,6 +59,7 @@ void InitializeCollision() {
 	OrderSetTreasureCollider(g_treasure_collider);
 	OrderSetMinionsCollider(g_minion_collider);
 	OrderSetFireCollider(g_fire_collider);
+	OrderSetEnemiesCollider(g_enemy_collider);
 }
 
 //当たり判定
@@ -93,6 +105,53 @@ void UpdateCollision() {
 		}
 	}
 
+	//敵モンスター同士の当たり判定
+	for (i = 0; i < ENEMY_MAX; i++) {
+		*g_enemy_collider[i].ride = NULL;
+	}
+	MR_COLLISION_MACRO2(g_enemy_collider, ENEMY_MAX, i, j, check) {
+		if (check & ISGROUND) {
+			*g_enemy_collider[i].collision_state |= ISGROUND;
+			*g_enemy_collider[j].collision_state |= ISCEILING;
+			*g_enemy_collider[i].ride = g_enemy_collider[j].vel;
+		}
+		else if (check & ISCEILING) {
+			*g_enemy_collider[j].collision_state |= ISGROUND;
+			*g_enemy_collider[i].collision_state |= ISCEILING;
+			*g_enemy_collider[j].ride = g_enemy_collider[i].vel;
+		}
+		if (check & ISLEFT) {
+			*g_enemy_collider[i].collision_state |= ISLEFT;
+			*g_enemy_collider[j].collision_state |= ISRIGHT;
+		}
+		else if (check & ISRIGHT) {
+			*g_enemy_collider[j].collision_state |= ISLEFT;
+			*g_enemy_collider[i].collision_state |= ISRIGHT;
+		}
+	}
+
+	//召喚モンスターと敵モンスターの当たり判定
+	MR_COLLISION_MACRO(g_minion_collider, MINION_MAX, i, g_enemy_collider, ENEMY_MAX, j, check) {
+		if (check & ISGROUND) {
+			*g_minion_collider[i].collision_state |= ISGROUND;
+			*g_enemy_collider[j].collision_state |= ISCEILING;
+			*g_minion_collider[i].ride = g_enemy_collider[j].vel;
+		}
+		else if (check & ISCEILING) {
+			*g_enemy_collider[j].collision_state |= ISGROUND;
+			*g_minion_collider[i].collision_state |= ISCEILING;
+			*g_enemy_collider[j].ride = g_minion_collider[i].vel;
+		}
+		if (check & ISLEFT) {
+			*g_minion_collider[i].collision_state |= ISLEFT;
+			*g_enemy_collider[j].collision_state |= ISRIGHT;
+		}
+		else if (check & ISRIGHT) {
+			*g_enemy_collider[j].collision_state |= ISLEFT;
+			*g_minion_collider[i].collision_state |= ISRIGHT;
+		}
+	}
+
 	//プレイヤーと召喚モンスターの当たり判定
 	*g_player_collider->ride = NULL;
 	MR_COLLISION_MACRO(g_player_collider, PLAYER_MAX, i, g_minion_collider, MINION_MAX, j, check) {
@@ -109,6 +168,24 @@ void UpdateCollision() {
 		}
 		else if (check & ISRIGHT) {
 			*g_minion_collider[j].collision_state |= ISLEFT;
+		}
+	}
+
+	//プレイヤーと敵モンスターの当たり判定
+	MR_COLLISION_MACRO(g_player_collider, PLAYER_MAX, i, g_enemy_collider, ENEMY_MAX, j, check) {
+		if (check & ISGROUND) {
+			*g_player_collider->collision_state = TRUE;
+			*g_player_collider->ride = g_enemy_collider[j].vel;
+		}
+		else if (check & ISCEILING) {
+			*g_enemy_collider[j].collision_state = TRUE;
+			*g_enemy_collider[j].ride = g_enemy_collider[i].vel;
+		}
+		if (check & ISLEFT) {
+			*g_enemy_collider[j].collision_state |= ISRIGHT;
+		}
+		else if (check & ISRIGHT) {
+			*g_enemy_collider[j].collision_state |= ISLEFT;
 		}
 	}
 
@@ -141,9 +218,26 @@ void UpdateCollision() {
 		}
 	}
 
-	
+	//敵モンスターとマップの当たり判定
+	for (i = 0; i < ENEMY_MAX; i++) {
+		if (*g_enemy_collider[i].state) {
+			*g_enemy_collider[i].collision_state |= check = CollisionObjectMap(g_enemy_collider[i].pos, g_enemy_collider[i].vel, g_enemy_collider[i].col);
+			if (check & ISGROUND) {
+				*g_enemy_collider[i].ground_flag = TRUE;
+			}
+			else {
+				//*g_enemy_collider[i].ground_flag = FALSE;
+			}
+		}
+	}
 
-	
+	//敵モンスターとドラゴンの炎の当たり判定
+	for (i = 0; i < FIRE_MAX; i++) {
+		g_fire_collider[i].vel = *g_fire_collider[i].ride;
+	}
+	MR_COLLISION_MACRO3(g_enemy_collider, ENEMY_MAX, i, g_fire_collider, FIRE_MAX, j, check) {
+		OrderDamageEnemy(i, 1);
+	}
 
 }
 
@@ -372,6 +466,112 @@ int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
 	}
 	return FALSE;
 }
+
+//動く矩形同士の当たり判定（移動無）
+int CollisionMovingAABB2(BoxCollider *obj1, BoxCollider *obj2) {
+	Vector2DF vel = *obj1->vel;		//相対速度の計算
+	SubVector2DF(vel, *obj2->vel);
+
+	float t, tx, ty;	//衝突するまでの時間
+	BOOL xflag, yflag;	//衝突したかの判定
+
+	t = tx = ty = 999;
+	xflag = yflag = FALSE;
+
+	Vector2DF point = { obj1->pos->x + obj1->col->left,
+						obj1->pos->y + obj1->col->top };
+	RectF rect = { obj2->pos->x + obj2->col->left - (obj1->col->right- obj1->col->left),
+					obj2->pos->y + obj2->col->top - (obj1->col->bottom - obj1->col->top),
+					obj2->pos->x + obj2->col->right,
+					obj2->pos->y + obj2->col->bottom };
+
+	//X方向の速度が0でないなら時間を求める
+	if (vel.x != 0) {
+		float lineX = (vel.x > 0) ? rect.left : rect.right;
+		tx = (lineX - point.x) / vel.x;
+
+		if ((tx >= 0) && (tx <= 1.0f)){
+			t = tx;
+			xflag = TRUE;
+		}
+		else if (point.x >= rect.left && point.x <= rect.right) {
+			xflag = TRUE;
+		}
+	}
+	//X方向の速度が0なら当たっているかを求める
+	else {	
+		if (point.x >= rect.left && point.x <= rect.right) {
+			/*if (point.x == rect.left || point.x == rect.right) {
+				xflag = FALSE;
+			}
+			else {
+				xflag = TRUE;
+			}*/
+			xflag = TRUE;
+		}
+	}
+
+	//Y方向の速度が0でないなら時間を求める
+	if (vel.y != 0) {
+		float lineY = (vel.y > 0) ? rect.top : rect.bottom;
+		ty = (lineY - point.y) / vel.y;
+
+		if ((ty >= 0) && (ty <= 1.0f)){
+			t = t < ty ? t : ty;
+			yflag = TRUE;
+		}
+		else if(point.y >= rect.top && point.y <= rect.bottom) {
+			yflag = TRUE;
+		}
+	}
+	//Y方向の速度が0なら当たっているかを求める
+	else {
+		if (point.y >= rect.top && point.y <= rect.bottom) {
+			yflag = TRUE;
+		}
+	}
+
+	//衝突しているなら
+	if (xflag && yflag) {
+		if (t != 999) {
+			//X方向に先に衝突したなら
+			if (t == tx) {
+				//obj1の右側と衝突したなら
+				if (obj1->pos->x < obj2->pos->x) {
+					return ISRIGHT;
+				}
+				//obj1の左側と衝突したなら
+				else {
+					return ISLEFT;
+				}
+			}
+			//Y方向に先に衝突したなら
+			if (t == ty) {
+				//obj1の下側と衝突したなら
+				if (obj1->pos->y < obj2->pos->y) {
+					return ISGROUND;
+				}
+				//obj1の上側と衝突したなら
+				else {
+					return ISCEILING;
+				}
+			}
+		}
+		else {
+			if (vel.y == 0) {
+				if (obj1->vel->y > 0) {
+					return ISGROUND;
+				}
+				else {
+					return ISCEILING;
+				}
+			}
+		}
+		return ISTRUE;
+	}
+	return FALSE;
+}
+
 
 //動かない矩形同士の当たり判定
 BOOL CollisionAABB(Vector2DF *pos1, RectF *col1, Vector2DF *pos2, RectF *col2) {

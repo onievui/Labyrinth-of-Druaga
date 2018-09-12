@@ -244,7 +244,7 @@ BOOL DamageMinion(int i, int power) {
 	//エラーチェック
 	if (i < 0 || i >= g_active_minion_num) {
 		MessageBox(NULL, "召喚モンスターのダメージ処理で不正な値が渡されました", "", MB_OK);
-		return;
+		return FALSE;
 	}
 
 	//体力が0なら消滅させる

@@ -54,7 +54,12 @@ enum MinionPattern {
 	MINION_PATTERN_NUM,		//召喚モンスターの種類数
 };
 
-
+//敵モンスターの種類
+enum EnemyPattern {
+	ENEMY_DRUID,			//ドルイド（マジシャン）
+	ENEMY_WIZARD,			//ウィザード（マジシャン）
+	ENEMY_PATTERN_NUM		//敵モンスターの種類数
+};
 
 
 

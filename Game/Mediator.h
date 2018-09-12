@@ -75,6 +75,15 @@ void OrderDestroyMinion(int i);
 //ドラゴンの炎の当たり判定の設定依頼
 void OrderSetFireCollider(BoxCollider collider[]);
 
+//敵モンスターの生成依頼
+BOOL OrderCreateEnemies(EnemyList enemy_list[]);
+
+//敵モンスターの当たり判定の設定依頼
+void OrderSetEnemiesCollider(BoxCollider collider[]);
+
+//敵モンスターのダメージ処理依頼
+BOOL OrderDamageEnemy(int i, int power);
+
 //お宝の座標を設定する
 void OrderSetTreasurePos(Vector2DF pos);
 

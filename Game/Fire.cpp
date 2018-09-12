@@ -99,7 +99,7 @@ void UpdateFire() {
 					}
 				}
 				//移動処理
-				AddVector2DF(g_fire[i].pos, g_fire[i].parent->vel);
+				AddVector2DF(g_fire[i].pos, *g_fire[i].parent_vel);
 			}
 			//消滅状態なら
 			else {
@@ -144,13 +144,6 @@ void DrawFire() {
 			if (g_fire[i].state == 3) {
 				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 			}
-			/*pos = g_fire[i].pos;
-			SubVector2DF(pos, OrderGetCameraOffset());
-			RectF rect = { pos.x + g_fire[i].col.left,
-				pos.y + g_fire[i].col.top,
-				pos.x + g_fire[i].col.right,
-				pos.y + g_fire[i].col.bottom };
-			DrawBoxAA(rect.left, rect.top, rect.right, rect.bottom, COLOR_BLUE, 0);*/
 			
 		}
 	}
@@ -211,6 +204,7 @@ void ChangeFireParentPt(Minion *pre_parent, Minion *new_parent) {
 		if (g_fire[i].state && g_fire[i].parent == pre_parent) {
 			//親オブジェクトの再設定をする
 			g_fire[i].parent = new_parent;
+			g_fire[i].parent_vel = &new_parent->vel;
 		}
 	}
 }

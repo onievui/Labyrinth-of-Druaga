@@ -130,6 +130,12 @@
     <ClCompile Include="Game\Fire.cpp">
       <Filter>ゲーム\オブジェクト関連</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Enemy.cpp">
+      <Filter>ゲーム\オブジェクト関連</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\EnemyManager.cpp">
+      <Filter>ゲーム\オブジェクト関連</Filter>
+    </ClCompile>
   </ItemGroup>
   <!-- ヘッダファイル -->
   <ItemGroup>
@@ -227,6 +233,12 @@
       <Filter>ゲーム\オブジェクト関連</Filter>
     </ClInclude>
     <ClInclude Include="Game\Fire.h">
+      <Filter>ゲーム\オブジェクト関連</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Enemy.h">
+      <Filter>ゲーム\オブジェクト関連</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\EnemyManager.h">
       <Filter>ゲーム\オブジェクト関連</Filter>
     </ClInclude>
   </ItemGroup>

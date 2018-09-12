@@ -37,6 +37,14 @@ struct Map {
 	GraphP graphp;		//画像
 };
 
+//敵モンスター出現用データ
+struct EnemyList {
+	BOOL is_use;		//使用するかどうか
+	EnemyPattern knd;	//種類
+	Vector2DF pos;		//座標
+	BOOL is_left;		//左向きかどうか
+};
+
 //マップ全体の構造体
 struct MapData {
 	Map map[MAP_WIDTH_MAX][MAP_HEIGHT_MAX];	//各マスの情報
@@ -46,6 +54,7 @@ struct MapData {
 	int player_sp;							//プレイヤーの初期SP
 	Vector2DF treasure_pos;					//お宝の座標
 	BOOL summonable[MINION_PATTERN_NUM];	//召喚できるモンスターの種類
+	EnemyList enemy_list[ENEMY_MAX];		//出現する敵の情報
 };
 
 // プレイヤー構造体
@@ -128,6 +137,24 @@ struct Fire {
 	BOOL is_left;			//左向きかどうか	
 	Graph graph;			//表示画像情報
 	int sprite_num;			//スプライト番号
+};
+
+//敵モンスター構造体
+struct Enemy {
+	EnemyPattern knd;		//種類
+	int state;				//状態
+	int count;				//出現してからの時間
+	int hp;					//体力
+	Vector2DF pos;			//座標
+	RectF col;				//当たり判定の相対座標
+	Vector2DF vel;			//移動量
+	Vector2DF *ride;		//乗っているオブジェクトの速度
+	BOOL is_left;			//左向きかどうか
+	int collision_state;	//他の物体にどう接しているか
+	BOOL ground_flag;		//マップに着地したかどうか
+	Graph graph;			//表示画像情報
+	int sprite_num;			//スプライト番号
+	int anime_count;		//アニメーション用カウンタ
 };
 
 //動く矩形の衝突判定用構造体

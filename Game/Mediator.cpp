@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "MinionManager.h"
 #include "Fire.h"
+#include "EnemyManager.h"
 #include "Treasure.h"
 #include "Collision.h"
 
@@ -132,6 +133,21 @@ void OrderDestroyMinion(int i) {
 //ドラゴンの炎の当たり判定の設定依頼
 void OrderSetFireCollider(BoxCollider collider[]) {
 	SetFireCollider(collider);
+}
+
+//敵モンスターの生成依頼
+BOOL OrderCreateEnemies(EnemyList enemy_list[]) {
+	return CreateEnemies(enemy_list);
+}
+
+//敵モンスターの当たり判定の設定依頼
+void OrderSetEnemiesCollider(BoxCollider collider[]) {
+	SetEnemiesCollider(collider);
+}
+
+//敵モンスターのダメージ処理依頼
+BOOL OrderDamageEnemy(int i, int power) {
+	return DamageEnemy(i, power);
 }
 
 //お宝の座標を設定する
