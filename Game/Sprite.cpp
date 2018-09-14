@@ -28,6 +28,7 @@ void InitializeSprite() {
 	g_sprite[SPR_STD_MONSTER]  = Sprite{ g_texture[GRP_MONSTER],   RECT{ 8,  8,  64,  64 } };
 	g_sprite[SPR_STD_DRAGON]   = Sprite{ g_texture[GRP_DRAGON],    RECT{ 8,  8,  96,  64 } };
 	g_sprite[SPR_STD_FIRE]     = Sprite{ g_texture[GRP_FIRE],      RECT{ 8,  8, 256,  64 } };
+	g_sprite[SPR_STD_MAGIC]    = Sprite{ g_texture[GRP_MAGIC],     RECT{ 8,  8,  64,  64 } };
 	for (i = 0; i < 11; i++) {
 		g_sprite[SPR_MAPCHIP1_1 + i] = Sprite{ g_texture[GRP_MAPCHIP1],  RECT{ 4 + i*(64 + 4),  4,  64,  64 } };
 	}
@@ -61,6 +62,10 @@ RECT GetSpriteRect(const SPR_ID sprId, const int num) {
 	//ドラゴンの炎スプライト
 	case SPR_STD_FIRE:
 		rect = RECT{ 8, 8 + num*(64 + 8),256,64 };
+		break;
+	//モンスターの魔法スプライト
+	case SPR_STD_MAGIC:
+		rect = RECT{ 8 + (num % 4)*(64 + 8),8 + (num / 4)*(64 + 8),64,64 };
 		break;
 	default:
 		MessageBox(NULL, "スプライトの切り出し位置の取得で不正な値が渡されました", "", MB_OK);

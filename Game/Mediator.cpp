@@ -10,6 +10,7 @@
 #include "MinionManager.h"
 #include "Fire.h"
 #include "EnemyManager.h"
+#include "MagicManager.h"
 #include "Treasure.h"
 #include "Collision.h"
 
@@ -95,6 +96,11 @@ void OrderPlayerGetTreasure() {
 	PlayerGetTreasure();
 }
 
+//プレイヤーがダメージ判定と衝突したときの処理依頼
+void OrderCollisionPlayer() {
+	CollisionPlayer();
+}
+
 //召喚モンスターの生成依頼
 int OrderCreateMinion(SummonAreaData *summon_area_data) {
 	return CreateMinion(summon_area_data);
@@ -125,6 +131,11 @@ void OrderDeleteMinion(SummonAreaData *summon_area_data) {
 	DeleteMinion(summon_area_data);
 }
 
+//召喚モンスターのダメージ処理依頼
+BOOL OrderDamageMinion(int i, int power) {
+	return DamageMinion(i, power);
+}
+
 //召喚モンスターの消滅依頼
 void OrderDestroyMinion(int i) {
 	DestroyMinion(i);
@@ -148,6 +159,26 @@ void OrderSetEnemiesCollider(BoxCollider collider[]) {
 //敵モンスターのダメージ処理依頼
 BOOL OrderDamageEnemy(int i, int power) {
 	return DamageEnemy(i, power);
+}
+
+//敵の魔法の当たり判定の設定依頼
+void OrderSetMagicsCollider(BoxCollider collider[]) {
+	SetMagicsCollider(collider);
+}
+
+//敵の魔法の壁衝突処理依頼
+BOOL OrderCollisionMagic(int i) {
+	return CollisionMagic(i);
+}
+
+//敵の魔法の消滅依頼
+void OrderDestroyMagic(int i) {
+	DestroyMagic(i);
+}
+
+//敵の魔法のダメージ量の取得依頼
+int OrderGetMagicPower(int i) {
+	return GetMagicPower(i);
 }
 
 //お宝の座標を設定する
@@ -198,6 +229,11 @@ BOOL OrderCollisionObjectMinions(Vector2DF *pos, RectF *col) {
 //オブジェクトと召喚モンスターの当たり判定依頼（当たったものは消す）
 BOOL OrderCollisionDeleteObjectMinions(Vector2DF *pos, RectF *col) {
 	return CollisionDeleteObjectMinions(pos, col);
+}
+
+//オブジェクトと敵モンスターの当たり判定依頼
+BOOL OrderCollisionObjectEnemies(Vector2DF *pos, RectF *col) {
+	return CollisionObjectEnemies(pos, col);
 }
 
 //カメラのオフセットを取得する依頼

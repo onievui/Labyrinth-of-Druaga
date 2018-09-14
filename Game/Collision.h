@@ -18,6 +18,8 @@ BOOL CollisionObjectMinions(Vector2DF *pos, RectF *col);
 //オブジェクトと召喚モンスターの当たり判定（当たったものは消す）
 BOOL CollisionDeleteObjectMinions(Vector2DF *pos, RectF *col);
 
+//オブジェクトと敵モンスターの当たり判定
+BOOL CollisionObjectEnemies(Vector2DF *pos, RectF *col);
 
 
 

@@ -23,6 +23,7 @@ HSND g_bgm[BGM_ALL_NUM];
 int g_shader[SHA_ALL_NUM];
 HFNT g_font_g30;
 HFNT g_font_g40;
+HFNT g_font_g50;
 HFNT g_font_g70;
 HFNT g_font_g150;
 
@@ -39,6 +40,7 @@ void LoadResources() {
 	}
 	g_font_g30 = CreateFontToHandle("GN-こはるいろサンレイ", 30, 3, DX_FONTTYPE_ANTIALIASING);
 	g_font_g40 = CreateFontToHandle("GN-こはるいろサンレイ", 40, 3, DX_FONTTYPE_ANTIALIASING);
+	g_font_g50 = CreateFontToHandle("GN-こはるいろサンレイ", 50, 3, DX_FONTTYPE_ANTIALIASING);
 	g_font_g70 = CreateFontToHandle("GN-こはるいろサンレイ", 70, 3, DX_FONTTYPE_ANTIALIASING);
 	g_font_g150 = CreateFontToHandle("GN-こはるいろサンレイ", 150, 3, DX_FONTTYPE_ANTIALIASING);
 
@@ -53,6 +55,7 @@ void LoadResources() {
 	g_texture[GRP_MONSTER]      = LoadGraph("Resources/Textures/Protected/monster.png");
 	g_texture[GRP_DRAGON]       = LoadGraph("Resources/Textures/Protected/dragon.png");
 	g_texture[GRP_FIRE]         = LoadGraph("Resources/Textures/Protected/fire.png");
+	g_texture[GRP_MAGIC]        = LoadGraph("Resources/Textures/Protected/magic.png");
 	g_texture[GRP_MAPCHIP1]     = LoadGraph("Resources/Textures/Protected/mapchip1.png");
 	g_texture[GRP_OBJECT_OTHER] = LoadGraph("Resources/Textures/Protected/object_other.png");
 
@@ -259,6 +262,7 @@ void DeleteResources() {
 	//フォントの削除
 	DeleteFontToHandle(g_font_g30);
 	DeleteFontToHandle(g_font_g40); 
+	DeleteFontToHandle(g_font_g50);
 	DeleteFontToHandle(g_font_g70);
 	DeleteFontToHandle(g_font_g150);
 }

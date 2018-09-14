@@ -25,6 +25,7 @@ enum GRP_ID {
 	GRP_MONSTER,			//モンスター画像
 	GRP_DRAGON,				//ドラゴン画像
 	GRP_FIRE,				//ドラゴンの炎画像
+	GRP_MAGIC,				//モンスター魔法画像
 	GRP_MAPCHIP1,			//マップチップ画像1
 	GRP_OBJECT_OTHER,		//その他オブジェクト画像
 	GRP_ALL_NUM,			//読み込む画像ファイルの数
@@ -55,6 +56,7 @@ extern HSND g_bgm[BGM_ALL_NUM];
 extern int g_shader[SHA_ALL_NUM];
 extern HFNT g_font_g30;
 extern HFNT g_font_g40;
+extern HFNT g_font_g50;
 extern HFNT g_font_g70;
 extern HFNT g_font_g150;
 

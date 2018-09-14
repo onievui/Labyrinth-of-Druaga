@@ -4,7 +4,7 @@
 
 //ヘッダファイルの読み込み
 #include "GameObjectStruct.h"
-
+#include "MagicManager.h"
 
 
 //定数の定義
@@ -42,7 +42,7 @@ void InitializePrototypeEnemy(Enemy proto_enemy[]) {
 		0,
 		1,
 		{ 0,0 },
-		{ -21,-12,21,12 },
+		{ -18,-30,18,30 },
 		{ 0,0 },
 		NULL,
 		TRUE,
@@ -77,6 +77,11 @@ void UpdateEnemyDruid(Enemy *enemy) {
 	//横方向の速度をリセットする
 	enemy->vel.x = 0;
 
+	//60フレームに1回白魔法を撃ち出す
+	if (enemy->count % 60 == 59) {
+		CreateMagic(MAGIC_WHITE, &enemy->pos, enemy->is_left);
+	}
+
 	//マップとの着地判定の適用
 	if (enemy->ground_flag) {
 		//着地している判定にする
@@ -95,6 +100,9 @@ void UpdateEnemyDruid(Enemy *enemy) {
 	if (enemy->ride) {
 		AddVector2DF(enemy->vel, *enemy->ride);
 	}
+
+
+	enemy->count++;
 
 }
 
@@ -118,6 +126,11 @@ void UpdateEnemyWizard(Enemy *enemy) {
 	//横方向の速度をリセットする
 	enemy->vel.x = 0;
 
+	//60フレームに1回緑魔法を撃ち出す
+	if (enemy->count % 60 == 59) {
+		CreateMagic(MAGIC_GREEN, &enemy->pos, enemy->is_left);
+	}
+
 	//マップとの着地判定の適用
 	if (enemy->ground_flag) {
 		//着地している判定にする
@@ -136,6 +149,9 @@ void UpdateEnemyWizard(Enemy *enemy) {
 	if (enemy->ride) {
 		AddVector2DF(enemy->vel, *enemy->ride);
 	}
+
+
+	enemy->count++;
 
 }
 

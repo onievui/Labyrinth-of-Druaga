@@ -73,7 +73,7 @@ void InitializePrototypeMinion(Minion proto_minion[], SummonData s_data[]) {
 	{
 		MINION_QUOX,
 		1,
-		3,
+		5,
 		{ 0,0 },
 		{ -31,-26,31,32 },//{ -25,-15,25,32 },
 		{ 0,0 },
@@ -186,8 +186,8 @@ void UpdateMinionQuox(Minion *minion) {
 	//横方向の速度をリセットする
 	minion->vel.x = 0;
 
-	//60フレーム経過したら炎を吐く
-	if (minion->anime_count == 60) {
+	//60フレーム経過したら130フレーム1回炎を吐く
+	if (minion->anime_count % 130 == 60) {
 		//炎を生成する
 		CreateFire(minion);
 		//炎を吐き出している画像に変更する

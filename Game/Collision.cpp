@@ -43,10 +43,12 @@ BoxCollider g_treasure_collider[TREASURE_MAX];		//お宝の当たり判定
 BoxCollider g_minion_collider[MINION_MAX];			//召喚モンスターの当たり判定
 BoxCollider g_fire_collider[FIRE_MAX];				//ドラゴンの炎の当たり判定
 BoxCollider g_enemy_collider[ENEMY_MAX];			//敵モンスターの当たり判定
+BoxCollider g_magic_collider[MAGIC_MAX];			//モンスターの魔法の当たり判定
 
 
 //プロトタイプ宣言
 int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col);
+int CollisionObjectMap2(Vector2DF *pos, Vector2DF *vel, RectF *col);
 int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2);
 int CollisionMovingAABB2(BoxCollider *obj1, BoxCollider *obj2);
 BOOL CollisionAABB(Vector2DF *pos1, RectF *col1, Vector2DF *pos2, RectF *col2);
@@ -60,6 +62,7 @@ void InitializeCollision() {
 	OrderSetMinionsCollider(g_minion_collider);
 	OrderSetFireCollider(g_fire_collider);
 	OrderSetEnemiesCollider(g_enemy_collider);
+	OrderSetMagicsCollider(g_magic_collider);
 }
 
 //当たり判定
@@ -236,8 +239,39 @@ void UpdateCollision() {
 		g_fire_collider[i].vel = *g_fire_collider[i].ride;
 	}
 	MR_COLLISION_MACRO3(g_enemy_collider, ENEMY_MAX, i, g_fire_collider, FIRE_MAX, j, check) {
-		OrderDamageEnemy(i, 1);
+		//ダメージを与える
+		if (OrderDamageEnemy(i, 1))
+		{
+			break;
+		}
 	}
+
+	//召喚モンスターと敵の魔法の当たり判定
+	MR_COLLISION_MACRO3(g_minion_collider, MINION_MAX, i, g_magic_collider, MAGIC_MAX, j, check) {
+		//召喚モンスターを倒せなかったら消滅する
+		if (!OrderDamageMinion(i, OrderGetMagicPower(j))) {
+			OrderDestroyMagic(j);
+		}
+		else {
+			break;
+		}
+	}
+
+	//プレイヤーと敵の魔法の当たり判定
+	MR_COLLISION_MACRO3(g_player_collider, PLAYER_MAX, i, g_magic_collider, MAGIC_MAX, j, check) {
+		//プレイヤーのダメージ処理を呼び出す
+		OrderCollisionPlayer();
+	}
+
+	//敵の魔法とマップの当たり判定
+	for (i = MAGIC_MAX - 1; i >= 0; i--) {
+		if (*g_magic_collider[i].state) {
+			if (CollisionObjectMap2(g_magic_collider[i].pos, g_magic_collider[i].vel, g_magic_collider[i].col)) {
+				OrderCollisionMagic(i);
+			}	
+		}
+	}
+
 
 }
 
@@ -305,10 +339,45 @@ int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
 	return mL + mR*2 + mU*4 + mD*8;
 }
 
+//オブジェクトとマップの当たり判定（移動無）
+int CollisionObjectMap2(Vector2DF *pos, Vector2DF *vel, RectF *col) {
+
+	//移動前の座標
+	RectF rect0 = {
+		pos->x + col->left,
+		pos->y + col->top,
+		pos->x + col->right - 1,
+		pos->y + col->bottom - 1,
+	};
+	//移動後の座標
+	RectF rect1 = {
+		vel->x + rect0.left,
+		vel->y + rect0.top,
+		vel->x + rect0.right,
+		vel->y + rect0.bottom,
+	};
+
+	//マップ縦横方向判定
+	BOOL mL = OrderIsWallWithPos(rect1.left, rect0.top) || OrderIsWallWithPos(rect1.left, rect0.bottom);
+	BOOL mR = OrderIsWallWithPos(rect1.right, rect0.top) || OrderIsWallWithPos(rect1.right, rect0.bottom);
+	BOOL mU = OrderIsWallWithPos(rect0.left, rect1.top) || OrderIsWallWithPos(rect0.right, rect1.top);
+	BOOL mD = OrderIsWallWithPos(rect0.left, rect1.bottom) || OrderIsWallWithPos(rect0.right, rect1.bottom);
+
+	//マップ斜め方向判定
+	if (!mL && !mU) { mL = mU = OrderIsWallWithPos(rect1.left, rect1.top); }
+	if (!mL && !mD) { mL = mD = OrderIsWallWithPos(rect1.left, rect1.bottom); }
+	if (!mR && !mU) { mR = mU = OrderIsWallWithPos(rect1.right, rect1.top); }
+	if (!mR && !mD) { mR = mD = OrderIsWallWithPos(rect1.right, rect1.bottom); }
+
+
+	//１方向でも衝突していたらTRUEを返す
+	return mL + mR * 2 + mU * 4 + mD * 8;
+}
+
 //オブジェクトと召喚モンスターの当たり判定
 BOOL CollisionObjectMinions(Vector2DF *pos, RectF *col) {
 	int i;
-	for (i = MINION_MAX - 1; i >= 0; i--) {
+	for (i = 0; i < MINION_MAX; i++) {
 		if (*g_minion_collider[i].state) {
 			//衝突しているかどうか
 			if (CollisionAABB(pos, col, g_minion_collider[i].pos, g_minion_collider[i].col)) {
@@ -334,6 +403,20 @@ BOOL CollisionDeleteObjectMinions(Vector2DF *pos, RectF *col) {
 		}
 	}
 	return ret;
+}
+
+//オブジェクトと敵モンスターの当たり判定
+BOOL CollisionObjectEnemies(Vector2DF *pos, RectF *col) {
+	int i;
+	for (i = 0; i < ENEMY_MAX; i++) {
+		if (*g_enemy_collider[i].state) {
+			//衝突しているかどうか
+			if (CollisionAABB(pos, col, g_enemy_collider[i].pos, g_enemy_collider[i].col)) {
+				return TRUE;
+			}
+		}
+	}
+	return FALSE;
 }
 
 //動く矩形同士の当たり判定

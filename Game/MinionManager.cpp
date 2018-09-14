@@ -90,7 +90,9 @@ SummonAreaData GetSummonAreaData(MinionPattern knd, Vector2DF *pl_pos, RectF *pl
 		summon_area_data.pos = s_pos;
 		summon_area_data.area = g_prototype_minion[knd].col;
 		//スペースがないなら無効にする
-		if (OrderIsWallWithPos(s_pos.x, s_pos.y) || OrderCollisionObjectMinions(&s_pos, &g_prototype_minion[knd].col)) {
+		if (OrderIsWallWithPos(s_pos.x, s_pos.y) ||
+			OrderCollisionObjectMinions(&s_pos, &g_prototype_minion[knd].col) ||
+			OrderCollisionObjectEnemies(&s_pos, &g_prototype_minion[knd].col)) {
 			summon_area_data.is_available = FALSE;
 			summon_area_data.state = 1;
 		}

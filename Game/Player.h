@@ -47,7 +47,7 @@ void AddPlayerSp(int plus);
 //プレイヤーがお宝を取得したときの処理
 void PlayerGetTreasure();
 
-//プレイヤーが敵と衝突したときの処理
-//void CollisionPlayer();
+//プレイヤーがダメージ判定と衝突したときの処理
+void CollisionPlayer();
 
 

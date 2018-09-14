@@ -10,13 +10,23 @@
 #define FIRE_INI_OFFSET		(60)					//親の座標とのずれ
 #define FIRE_DRAW_OFFSET	(160-FIRE_INI_OFFSET)	//描画時の中心座標のずれ
 
-#define FIRE_SPEED			(6)					//炎の増大間隔
+#define FIRE_SPEED			(5)					//炎の増大間隔
+
+
+//ドラゴンの炎の状態
+enum FireState {
+	FIRE_STATE_NONE,		//未使用状態
+	FIRE_STATE_IN,			//拡大状態
+	FIRE_STATE_WAIT,		//待機状態
+	FIRE_STATE_OUT,			//縮小状態
+	FIRE_STATE_DESTROY		//消滅状態
+};
 
 
 
 //関数のプロトタイプ宣言
 RectF GetFireRect(int sprite_num);
-
+void UpdateFireAnimation(int i, int num);
 
 
 Fire g_fire[FIRE_MAX];		//ドラゴンの炎オブジェクト
@@ -76,25 +86,36 @@ void UpdateFire() {
 	for (i = 0; i < FIRE_MAX; i++) {
 		if (g_fire[i].state) {
 			//出現状態なら
-			if (g_fire[i].state < 3) {
-				//大きくなる途中なら処理を行う
-				if (g_fire[i].state == 1) {
+			if (g_fire[i].state < FIRE_STATE_DESTROY) {
+				//拡大状態なら
+				if (g_fire[i].state == FIRE_STATE_IN) {
 					//10フレームに1回大きくする
 					if (g_fire[i].count % FIRE_SPEED == FIRE_SPEED-1) {
-						//画像の変更
-						g_fire[i].sprite_num++;
-						g_fire[i].graph.sprite.rect = GetSpriteRect(SPR_STD_FIRE, g_fire[i].sprite_num);
-						//当たり判定の更新
-						g_fire[i].col = GetFireRect(g_fire[i].sprite_num);
-						//左右反転させる
-						if (g_fire[i].is_left) {
-							float tmp = g_fire[i].col.left;
-							g_fire[i].col.left = -g_fire[i].col.right;
-							g_fire[i].col.right = -tmp;
-						}
-						//最大まで大きくなったら状態を遷移させる
+						//アニメーションの更新
+						UpdateFireAnimation(i, 1);
+						//最大まで大きくなったら待機状態に遷移
 						if (g_fire[i].sprite_num == 7) {
-							g_fire[i].state = 2;
+							g_fire[i].state = FIRE_STATE_WAIT;
+						}
+					}
+				}
+				//待機状態なら
+				else if (g_fire[i].state == FIRE_STATE_WAIT) {
+					//一定時間経過で縮小状態に遷移
+					if (g_fire[i].count == FIRE_SPEED * 8 * 2) {
+						g_fire[i].state = FIRE_STATE_OUT;
+					}
+				}
+				//縮小状態なら
+				else {
+					//10フレームに1回小さくする
+					if (g_fire[i].count % FIRE_SPEED == FIRE_SPEED - 1) {
+						//アニメーションの更新
+						UpdateFireAnimation(i, -1);
+						//最小まで小さくなったら消す
+						if (g_fire[i].sprite_num == 0) {
+							g_fire[i].parent = NULL;
+							g_fire[i].state = FIRE_STATE_DESTROY;
 						}
 					}
 				}
@@ -103,9 +124,9 @@ void UpdateFire() {
 			}
 			//消滅状態なら
 			else {
-				//60フレームで消滅させる
-				if (g_fire[i].count == 60) {
-					g_fire[i].state = 0;
+				//最大60フレームで消滅させる
+				if (g_fire[i].count >= 60) {
+					g_fire[i].state = FIRE_STATE_NONE;
 				}
 			}
 			g_fire[i].count++;
@@ -127,7 +148,7 @@ void DrawFire() {
 				pos.x += FIRE_DRAW_OFFSET;
 			}
 			//消滅中は透明にする
-			if (g_fire[i].state == 3) {
+			if (g_fire[i].state == FIRE_STATE_DESTROY) {
 				float t = (60 - g_fire[i].count) / 60.0f;
 				SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)(255 * t * (2-t)));
 			}
@@ -141,7 +162,7 @@ void DrawFire() {
 			}
 
 			//透明度を元に戻す
-			if (g_fire[i].state == 3) {
+			if (g_fire[i].state == FIRE_STATE_DESTROY) {
 				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 			}
 			
@@ -182,6 +203,21 @@ RectF GetFireRect(int sprite_num) {
 	return ret;
 }
 
+//ドラゴンの炎のアニメーションの更新
+void UpdateFireAnimation(int i, int num) {
+	//画像の変更
+	g_fire[i].sprite_num += num;
+	g_fire[i].graph.sprite.rect = GetSpriteRect(SPR_STD_FIRE, g_fire[i].sprite_num);
+	//当たり判定の更新
+	g_fire[i].col = GetFireRect(g_fire[i].sprite_num);
+	//左右反転させる
+	if (g_fire[i].is_left) {
+		float tmp = g_fire[i].col.left;
+		g_fire[i].col.left = -g_fire[i].col.right;
+		g_fire[i].col.right = -tmp;
+	}
+}
+
 //ドラゴンの炎の当たり判定の設定
 void SetFireCollider(BoxCollider collider[]) {
 	int i;
@@ -217,7 +253,7 @@ void DestroyFire(Minion *parent) {
 		if (g_fire[i].state && g_fire[i].parent == parent) {
 			//IDを変更して、状態を遷移する
 			g_fire[i].parent = NULL;
-			g_fire[i].state = 3;
+			g_fire[i].state = FIRE_STATE_DESTROY;
 			g_fire[i].count = 0;
 		}
 	}

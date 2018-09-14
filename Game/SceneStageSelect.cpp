@@ -138,10 +138,18 @@ void RenderStageSelect(void)
 	//選択するステージ名の表示
 	int i;
 	Vector2DF pos = g_stageselect_icon_object.pos;
+	char name[64];
 	for (i = 0; i < STAGE_NUM; i++) {
+		//枠の描画
 		//DrawGraphic(pos, &g_stageselect_back_object.graph);
-		DrawBoxAA(pos.x - 60, pos.y - 40, pos.x + 60, pos.y + 40, COLOR_BLUE, TRUE);
+		DrawBoxAA(pos.x - 60, pos.y - 40, pos.x + 60, pos.y + 40, COLOR_BLACK, TRUE);
 
+		//文字の描画
+		sprintf(name, "%d - %d", i / 5 + 1, i % 5 + 1);
+		DrawFormatStringFToHandle(pos.x - GetDrawFormatStringWidthToHandle(g_font_g30, "%s", name) / 2.0f,
+			pos.y - 10, COLOR_WHITE, g_font_g30, "%s", name);
+
+		//座標をずらす
 		if (i % 5 != 4) {
 			pos.x += SCREEN_WIDTH * 4 / 20;
 		}
@@ -149,7 +157,6 @@ void RenderStageSelect(void)
 			pos.x = g_stageselect_icon_object.pos.x;
 			pos.y += SCREEN_HEIGHT * 4 / 20;
 		}
-
 	}
 
 	//選択中のステージを表すカーソルの表示

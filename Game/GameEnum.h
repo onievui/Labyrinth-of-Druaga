@@ -33,6 +33,11 @@ enum StageId {
 	STAGE_13,
 	STAGE_14,
 	STAGE_15,
+	STAGE_16,
+	STAGE_17,
+	STAGE_18,
+	STAGE_19,
+	STAGE_20,
 	STAGE_NUM,
 };
 
@@ -61,5 +66,11 @@ enum EnemyPattern {
 	ENEMY_PATTERN_NUM		//敵モンスターの種類数
 };
 
+//モンスターの魔法の種類
+enum MagicPattern {
+	MAGIC_WHITE,			//通常魔法
+	MAGIC_GREEN,			//貫通魔法
+	MAGIC_PATTERN_NUM		//モンスターの魔法の種類数
+};
 
 

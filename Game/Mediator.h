@@ -51,6 +51,9 @@ void OrderAddPlayerSp(int plus);
 //プレイヤーがお宝を取得したときの処理依頼
 void OrderPlayerGetTreasure();
 
+//プレイヤーがダメージ判定と衝突したときの処理依頼
+void OrderCollisionPlayer();
+
 //召喚モンスターの生成依頼
 int OrderCreateMinion(SummonAreaData *summon_area_data);
 
@@ -69,6 +72,9 @@ SummonAreaData OrderGetSummonAreaData(MinionPattern knd, Vector2DF *pl_pos, Rect
 //召喚モンスターを消す依頼
 void OrderDeleteMinion(SummonAreaData *summon_area_data);
 
+//召喚モンスターのダメージ処理依頼
+BOOL OrderDamageMinion(int i, int power);
+
 //召喚モンスターの消滅依頼
 void OrderDestroyMinion(int i);
 
@@ -83,6 +89,18 @@ void OrderSetEnemiesCollider(BoxCollider collider[]);
 
 //敵モンスターのダメージ処理依頼
 BOOL OrderDamageEnemy(int i, int power);
+
+//敵の魔法の当たり判定の設定依頼
+void OrderSetMagicsCollider(BoxCollider collider[]);
+
+//敵の魔法の壁衝突処理依頼
+BOOL OrderCollisionMagic(int i);
+
+//敵の魔法の消滅依頼
+void OrderDestroyMagic(int i);
+
+//敵の魔法のダメージ量の取得依頼
+int OrderGetMagicPower(int i);
 
 //お宝の座標を設定する
 void OrderSetTreasurePos(Vector2DF pos);
@@ -113,6 +131,9 @@ BOOL OrderCollisionObjectMinions(Vector2DF *pos, RectF *col);
 
 //オブジェクトと召喚モンスターの当たり判定依頼（当たったものは消す）
 BOOL OrderCollisionDeleteObjectMinions(Vector2DF *pos, RectF *col);
+
+//オブジェクトと敵モンスターの当たり判定依頼
+BOOL OrderCollisionObjectEnemies(Vector2DF *pos, RectF *col);
 
 //カメラのオフセットを取得する依頼
 Vector2DF OrderGetCameraOffset();

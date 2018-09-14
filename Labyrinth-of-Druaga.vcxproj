@@ -95,6 +95,8 @@
     <ClCompile Include="Game\Graphic.cpp" />
     <ClCompile Include="Game\Key.cpp" />
     <ClCompile Include="Game\Load.cpp" />
+    <ClCompile Include="Game\Magic.cpp" />
+    <ClCompile Include="Game\MagicManager.cpp" />
     <ClCompile Include="Game\Map.cpp" />
     <ClCompile Include="Game\Mediator.cpp" />
     <ClCompile Include="Game\Minion.cpp" />
@@ -130,6 +132,8 @@
     <ClInclude Include="Game\Graphic.h" />
     <ClInclude Include="Game\Key.h" />
     <ClInclude Include="Game\Load.h" />
+    <ClInclude Include="Game\Magic.h" />
+    <ClInclude Include="Game\MagicManager.h" />
     <ClInclude Include="Game\Map.h" />
     <ClInclude Include="Game\Mediator.h" />
     <ClInclude Include="Game\Minion.h" />

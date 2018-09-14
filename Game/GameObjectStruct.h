@@ -157,6 +157,20 @@ struct Enemy {
 	int anime_count;		//アニメーション用カウンタ
 };
 
+//モンスターの魔法構造体
+struct Magic {
+	MagicPattern knd;	//種類
+	int state;			//状態
+	Vector2DF pos;		//座標
+	RectF col;			//当たり判定の相対座標
+	Vector2DF vel;		//速度
+	int power;			//ダメージ量
+	Graph graph;		//画像
+	int sprite_num;		//スプライト番号
+	int anime_count;	//アニメーション用カウンタ
+
+};
+
 //動く矩形の衝突判定用構造体
 struct BoxCollider {
 	int *state;				//オブジェクトの状態

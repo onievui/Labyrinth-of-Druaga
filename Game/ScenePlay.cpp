@@ -14,6 +14,7 @@
 #include "MinionManager.h"
 #include "Fire.h"
 #include "EnemyManager.h"
+#include "MagicManager.h"
 #include "Treasure.h"
 #include "Collision.h"
 #include "Shader.h"
@@ -78,6 +79,9 @@ void InitializePlay(void)
 
 	//敵モンスターの初期化
 	InitializeEnemies();
+
+	//敵の魔法の初期化
+	InitializeMagics();
 
 	//お宝の初期化
 	InitializeTreasure();
@@ -159,6 +163,9 @@ void RenderPlay(void)
 	//敵モンスターの描画
 	DrawEnemies();
 
+	//敵の魔法の描画
+	DrawMagics();
+
 	//ドラゴンの炎の描画
 	DrawFire();
 
@@ -173,6 +180,10 @@ void RenderPlay(void)
 
 	//プレイヤー関係の情報の描画
 	DrawPlayerUI();
+
+	//時間の表示
+	DrawFormatStringFToHandle(SCREEN_CENTER_X + 5 - GetDrawFormatStringWidthToHandle(g_font_g50, "%.2f", g_count/60.0f) / 2.0f,
+		15, COLOR_WHITE, g_font_g50, "%.2f", g_count / 60.0f);
 
 	//画面の明るさを戻す
 	if (is_change_bright) {
@@ -237,6 +248,9 @@ void PlayProcess()
 	//召喚モンスターの更新
 	UpdateMinions();
 
+	//敵の魔法の更新
+	UpdateMagics();
+
 	//敵モンスターの更新
 	UpdateEnemies();
 
@@ -255,7 +269,8 @@ void PlayProcess()
 		g_play_state = PLAY_STATE_PAUSE;
 	}
 
-	g_count++;
+	if (g_play_state == PLAY_STATE_PLAY)
+		g_count++;
 }
 
 //ポーズ画面処理

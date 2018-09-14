@@ -91,9 +91,8 @@ void RenderResult(void)
 
 	//クリアタイムの表示
 	int time = GetClearTime();
-	DrawFormatStringFToHandle(SCREEN_CENTER_X - GetDrawFormatStringWidthToHandle(g_font_g70, "TIME %2d:%d%d", time / 3600,
-		((time / 60) % 60) / 10, ((time / 60) % 60) % 10) / 2.0f, SCREEN_CENTER_Y - 50, COLOR_GREEN, g_font_g70, "TIME %2d:%d%d",
-		time / 3600, ((time / 60) % 60) / 10, ((time / 60) % 60) % 10);
+	DrawFormatStringFToHandle(SCREEN_CENTER_X - GetDrawFormatStringWidthToHandle(g_font_g70, "TIME %.2f", time / 60.0f) / 2.0f,
+		SCREEN_CENTER_Y - 50, COLOR_YELLOW, g_font_g70, "TIME %.2f", time / 60.0f);
 	//キー入力の促し
 	DrawFormatStringFToHandle(SCREEN_CENTER_X - GetDrawFormatStringWidthToHandle(g_font_g40, "Press [X] Key") / 2.0f,
 		SCREEN_CENTER_Y + 100, COLOR_WHITE, g_font_g40, "Press [X] Key");

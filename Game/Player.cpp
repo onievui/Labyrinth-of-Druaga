@@ -431,16 +431,29 @@ void DrawPlayerUI() {
 		g_summonable[index].graph.exrate = (i == 0) ? 1.0f : 0.75f;
 		//表示位置
 		Vector2DF pos = { (float)(SLIST_POS_X + i * SLIST_DIST_X),(float)(SLIST_POS_Y) };
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
 		//枠の描画
 		DrawBoxAA(pos.x - 32 * g_summonable[index].graph.exrate,
 			pos.y - 32 * g_summonable[index].graph.exrate,
 			pos.x + 32 * g_summonable[index].graph.exrate,
 			pos.y + 32 * g_summonable[index].graph.exrate,
-			COLOR_AQUA,
+			COLOR_WHITE,
 			TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		//消滅モードは画像を表示しない
 		if (index != 0) {
+			//召喚コストの取得
+			int cost = OrderGetSummonCost(g_summonable[index].knd);
+			int r, g, b;
+			//コスト不足なら
+			if (cost > g_player.sp) {
+				GetDrawBright(&r, &g, &b);
+				SetDrawBright(r * 2 / 5, g * 2 / 5,b * 2 / 5);
+			}
 			DrawGraphic(pos, &g_summonable[index].graph);
+			if (cost > g_player.sp) {
+				SetDrawBright(r, g, b);
+			}
 		}
 	}
 
@@ -524,16 +537,9 @@ void PlayerDead() {
 	RequestStageFailed();
 }
 
-//プレイヤーが敵と衝突したときの処理
-//void CollisionPlayer() {
-//	//無敵状態なら処理しない
-//	if (g_player.state == 2) {
-//		return;
-//	}
-//	g_player.state = 0;
-//	SetSE(SE_MISS);
-//	OrderCreateEffect(EFF_PATTERN_2, g_player.pos);
-//	//コンティニューの確認
-//	RequestContinue();
-//}
+//プレイヤーがダメージ判定と衝突したときの処理
+void CollisionPlayer() {
+	//死んだときの処理を呼び出す
+	PlayerDead();
+}
 
