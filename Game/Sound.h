@@ -14,8 +14,8 @@
 
 // 変数の宣言 ==============================================================
 
-extern bool g_se_flag[SE_ALL_NUM];		//効果音用フラグ
-extern bool g_bgm_flag[BGM_ALL_NUM];	//BGM用フラグ
+extern BOOL g_se_flag[SE_ALL_NUM];		//効果音用フラグ
+extern BOOL g_bgm_flag[BGM_ALL_NUM];	//BGM用フラグ
 
 
 
@@ -34,9 +34,15 @@ void PlayBGM(void);
 //効果音の再生フラグをtrueにする
 void SetSE(SE_ID se_Id);
 
+//効果音を停止する
+void StopSE(SE_ID se_Id);
+
 //BGMの再生フラグをtrueにする
 void SetBGM(BGM_ID bgm_Id);
 
 //BGMを停止する
 void StopBGM(BGM_ID bgm_Id);
+
+//BGMを止めたところから再生する
+void ContinueBGM(BGM_ID bgm_Id);
 

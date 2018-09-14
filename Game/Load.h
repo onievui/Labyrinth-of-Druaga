@@ -33,13 +33,26 @@ enum GRP_ID {
 
 //効果音のID
 enum SE_ID {
-	SE_NULL,		//仮の効果音
-	SE_ALL_NUM,		//読み込む効果音ファイルの数
+	SE_CLEAR,			//ステージクリア効果音
+	SE_HEIGH_SCORE,		//ハイスコア効果音
+	SE_FANFARE,			//ファンファーレ効果音
+	SE_PAUSE,			//ポーズ効果音
+	SE_MISS,			//ミス効果音
+	SE_WALK,			//歩き効果音
+	SE_SWORD,			//剣効果音
+	SE_SUMMON,			//召喚効果音
+	SE_FIRE,			//ドラゴンの炎効果音
+	SE_MINION_STRIKE,	//召喚モンスター消滅効果音
+	SE_MAGIC,			//敵の魔法効果音
+	SE_ENEMY_STRIKE,	//敵モンスター消滅効果音
+	SE_ALL_NUM,			//読み込む効果音ファイルの数
 };
 
 //BGMのID
 enum BGM_ID {
-	BGM_NULL,		//仮のBGM
+	BGM_TITLE,		//タイトルBGM
+	BGM_SELECT,		//ステージセレクトBGM
+	BGM_INGAME,		//プレイ中BGM
 	BGM_ALL_NUM,	//読み込むBGMファイルの数
 };
 

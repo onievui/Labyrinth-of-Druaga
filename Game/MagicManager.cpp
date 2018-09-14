@@ -5,6 +5,7 @@
 //ヘッダファイルの読み込み
 #include "Magic.h"
 #include "Mediator.h"
+#include "Sound.h"
 
 
 
@@ -82,6 +83,9 @@ BOOL CreateMagic(MagicPattern knd, Vector2DF *pos, BOOL isLeft) {
 
 		//使用中の数を増やす
 		g_active_magic_num++;
+
+		//効果音を鳴らす
+		SetSE(SE_MAGIC);
 
 		return TRUE;
 	}

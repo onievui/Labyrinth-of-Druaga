@@ -61,11 +61,24 @@ void LoadResources() {
 
 
 	//効果音の読み込み
-	g_bgm[SE_NULL] = LoadSoundMem("Resources/Audio/Protected/NULL");
+	g_se[SE_CLEAR]         = LoadSoundMem("Resources/Audio/Protected/se_clear.wav");
+	g_se[SE_HEIGH_SCORE]   = LoadSoundMem("Resources/Audio/Protected/se_high_score.wav");
+	g_se[SE_FANFARE]       = LoadSoundMem("Resources/Audio/Protected/se_fanfare.wav");
+	g_se[SE_PAUSE]         = LoadSoundMem("Resources/Audio/Protected/se_pause.wav");
+	g_se[SE_MISS]          = LoadSoundMem("Resources/Audio/Protected/se_miss.wav");
+	g_se[SE_WALK]          = LoadSoundMem("Resources/Audio/Protected/se_gil_walk.wav");
+	g_se[SE_SWORD]         = LoadSoundMem("Resources/Audio/Protected/se_sword.wav");
+	g_se[SE_SUMMON]        = LoadSoundMem("Resources/Audio/Protected/se_summon.wav");
+	g_se[SE_FIRE]          = LoadSoundMem("Resources/Audio/Protected/se_fire.wav");
+	g_se[SE_MINION_STRIKE] = LoadSoundMem("Resources/Audio/Protected/se_minion_strike.wav");
+	g_se[SE_MAGIC]         = LoadSoundMem("Resources/Audio/Protected/se_spell.wav");
+	g_se[SE_ENEMY_STRIKE]  = LoadSoundMem("Resources/Audio/Protected/se_enemy_strike.wav");
 
 
 	//BGMの読み込み
-	g_bgm[BGM_NULL] = LoadSoundMem("Resources/Audio/Protected/NULL");
+	g_bgm[BGM_TITLE]  = LoadSoundMem("Resources/Audio/Protected/bgm_title.wav");
+	g_bgm[BGM_SELECT] = LoadSoundMem("Resources/Audio/Protected/bgm_select.wav");
+	g_bgm[BGM_INGAME] = LoadSoundMem("Resources/Audio/Protected/bgm_ingame.wav");
 
 
 	//シェーダーの読み込み

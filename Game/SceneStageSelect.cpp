@@ -56,9 +56,13 @@ void InitializeStageSelect(void)
 	g_stageselect_icon_object.angle = 0;
 	g_stageselect_icon_object.graph = Graph{ g_sprite[SPR_STAGESELECT_ICON] , 1.0f, 0.0f };
 
+	//前回のステージにカーソルを合わせる
 	g_select_stage = GetSelectStage();
 	if (!~g_select_stage)
 		g_select_stage = 0;
+
+	//BGMの再生
+	SetBGM(BGM_SELECT);
 }
 
 
@@ -177,7 +181,8 @@ void RenderStageSelect(void)
 //----------------------------------------------------------------------
 void FinalizeStageSelect(void)
 {
-
+	//BGMを止める
+	StopBGM(BGM_SELECT);
 }
 
 

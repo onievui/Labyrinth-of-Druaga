@@ -13,6 +13,7 @@
 #include "ScenePlay.h"
 #include "Mediator.h"
 #include "Key.h"
+#include "Sound.h"
 #include <math.h>
 
 
@@ -53,6 +54,9 @@ int g_slist_active_num;								//リストで使用中の要素数
 int g_select_summon_type;							//選択中の召喚タイプ
 SummonAreaData g_summon_area;						//召喚・消滅範囲情報
 BOOL g_use_summon_area;								//召喚・消滅範囲表示フラグ
+BOOL g_is_walking;									//今回歩いたかどうか
+BOOL g_was_walking;									//前回歩いたかどうか
+
 
 
 extern HFNT g_font_g40;
@@ -85,6 +89,9 @@ void InitializePlayer() {
 	g_select_summon_type = 0;
 	memset(&g_summon_area, 0, sizeof(g_summon_area));
 	g_use_summon_area = GetUseSummonArea();
+
+	g_is_walking = FALSE;
+	g_was_walking = FALSE;
 }
 
 
@@ -95,7 +102,7 @@ void UpdatePlayer() {
 		//プレイヤーの行動
 		ActPlayer();
 		//マップでの死亡判定
-		if (OrderIsUnderMap(&g_player.pos,&g_player.col) || CheckHitKeyDown(KEY_INPUT_Q)) {
+		if (OrderIsUnderMap(&g_player.pos,&g_player.col)) {
 			PlayerDead();
 		}
 		//召喚・消滅範囲の表示切替
@@ -110,6 +117,20 @@ void UpdatePlayer() {
 	}
 	//プレイヤーのアニメーション
 	AnimatePlayer();
+
+	//歩き始めたら効果音を鳴らす
+	if (g_is_walking && !g_was_walking) {
+		SetSE(SE_WALK);
+	}
+	//歩いてないなら効果音を止める
+	else if (!g_is_walking && g_was_walking) {
+		StopSE(SE_WALK);
+	}
+	//フラグの更新
+	g_was_walking = g_is_walking;
+	g_is_walking = FALSE;
+
+
 }
 
 
@@ -199,16 +220,19 @@ void PlayerActStand() {
 		g_player.vel.x = -PLAYER_WALK_SPEED;
 		g_player.is_left = TRUE;
 		g_player.anime_count++;
+		g_is_walking = TRUE;
 		break;
 	case 2:
 		g_player.vel.x = PLAYER_WALK_SPEED;
 		g_player.is_left = FALSE;
 		g_player.anime_count++;
+		g_is_walking = TRUE;
 		break;
 	default:
 		MessageBox(NULL, "プレイヤー入力エラー", "", MB_OK);
 		break;
 	}
+
 	//召喚したなら召喚状態に遷移する
 	if (CheckHitKeyDown(KEY_INPUT_SUMMON)) {
 		g_player.state = PLAYER_STATE_SUMMON;
@@ -302,7 +326,7 @@ void AnimatePlayer() {
 	case PLAYER_STATE_STAND:
 		//左向き
 		if (g_player.is_left) {
-			if (g_player.anime_count % 12 < 6) {
+			if ((g_player.anime_count+5) % 12 < 6) {
 				sprite_num = 6;
 			}
 			else {
@@ -311,7 +335,7 @@ void AnimatePlayer() {
 		}
 		//右向き
 		else {
-			if (g_player.anime_count % 12 < 6) {
+			if ((g_player.anime_count + 5) % 12 < 6) {
 				sprite_num = 4;
 			}
 			else {
@@ -393,12 +417,14 @@ void SummonMinion() {
 		//召喚に失敗してもモーションを行う
 		else {
 			g_summon_time = SUMMON_FAILED_TIME;
+			SetSE(SE_SWORD);
 		}
 	}
 	//モンスターの消滅処理
 	else {
 		OrderDeleteMinion(&g_summon_area);
 		g_summon_time = SUMMON_FAILED_TIME;
+		SetSE(SE_SWORD);
 	}
 }
 

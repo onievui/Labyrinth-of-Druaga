@@ -5,6 +5,7 @@
 //ヘッダファイルの読み込み
 #include "GameObjectStruct.h"
 #include "MagicManager.h"
+#include "Sound.h"
 
 
 //定数の定義
@@ -195,11 +196,13 @@ BOOL DamageEnemyWizard(Enemy *enemy, int power) {
 //ドルイドの消滅
 void DestroyEnemyDruid(Enemy *enemy) {
 	enemy->state = 0;
+	SetSE(SE_ENEMY_STRIKE);
 }
 
 //ウィザードの消滅
 void DestroyEnemyWizard(Enemy *enemy) {
 	enemy->state = 0;
+	SetSE(SE_ENEMY_STRIKE);
 }
 
 

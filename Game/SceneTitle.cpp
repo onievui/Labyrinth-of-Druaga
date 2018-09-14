@@ -54,7 +54,8 @@ void InitializeTitle(void)
 	g_bg_object.angle = 0;
 	g_bg_object.graph = Graph{ g_sprite[SPR_BG] , 1.0f, 0.0f };
 
-	//SetBGM(BGM_1);
+	//BGMÇÃçƒê∂
+	SetBGM(BGM_TITLE);
 }
 
 
@@ -108,5 +109,6 @@ void RenderTitle(void)
 //----------------------------------------------------------------------
 void FinalizeTitle(void)
 {
-
+	//BGMÇé~ÇﬂÇÈ
+	StopBGM(BGM_TITLE);
 }

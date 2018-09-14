@@ -3,6 +3,7 @@
 
 //ヘッダファイルの読み込み
 #include "GameObjectStruct.h"
+#include "Sound.h"
 
 
 
@@ -73,6 +74,9 @@ BOOL CreateFire(Minion *parent) {
 			g_fire[i].parent = parent;
 			//親の速度の取得
 			g_fire[i].parent_vel = &parent->vel;
+
+			//効果音を鳴らす
+			SetSE(SE_FIRE);
 
 			return TRUE;
 		}

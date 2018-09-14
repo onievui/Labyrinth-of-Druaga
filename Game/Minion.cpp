@@ -6,6 +6,7 @@
 #include "GameObjectStruct.h"
 #include "Mediator.h"
 #include "Fire.h"
+#include "Sound.h"
 
 
 //定数の定義
@@ -214,7 +215,7 @@ void UpdateMinionQuox(Minion *minion) {
 	if (minion->ride) {
 		AddVector2DF(minion->vel, *minion->ride);
 	}
-
+	
 	minion->anime_count++;
 
 }
@@ -270,18 +271,21 @@ BOOL DamageMinionQuox(Minion *minion, int power) {
 void DestroyMinionSlime(Minion *minion, SummonData *s_dat) {
 	minion->state = 0;
 	OrderAddPlayerSp(s_dat->cost);
+	SetSE(SE_MINION_STRIKE);
 }
 
 //ゴーストの消滅
 void DestroyMinionGhost(Minion *minion, SummonData *s_dat) {
 	minion->state = 0;
 	OrderAddPlayerSp(s_dat->cost);
+	SetSE(SE_MINION_STRIKE);
 }
 
 //クオックスの消滅
 void DestroyMinionQuox(Minion *minion, SummonData *s_dat) {
 	minion->state = 0;
 	OrderAddPlayerSp(s_dat->cost);
+	SetSE(SE_MINION_STRIKE);
 	//子オブジェクトの炎を消す
 	DestroyFire(minion);
 }

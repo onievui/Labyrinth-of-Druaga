@@ -99,6 +99,9 @@ void InitializePlay(void)
 	g_play_state = PLAY_STATE_PLAY;
 	g_select_mode = 0;
 	g_wait_time = 0;
+
+	//BGMの再生
+	SetBGM(BGM_INGAME);
 }
 
 
@@ -233,7 +236,8 @@ void RenderPlay(void)
 //----------------------------------------------------------------------
 void FinalizePlay(void)
 {
-
+	//BGMを止める
+	StopBGM(BGM_INGAME);
 }
 
 //プレイ処理
@@ -267,6 +271,10 @@ void PlayProcess()
 	//ポーズボタンを押したらポーズ状態にする
 	if (CheckHitKeyDown(KEY_INPUT_PAUSE2)) {
 		g_play_state = PLAY_STATE_PAUSE;
+		//BGMを止める
+		StopBGM(BGM_INGAME);
+		//効果音を鳴らす
+		SetSE(SE_PAUSE);
 	}
 
 	if (g_play_state == PLAY_STATE_PLAY)
@@ -304,6 +312,8 @@ void PauseProcess()
 			//再開
 		case 0:
 			g_play_state = PLAY_STATE_PLAY;
+			//BGMを再開する
+			ContinueBGM(BGM_INGAME);
 			break;
 			//リトライ
 		case 1:
@@ -336,6 +346,11 @@ void RequestStageFailed()
 	g_wait_time = 120;
 	//カーソルの初期化
 	g_select_mode = 0;
+
+	//BGMを止める
+	StopBGM(BGM_INGAME);
+	//効果音を鳴らす
+	SetSE(SE_MISS);
 }
 
 //ステージ失敗処理
@@ -382,6 +397,11 @@ void RequestStageClear()
 	g_play_state = PLAY_STATE_CLEAR;
 	//3秒間待つ
 	g_wait_time = 180;
+
+	//BGMを止める
+	StopBGM(BGM_INGAME);
+	//効果音を鳴らす
+	SetSE(SE_CLEAR);
 }
 
 //ステージクリア処理

@@ -6,7 +6,7 @@
 #include "Minion.h"
 #include "Mediator.h"
 #include "Fire.h"
-
+#include "Sound.h"
 
 
 
@@ -163,6 +163,9 @@ int CreateMinion(SummonAreaData *summon_area_data) {
 
 		//Žg—p’†‚Ì”‚ð‘‚â‚·
 		g_active_minion_num++;
+
+		//Œø‰Ê‰¹‚ð–Â‚ç‚·
+		SetSE(SE_SUMMON);
 
 		return g_summon_data[summon_area_data->knd].time;
 	}
