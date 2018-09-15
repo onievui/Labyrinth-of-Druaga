@@ -11,13 +11,18 @@
 
 
 
+//定数の定義
+#define ICON_DEF_X	((float)(SCREEN_WIDTH / 10))	//ステージアイコンの初期X座標
+#define ICON_DEF_Y	((float)(SCREEN_HEIGHT / 5))	//ステージアイコンの初期Y座標
+
+#define COLOR_BLUE2 ((unsigned int)(0xFF0040FF))	//青色2
+
+
 // グローバル変数の定義 ====================================================
 
 GameObject g_stageselect_back_object;	//背景オブジェクト
-GameObject g_stageselect_icon_object;	//ステージアイコンオブジェクト
-
 int g_select_stage;				//選択中のステージ番号
-
+AllClearData *g_view_clear_data;	//クリアデータ
 
 
 
@@ -48,14 +53,6 @@ void InitializeStageSelect(void)
 	g_stageselect_back_object.angle = 0;
 	g_stageselect_back_object.graph = Graph{ g_sprite[SPR_BG] , 1.0f, 0.0f };
 
-	//アイコンオブジェクトの初期化
-	g_stageselect_icon_object.pos = Vector2DF{ (float)(SCREEN_WIDTH * 1 / 10),(float)(SCREEN_HEIGHT / 5) };
-	g_stageselect_icon_object.vel = Vector2DF{ 0,0 };
-	g_stageselect_icon_object.state = 1;
-	g_stageselect_icon_object.speed = 0;
-	g_stageselect_icon_object.angle = 0;
-	g_stageselect_icon_object.graph = Graph{ g_sprite[SPR_STAGESELECT_ICON] , 1.0f, 0.0f };
-
 	//前回のステージにカーソルを合わせる
 	g_select_stage = GetSelectStage();
 	if (!~g_select_stage)
@@ -63,6 +60,11 @@ void InitializeStageSelect(void)
 
 	//BGMの再生
 	SetBGM(BGM_SELECT);
+
+	//クリアデータの読み込み
+	OrderLoadClearData();
+	//クリアデータの取得
+	g_view_clear_data = GetAllClearData();
 }
 
 
@@ -118,8 +120,6 @@ void UpdateStageSelect(void)
 
 	// Xキーでプレイ画面に遷移
 	if (CheckHitKeyDown(KEY_INPUT_X)) {
-		//StopBGM(BGM_1);
-		//SetSE(SE_DECISION);
 		SetSelectStage((StageId)g_select_stage);
 		RequestScene(SCENE_PLAY);
 	}
@@ -141,31 +141,43 @@ void RenderStageSelect(void)
 
 	//選択するステージ名の表示
 	int i;
-	Vector2DF pos = g_stageselect_icon_object.pos;
+	Vector2DF pos = { ICON_DEF_X,ICON_DEF_Y };
 	char name[64];
 	for (i = 0; i < STAGE_NUM; i++) {
-		//枠の描画
-		//DrawGraphic(pos, &g_stageselect_back_object.graph);
-		DrawBoxAA(pos.x - 60, pos.y - 40, pos.x + 60, pos.y + 40, COLOR_BLACK, TRUE);
+		//未クリア状態なら
+		if (!g_view_clear_data->clear_data[i].is_clear) {
+			//枠の描画
+			DrawBoxAA(pos.x - 60, pos.y - 40, pos.x + 60, pos.y + 40, COLOR_BLUE2, TRUE);
 
-		//文字の描画
-		sprintf(name, "%d - %d", i / 5 + 1, i % 5 + 1);
-		DrawFormatStringFToHandle(pos.x - GetDrawFormatStringWidthToHandle(g_font_g30, "%s", name) / 2.0f,
-			pos.y - 10, COLOR_WHITE, g_font_g30, "%s", name);
+			//文字の描画
+			sprintf(name, "%d - %d", i / 5 + 1, i % 5 + 1);
+			DrawFormatStringFToHandle(pos.x - GetDrawFormatStringWidthToHandle(g_font_g30, "%s", name) / 2.0f,
+				pos.y - 10, COLOR_WHITE, g_font_g30, "%s", name);
+		}
+		//クリア状態なら
+		else {
+			//枠の描画
+			DrawBoxAA(pos.x - 60, pos.y - 40, pos.x + 60, pos.y + 40, COLOR_BLACK, TRUE);
+
+			//文字の描画
+			sprintf(name, "%d - %d", i / 5 + 1, i % 5 + 1);
+			DrawFormatStringFToHandle(pos.x - GetDrawFormatStringWidthToHandle(g_font_g30, "%s", name) / 2.0f,
+				pos.y - 10, COLOR_WHITE, g_font_g30, "%s", name);
+		}
 
 		//座標をずらす
 		if (i % 5 != 4) {
 			pos.x += SCREEN_WIDTH * 4 / 20;
 		}
 		else {
-			pos.x = g_stageselect_icon_object.pos.x;
+			pos.x = ICON_DEF_X;
 			pos.y += SCREEN_HEIGHT * 4 / 20;
 		}
 	}
 
 	//選択中のステージを表すカーソルの表示
-	pos.x = g_stageselect_icon_object.pos.x + (SCREEN_WIDTH  * 4 / 20)*(g_select_stage % 5);
-	pos.y = g_stageselect_icon_object.pos.y + (SCREEN_HEIGHT * 4 / 20)*(g_select_stage / 5);
+	pos.x = ICON_DEF_X + (SCREEN_WIDTH  * 4 / 20)*(g_select_stage % 5);
+	pos.y = ICON_DEF_Y + (SCREEN_HEIGHT * 4 / 20)*(g_select_stage / 5);
 	DrawBoxAA(pos.x - 70, pos.y - 50, pos.x + 70, pos.y + 50, COLOR_RED, FALSE, 3);
 	
 }

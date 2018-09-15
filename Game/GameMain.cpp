@@ -118,7 +118,6 @@ void InitializeGame(void)
 
 	//Mediator‚Ì‰Šú‰»
 	InitializeMediator();
-
 	
 }
 

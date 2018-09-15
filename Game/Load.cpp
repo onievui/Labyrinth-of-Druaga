@@ -62,7 +62,7 @@ void LoadResources() {
 
 	//効果音の読み込み
 	g_se[SE_CLEAR]         = LoadSoundMem("Resources/Audio/Protected/se_clear.wav");
-	g_se[SE_HEIGH_SCORE]   = LoadSoundMem("Resources/Audio/Protected/se_high_score.wav");
+	g_se[SE_HIGHSCORE]   = LoadSoundMem("Resources/Audio/Protected/se_high_score.wav");
 	g_se[SE_FANFARE]       = LoadSoundMem("Resources/Audio/Protected/se_fanfare.wav");
 	g_se[SE_PAUSE]         = LoadSoundMem("Resources/Audio/Protected/se_pause.wav");
 	g_se[SE_MISS]          = LoadSoundMem("Resources/Audio/Protected/se_miss.wav");
@@ -71,7 +71,7 @@ void LoadResources() {
 	g_se[SE_SUMMON]        = LoadSoundMem("Resources/Audio/Protected/se_summon.wav");
 	g_se[SE_FIRE]          = LoadSoundMem("Resources/Audio/Protected/se_fire.wav");
 	g_se[SE_MINION_STRIKE] = LoadSoundMem("Resources/Audio/Protected/se_minion_strike.wav");
-	g_se[SE_MAGIC]         = LoadSoundMem("Resources/Audio/Protected/se_spell.wav");
+	g_se[SE_MAGIC]         = LoadSoundMem("Resources/Audio/Protected/se_magic.wav");
 	g_se[SE_ENEMY_STRIKE]  = LoadSoundMem("Resources/Audio/Protected/se_enemy_strike.wav");
 
 
@@ -84,6 +84,133 @@ void LoadResources() {
 	//シェーダーの読み込み
 	g_shader[SHA_WAIPU] = LoadPixelShader("Resources/Shaders/waipu.pso");
 }
+
+//クリアデータの読み込み
+void LoadClearData(AllClearData *all_clear_data) {
+
+	int i, fp, loop;
+	char fname[64] = "Resources/Texts/clear_time.dat";
+	int input[64];
+	char inputc[64];
+	int knd;			//現在読み込んでいるデータの種類
+	int num;			//読み込んでいるデータの件数
+
+	fp = FileRead_open(fname);//ファイル読み込み
+	if (fp == NULL) {
+		MessageBox(NULL, "クリアデータが存在しません", "", MB_OK);
+		return;
+	}
+
+	//変数初期化
+	loop = 1, knd = 0, num = 0;
+
+	while (loop) {
+
+		for (i = 0; i<64; i++) {
+			inputc[i] = input[i] = FileRead_getc(fp);	//1文字取得する
+			if (inputc[i] == '#') {						//シャープがあればその行を読み飛ばす
+				while (FileRead_getc(fp) != '\n');
+				i = -1;
+				continue;
+			}
+			if (input[i] == '.' || input[i] == '\n') {	//ピリオドか改行ならそこまでを文字列とする
+				inputc[i] = '\0';
+				break;
+			}
+			if (input[i] == EOF) {		//ファイルの終わりなら
+				knd = -1;			//終了
+			}
+		}
+		switch (knd) {
+			//トータルタイム
+		case 0:
+			//秒
+			if (num == 0) {
+				all_clear_data->total_second = atoi(inputc);
+				num++;
+			}
+			//小数点以下
+			else {
+				all_clear_data->total_decimal = atoi(inputc);
+				knd = 1;
+				num = 0;
+			}
+
+			break;
+			//各ステージのタイム
+		case 1:
+			//秒
+			if (num % 2 == 0) {
+				//クリア済みかを確認
+				if (all_clear_data->clear_data[num / 2].second = atoi(inputc)) {
+					all_clear_data->clear_data[num / 2].is_clear = TRUE;
+				}
+				else {
+					all_clear_data->clear_data[num / 2].is_clear = FALSE;
+				}
+			}
+			//小数点以下
+			else {
+				all_clear_data->clear_data[num / 2].second = atoi(inputc);
+			}
+	
+			num++;
+
+			//最後のデータなら処理を抜けさせる
+			if (num == STAGE_NUM * 2)
+				knd = -1;
+
+			break;
+		case -1:
+			loop = 0;
+			break;
+
+		}
+	}
+	FileRead_close(fp);
+
+}
+
+//クリアデータの更新
+void WriteClearData(AllClearData *all_clear_data) {
+	
+	int i;
+	char lines[50][256];
+	char fname[256] = "Resources/Texts/clear_time.dat";
+	FILE *fp;
+	
+	fp = fopen(fname, "r");
+
+	if (fp == NULL) {
+		MessageBox(NULL, "クリアデータが存在しません", "", MB_OK);
+		return;
+	}
+	else {
+		//一行ずつ読み込む
+		for (i = 0; i < 50; i++) {
+			if (!fgets(lines[i], sizeof(lines[i]), fp))
+				break;
+		}
+		fclose(fp);
+		//データの更新
+		i = 1;
+		sprintf(lines[i], "%d.%02d\n", all_clear_data->total_second, all_clear_data->total_decimal);
+		for (i = 0; i < STAGE_NUM; i++) {
+			sprintf(lines[3 + i * 2], "%d.%02d\n", all_clear_data->clear_data[i].second, all_clear_data->clear_data[i].decimal);
+		}
+		//データの出力
+		fp = fopen(fname, "w");
+		if (fp == NULL) {
+			MessageBox(NULL, "クリアデータが存在しません", "", MB_OK);
+			return;
+		}
+		for (i = 0; i < STAGE_NUM * 2 + 2; i++) {
+			fprintf(fp, lines[i]);
+		}
+		fclose(fp);
+	}
+}
+
 
 //マップデータの読み込み
 void LoadMapData(const StageId stageId, MapData *mapdata) {

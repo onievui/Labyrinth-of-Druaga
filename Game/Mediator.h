@@ -24,6 +24,15 @@ void SetClearTime(int time);
 //プレイ画面のクリア時間の取得
 int GetClearTime();
 
+//クリアデータの読み込み依頼
+void OrderLoadClearData();
+
+//クリアデータの更新依頼
+void OrderWriteClearData();
+
+//クリアデータの取得
+AllClearData* GetAllClearData();
+
 //召喚・消滅範囲表示フラグの設定
 void SetUseSummonArea(BOOL flag);
 

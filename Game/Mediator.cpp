@@ -17,10 +17,14 @@
 
 
 //グローバル変数の宣言
-static StageId g_select_stage;	//選択中のステージ
-static int g_clear_time;		//ステージクリアまでの時間
-static BOOL g_use_summon_area;	//召喚・消滅範囲表示フラグ
+static StageId g_select_stage;			//選択中のステージ
+static int g_clear_time;				//ステージクリアまでの時間
+static BOOL g_use_summon_area;			//召喚・消滅範囲表示フラグ
+static AllClearData g_all_clear_data;		//ステージのクリア情報
 
+
+extern void LoadClearData(AllClearData *all_clear_data);
+extern void WriteClearData(AllClearData *all_clear_data);
 
 
 
@@ -29,6 +33,7 @@ void InitializeMediator() {
 	g_select_stage = (StageId)-1;
 	g_clear_time = -1;
 	g_use_summon_area = FALSE;
+	memset(&g_all_clear_data, 0, sizeof(g_all_clear_data));
 }
 
 //選択中のステージの設定
@@ -50,6 +55,24 @@ void SetClearTime(int time) {
 int GetClearTime() {
 	return g_clear_time;
 }
+
+//クリアデータの読み込み依頼
+void OrderLoadClearData() {
+	LoadClearData(&g_all_clear_data);
+}
+
+//クリアデータの更新依頼
+void OrderWriteClearData() {
+	WriteClearData(&g_all_clear_data);
+}
+
+//クリアデータの取得
+AllClearData* GetAllClearData() {
+	return &g_all_clear_data;
+}
+
+//クリアデータの更新
+
 
 //召喚・消滅範囲表示フラグの設定
 void SetUseSummonArea(BOOL flag) {

@@ -102,6 +102,7 @@ void InitializePlay(void)
 
 	//BGMÇÃçƒê∂
 	SetBGM(BGM_INGAME);
+
 }
 
 

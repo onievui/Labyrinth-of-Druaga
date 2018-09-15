@@ -30,6 +30,20 @@ struct GameObject {
 	Graph graph;		//表示画像情報
 };
 
+//クリアデータ構造体
+struct ClearData {
+	BOOL is_clear;		//クリアしたかどうか
+	int second;			//秒
+	int decimal;		//秒（小数）
+};
+
+//全ステージのクリアデータ構造体
+struct AllClearData {
+	ClearData clear_data[STAGE_NUM];	//クリアデータ
+	int total_second;					//トータルの秒
+	int total_decimal;					//トータルの秒（小数）
+};
+
 //マップ構造体
 struct Map {
 	SPR_ID knd;			//種類
