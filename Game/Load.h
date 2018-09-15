@@ -70,8 +70,8 @@ extern int g_shader[SHA_ALL_NUM];
 extern HFNT g_font_g30;
 extern HFNT g_font_g40;
 extern HFNT g_font_g50;
+extern HFNT g_font_g60;
 extern HFNT g_font_g70;
-extern HFNT g_font_g150;
 
 //ÉäÉ\Å[ÉXÇÃì«Ç›çûÇ›
 void LoadResources();

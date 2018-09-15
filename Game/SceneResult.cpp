@@ -156,7 +156,7 @@ void ChangeGetClearTime() {
 
 
 //ハイスコア更新処理
-void UpdateHighscore() {
+void UpdateHighscore() {																																																																																																		
 
 	StageId id = GetSelectStage();
 	g_is_highscore = FALSE;
@@ -169,6 +169,20 @@ void UpdateHighscore() {
 		//スコアを更新する
 		g_old_clear_data->clear_data[id].second = g_second;
 		g_old_clear_data->clear_data[id].decimal = g_decimal;
+
+		//全ステージクリアしているなら合計スコアも更新する
+		g_old_clear_data->clear_data[id].is_clear = TRUE;
+		if (GetClearStageNum() == STAGE_NUM) {
+			int i;
+			g_old_clear_data->total_second = 0;
+			g_old_clear_data->total_decimal = 0;
+			for (i = 0; i < STAGE_NUM; i++) {
+				g_old_clear_data->total_second += g_old_clear_data->clear_data[i].second;
+				g_old_clear_data->total_decimal += g_old_clear_data->clear_data[i].decimal;
+			}
+			g_old_clear_data->total_second += g_old_clear_data->total_decimal / 100;
+			g_old_clear_data->total_decimal = g_old_clear_data->total_decimal % 100;
+		}
 
 		//スコアの反映
 		OrderWriteClearData();

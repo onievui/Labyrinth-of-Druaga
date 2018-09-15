@@ -71,7 +71,16 @@ AllClearData* GetAllClearData() {
 	return &g_all_clear_data;
 }
 
-//クリアデータの更新
+//クリアしたステージ数の取得
+int GetClearStageNum() {
+	int i;
+	int count = 0;
+	for (i = 0; i < STAGE_NUM; i++) {
+		if (g_all_clear_data.clear_data[i].is_clear)
+			count++;
+	}
+	return count;
+}
 
 
 //召喚・消滅範囲表示フラグの設定

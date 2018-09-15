@@ -142,12 +142,13 @@ void RenderStageSelect(void)
 	//選択するステージ名の表示
 	int i;
 	Vector2DF pos = { ICON_DEF_X,ICON_DEF_Y };
-	char name[64];
+	char name[20];
+	char time[20];
 	for (i = 0; i < STAGE_NUM; i++) {
 		//未クリア状態なら
 		if (!g_view_clear_data->clear_data[i].is_clear) {
 			//枠の描画
-			DrawBoxAA(pos.x - 60, pos.y - 40, pos.x + 60, pos.y + 40, COLOR_BLUE2, TRUE);
+			DrawBoxAA(pos.x - 60, pos.y - 40, pos.x + 60, pos.y + 40, COLOR_BLACK, TRUE);
 
 			//文字の描画
 			sprintf(name, "%d - %d", i / 5 + 1, i % 5 + 1);
@@ -157,12 +158,15 @@ void RenderStageSelect(void)
 		//クリア状態なら
 		else {
 			//枠の描画
-			DrawBoxAA(pos.x - 60, pos.y - 40, pos.x + 60, pos.y + 40, COLOR_BLACK, TRUE);
+			DrawBoxAA(pos.x - 60, pos.y - 40, pos.x + 60, pos.y + 40, COLOR_BLUE2, TRUE);
 
 			//文字の描画
 			sprintf(name, "%d - %d", i / 5 + 1, i % 5 + 1);
 			DrawFormatStringFToHandle(pos.x - GetDrawFormatStringWidthToHandle(g_font_g30, "%s", name) / 2.0f,
-				pos.y - 10, COLOR_WHITE, g_font_g30, "%s", name);
+				pos.y - 25, COLOR_WHITE, g_font_g30, "%s", name);
+			sprintf(time, "%d.%02d", g_view_clear_data->clear_data[i].second, g_view_clear_data->clear_data[i].decimal);
+			DrawFormatStringFToHandle(pos.x - GetDrawFormatStringWidthToHandle(g_font_g30, "%s", time) / 2.0f,
+				pos.y + 10, COLOR_WHITE, g_font_g30, "%s", time);
 		}
 
 		//座標をずらす
@@ -179,6 +183,25 @@ void RenderStageSelect(void)
 	pos.x = ICON_DEF_X + (SCREEN_WIDTH  * 4 / 20)*(g_select_stage % 5);
 	pos.y = ICON_DEF_Y + (SCREEN_HEIGHT * 4 / 20)*(g_select_stage / 5);
 	DrawBoxAA(pos.x - 70, pos.y - 50, pos.x + 70, pos.y + 50, COLOR_RED, FALSE, 3);
+
+	//残りステージ・合計タイムの表示
+	pos.x = (float)(SCREEN_CENTER_X);
+	pos.y = (float)(SCREEN_HEIGHT * 7 /8);
+	int count = GetClearStageNum();
+	//残り2つ以上
+	if (count < STAGE_NUM - 1) {
+		sprintf(time, "%d STAGES LEFT", STAGE_NUM - count);
+	}
+	//残り1つ
+	else if (count == STAGE_NUM - 1) {
+		sprintf(time, "%d STAGE LEFT", 1);
+	}
+	//全ステージクリア
+	else {
+		sprintf(time, "TOTAL : %d.%02d", g_view_clear_data->total_second, g_view_clear_data->total_decimal);
+	}	
+	DrawFormatStringFToHandle(pos.x - GetDrawFormatStringWidthToHandle(g_font_g60, "%s", time) / 2.0f,
+		pos.y + 10, COLOR_YELLOW, g_font_g60, "%s", time);
 	
 }
 

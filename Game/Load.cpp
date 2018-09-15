@@ -24,8 +24,8 @@ int g_shader[SHA_ALL_NUM];
 HFNT g_font_g30;
 HFNT g_font_g40;
 HFNT g_font_g50;
+HFNT g_font_g60;
 HFNT g_font_g70;
-HFNT g_font_g150;
 
 //リソースの読み込み
 void LoadResources() {
@@ -41,8 +41,8 @@ void LoadResources() {
 	g_font_g30 = CreateFontToHandle("GN-こはるいろサンレイ", 30, 3, DX_FONTTYPE_ANTIALIASING);
 	g_font_g40 = CreateFontToHandle("GN-こはるいろサンレイ", 40, 3, DX_FONTTYPE_ANTIALIASING);
 	g_font_g50 = CreateFontToHandle("GN-こはるいろサンレイ", 50, 3, DX_FONTTYPE_ANTIALIASING);
+	g_font_g60 = CreateFontToHandle("GN-こはるいろサンレイ", 60, 3, DX_FONTTYPE_ANTIALIASING);
 	g_font_g70 = CreateFontToHandle("GN-こはるいろサンレイ", 70, 3, DX_FONTTYPE_ANTIALIASING);
-	g_font_g150 = CreateFontToHandle("GN-こはるいろサンレイ", 150, 3, DX_FONTTYPE_ANTIALIASING);
 
 
 	//画像の読み込み
@@ -151,7 +151,7 @@ void LoadClearData(AllClearData *all_clear_data) {
 			}
 			//小数点以下
 			else {
-				all_clear_data->clear_data[num / 2].second = atoi(inputc);
+				all_clear_data->clear_data[num / 2].decimal = atoi(inputc);
 			}
 	
 			num++;
@@ -403,6 +403,6 @@ void DeleteResources() {
 	DeleteFontToHandle(g_font_g30);
 	DeleteFontToHandle(g_font_g40); 
 	DeleteFontToHandle(g_font_g50);
+	DeleteFontToHandle(g_font_g60);
 	DeleteFontToHandle(g_font_g70);
-	DeleteFontToHandle(g_font_g150);
 }

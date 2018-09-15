@@ -33,6 +33,9 @@ void OrderWriteClearData();
 //クリアデータの取得
 AllClearData* GetAllClearData();
 
+//クリアしたステージ数の取得
+int GetClearStageNum();
+
 //召喚・消滅範囲表示フラグの設定
 void SetUseSummonArea(BOOL flag);
 
