@@ -102,6 +102,12 @@ void RenderResult(void)
 	//リザルト背景の描画
 	DrawGraphic(g_result_back_object.pos, &g_result_back_object.graph);
 
+	//ハイスコアなら表示する
+	if (g_is_highscore) {
+		DrawFormatStringFToHandle(SCREEN_CENTER_X - GetDrawFormatStringWidthToHandle(g_font_g70, "HIGH SCORE!") / 2.0f,
+			SCREEN_CENTER_Y - 165, COLOR_RED, g_font_g70, "HIGH SCORE!");
+	}
+
 	//クリアタイムの表示
 	DrawFormatStringFToHandle(SCREEN_CENTER_X - GetDrawFormatStringWidthToHandle(g_font_g70, "TIME %d.%02d", g_second,g_decimal) / 2.0f,
 		SCREEN_CENTER_Y - 50, COLOR_YELLOW, g_font_g70, "TIME %d.%02d", g_second, g_decimal);

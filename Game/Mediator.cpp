@@ -103,6 +103,11 @@ void OrderSetPlayerPos(Vector2DF pos) {
 	SetPlayerPos(pos);
 }
 
+//プレイヤーの向きを設定する依頼
+void OrderSetPlayerDirection(BOOL isLeft) {
+	SetPlayerDirection(isLeft);
+}
+
 //プレイヤーの召喚可能モンスターを設定する依頼
 void OrderSetPlayerSummonable(BOOL summonable[]) {
 	SetPlayerSummonable(summonable);

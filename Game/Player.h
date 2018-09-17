@@ -32,6 +32,9 @@ Vector2DF GetPlayerPos();
 //プレイヤーの座標を設定する
 void SetPlayerPos(Vector2DF pos);
 
+//プレイヤーの向きを設定する
+void SetPlayerDirection(BOOL isLeft);
+
 //プレイヤーの召喚可能モンスターを設定する
 void SetPlayerSummonable(BOOL summonable[]);
 

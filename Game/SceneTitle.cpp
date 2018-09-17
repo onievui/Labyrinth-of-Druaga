@@ -72,7 +72,6 @@ void UpdateTitle(void)
 	// Xキーでステージセレクト画面に遷移
 	if (CheckHitKeyDown(KEY_INPUT_X)) {
 		RequestScene(SCENE_STAGESELECT);
-		//SetSE(SE_DECISION);
 	}
 }
 

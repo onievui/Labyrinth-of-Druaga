@@ -3,7 +3,7 @@
 //!
 //! @brief  プレイヤーオブジェクトの処理
 //!
-//! @date   2018/08/18
+//! @date   2018/09/15
 //__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
 
 #pragma once
@@ -34,14 +34,14 @@
 
 //プロトタイプ宣言
 void ActPlayer();
-void PlayerActDead();
+void PlayerActMiss();
 void PlayerActStand();
 void PlayerActJump();
 void PlayerActSummon();
 void PlayerActClear();
 void AnimatePlayer();
 void SummonMinion();
-void PlayerDead();
+void PlayerMiss();
 
 
 
@@ -103,7 +103,7 @@ void UpdatePlayer() {
 		ActPlayer();
 		//マップでの死亡判定
 		if (OrderIsUnderMap(&g_player.pos,&g_player.col)) {
-			PlayerDead();
+			PlayerMiss();
 		}
 		//召喚・消滅範囲の表示切替
 		if (CheckHitKeyDown(KEY_INPUT_S_AREA)) {
@@ -113,7 +113,7 @@ void UpdatePlayer() {
 	}
 	//プレイヤーが死んでいる場合
 	else {
-		PlayerActDead();
+		PlayerActMiss();
 	}
 	//プレイヤーのアニメーション
 	AnimatePlayer();
@@ -190,8 +190,8 @@ void ActPlayer() {
 
 }
 
-//プレイヤーの死に状態
-void PlayerActDead() {
+//プレイヤーのミス状態
+void PlayerActMiss() {
 	//上に飛んで落下する
 	if (g_player.anime_count == 0) {
 		g_player.vel.y = PLAYER_JUMP_SPEED*1.5f;
@@ -318,7 +318,7 @@ void AnimatePlayer() {
 	//プレイヤーの状態で分岐する
 	switch (g_player.state) {
 	//死んでいるなら
-	case PLAYER_STATE_DEAD:
+	case PLAYER_STATE_MISS:
 		sprite_num = g_player.sprite_num;
 		g_player.graph.angle += PI2 / 20.0f;
 		break;
@@ -387,7 +387,7 @@ void AnimatePlayer() {
 	if (g_player.sprite_num != sprite_num) {
 		//スプライト番号の変更
 		g_player.sprite_num = sprite_num;
-		//召喚状態でないときはプレイヤーのスプライトを変更しない
+		//召喚状態のときはプレイヤーのスプライトを変更しない
 		if (g_player.state != PLAYER_STATE_SUMMON) {
 			//スプライトの変更
 			g_player.graph.sprite.rect = GetSpriteRect(SPR_STD_GIL, g_player.sprite_num);
@@ -511,6 +511,15 @@ void SetPlayerPos(Vector2DF pos) {
 	g_player.pos = pos;
 }
 
+//プレイヤーの向きを設定する
+void SetPlayerDirection(BOOL isLeft) {
+	g_player.is_left = isLeft;
+	//スプライトの変更
+	g_player.sprite_num = (isLeft ? 6 : 4);
+	g_player.graph.sprite.rect = GetSpriteRect(SPR_STD_GIL, g_player.sprite_num);
+	
+}
+
 //プレイヤーの召喚可能モンスターを設定する
 void SetPlayerSummonable(BOOL summonable[]) {
 	int i;
@@ -555,9 +564,9 @@ void PlayerGetTreasure() {
 }
 
 //プレイヤーが死んだ時の処理
-void PlayerDead() {
-	//プレイヤーを死に状態にする
-	g_player.state = PLAYER_STATE_DEAD;
+void PlayerMiss() {
+	//プレイヤーをミス状態にする
+	g_player.state = PLAYER_STATE_MISS;
 	g_player.anime_count = 0;
 	//ステージ失敗の通知
 	RequestStageFailed();
@@ -566,6 +575,5 @@ void PlayerDead() {
 //プレイヤーがダメージ判定と衝突したときの処理
 void CollisionPlayer() {
 	//死んだときの処理を呼び出す
-	PlayerDead();
+	PlayerMiss();
 }
-

@@ -121,4 +121,14 @@ void ContinueBGM(BGM_ID bgm_Id) {
 	g_bgm_flag[bgm_Id] = TRUE;
 }
 
+//‘S‚Ä‚ÌŒø‰Ê‰¹‚ÆBGM‚ðŽ~‚ß‚é
+void StopAllSound() {
+	int i;
+	for (i = 0; i < SE_ALL_NUM; i++) {
+		StopSoundMem(g_se[i]);
+	}
+	for (i = 0; i < BGM_ALL_NUM; i++) {
+		StopSoundMem(g_bgm[i]);
+	}
+}
 

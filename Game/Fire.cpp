@@ -93,7 +93,7 @@ void UpdateFire() {
 			if (g_fire[i].state < FIRE_STATE_DESTROY) {
 				//拡大状態なら
 				if (g_fire[i].state == FIRE_STATE_IN) {
-					//10フレームに1回大きくする
+					//5フレームに1回大きくする
 					if (g_fire[i].count % FIRE_SPEED == FIRE_SPEED-1) {
 						//アニメーションの更新
 						UpdateFireAnimation(i, 1);
@@ -112,7 +112,7 @@ void UpdateFire() {
 				}
 				//縮小状態なら
 				else {
-					//10フレームに1回小さくする
+					//5フレームに1回小さくする
 					if (g_fire[i].count % FIRE_SPEED == FIRE_SPEED - 1) {
 						//アニメーションの更新
 						UpdateFireAnimation(i, -1);

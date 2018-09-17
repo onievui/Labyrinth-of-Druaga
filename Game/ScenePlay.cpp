@@ -30,6 +30,7 @@
 
 //プレイシーンの状態
 enum ScenePlayState {
+	PLAY_STATE_WAIT,	//待ち状態
 	PLAY_STATE_PLAY,	//プレイ状態
 	PLAY_STATE_PAUSE,	//ポーズ状態
 	PLAY_STATE_FAILED,	//ステージ失敗状態
@@ -50,6 +51,7 @@ void InitializePlay(void);  // プレイシーンの初期化処理
 void UpdatePlay(void);      // プレイシーンの更新処理
 void RenderPlay(void);      // プレイシーンの描画処理
 void FinalizePlay(void);    // プレイシーンの終了処理
+void WaitProcess();
 void PlayProcess();
 void PauseProcess();
 void StageFailedProcess();
@@ -96,12 +98,12 @@ void InitializePlay(void)
 	g_count = 0;
 
 	//状態の初期化
-	g_play_state = PLAY_STATE_PLAY;
+	g_play_state = PLAY_STATE_WAIT;
 	g_select_mode = 0;
 	g_wait_time = 0;
 
-	//BGMの再生
-	SetBGM(BGM_INGAME);
+	//効果音を鳴らす
+	SetSE(SE_START);
 
 }
 
@@ -118,6 +120,10 @@ void UpdatePlay(void)
 {
 
 	switch (g_play_state) {
+	//待ち状態
+	case PLAY_STATE_WAIT:
+		WaitProcess();
+		break;
 	//プレイ状態
 	case PLAY_STATE_PLAY:
 		PlayProcess();
@@ -186,8 +192,15 @@ void RenderPlay(void)
 	DrawPlayerUI();
 
 	//時間の表示
-	DrawFormatStringFToHandle(SCREEN_CENTER_X + 5 - GetDrawFormatStringWidthToHandle(g_font_g50, "%.2f", g_count/60.0f) / 2.0f,
-		15, COLOR_WHITE, g_font_g50, "%.2f", g_count / 60.0f);
+	if (g_play_state != PLAY_STATE_WAIT) {
+		DrawFormatStringFToHandle(SCREEN_CENTER_X + 5 - GetDrawFormatStringWidthToHandle(g_font_g50, "%.2f", g_count / 60.0f) / 2.0f,
+			15, COLOR_WHITE, g_font_g50, "%.2f", g_count / 60.0f);
+	}
+	//キー入力の促し
+	else {
+		DrawFormatStringFToHandle(SCREEN_CENTER_X - GetDrawFormatStringWidthToHandle(g_font_g50, "PRESS ANY KEY") / 2.0f,
+			SCREEN_CENTER_Y, COLOR_WHITE, g_font_g50, "PRESS ANY KEY");
+	}
 
 	//画面の明るさを戻す
 	if (is_change_bright) {
@@ -241,6 +254,22 @@ void FinalizePlay(void)
 	StopBGM(BGM_INGAME);
 }
 
+//入力待ち処理
+void WaitProcess() {
+
+	//カメラのオフセットの更新
+	UpdateCameraOffset();
+
+	//ボタンを押したら開始する
+	if (CheckHitKeyDownAll()) {
+		g_play_state = PLAY_STATE_PLAY;
+		//効果音を止める
+		StopSE(SE_START);
+		//BGMを再生する
+		SetBGM(BGM_INGAME);
+	}
+}
+
 //プレイ処理
 void PlayProcess() 
 {
@@ -270,10 +299,10 @@ void PlayProcess()
 
 
 	//ポーズボタンを押したらポーズ状態にする
-	if (CheckHitKeyDown(KEY_INPUT_PAUSE2)) {
+	if (CheckHitKeyDown(KEY_INPUT_PAUSE2) && g_play_state == PLAY_STATE_PLAY) {
 		g_play_state = PLAY_STATE_PAUSE;
-		//BGMを止める
-		StopBGM(BGM_INGAME);
+		//全ての効果音とBGMを止める
+		StopAllSound();
 		//効果音を鳴らす
 		SetSE(SE_PAUSE);
 	}

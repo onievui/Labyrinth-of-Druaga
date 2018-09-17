@@ -33,9 +33,9 @@ enum GRP_ID {
 
 //効果音のID
 enum SE_ID {
+	SE_START,			//ステージ開始効果音
 	SE_CLEAR,			//ステージクリア効果音
 	SE_HIGHSCORE,		//ハイスコア効果音
-	SE_FANFARE,			//ファンファーレ効果音
 	SE_PAUSE,			//ポーズ効果音
 	SE_MISS,			//ミス効果音
 	SE_WALK,			//歩き効果音

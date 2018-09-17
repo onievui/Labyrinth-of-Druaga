@@ -46,3 +46,7 @@ void StopBGM(BGM_ID bgm_Id);
 //BGM‚ðŽ~‚ß‚½‚Æ‚±‚ë‚©‚çÄ¶‚·‚é
 void ContinueBGM(BGM_ID bgm_Id);
 
+//‘S‚Ä‚ÌŒø‰Ê‰¹‚ÆBGM‚ðŽ~‚ß‚é
+void StopAllSound();
+
+

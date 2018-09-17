@@ -61,9 +61,9 @@ void LoadResources() {
 
 
 	//効果音の読み込み
+	g_se[SE_START]         = LoadSoundMem("Resources/Audio/Protected/se_start.wav");
 	g_se[SE_CLEAR]         = LoadSoundMem("Resources/Audio/Protected/se_clear.wav");
-	g_se[SE_HIGHSCORE]   = LoadSoundMem("Resources/Audio/Protected/se_high_score.wav");
-	g_se[SE_FANFARE]       = LoadSoundMem("Resources/Audio/Protected/se_fanfare.wav");
+	g_se[SE_HIGHSCORE]     = LoadSoundMem("Resources/Audio/Protected/se_high_score.wav");
 	g_se[SE_PAUSE]         = LoadSoundMem("Resources/Audio/Protected/se_pause.wav");
 	g_se[SE_MISS]          = LoadSoundMem("Resources/Audio/Protected/se_miss.wav");
 	g_se[SE_WALK]          = LoadSoundMem("Resources/Audio/Protected/se_gil_walk.wav");
@@ -278,14 +278,18 @@ void LoadMapData(const StageId stageId, MapData *mapdata) {
 			}
 
 			break;
-		//プレイヤーの初期座標
+		//プレイヤーの初期座標、向き
 		case 1:
 			if (num == 0) {
 				mapdata->player_pos.x = (float)atof(inputc);
 				num++;
 			}
-			else {
+			else if (num == 1) {
 				mapdata->player_pos.y = (float)atof(inputc);
+				num++;
+			}
+			else {
+				mapdata->player_is_left = atoi(inputc);
 				knd = 2;
 				num = 0;
 			}

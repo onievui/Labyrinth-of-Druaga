@@ -48,6 +48,9 @@ Vector2DF OrderGetPlayerPos();
 //プレイヤーの座標を設定する依頼
 void OrderSetPlayerPos(Vector2DF pos);
 
+//プレイヤーの向きを設定する依頼
+void OrderSetPlayerDirection(BOOL isLeft);
+
 //プレイヤーの召喚可能モンスターを設定する依頼
 void OrderSetPlayerSummonable(BOOL summonable[]);
 

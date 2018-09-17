@@ -41,6 +41,7 @@ void InitializeMap() {
 	MulVector2DF(g_mapdata.player_pos, MAPCHIP_SIZE);
 	AddVector2DF(g_mapdata.player_pos, Vector2DF{ MAPCHIP_SIZE_HALF,MAPCHIP_SIZE_HALF });
 	OrderSetPlayerPos(g_mapdata.player_pos);
+	OrderSetPlayerDirection(g_mapdata.player_is_left);
 	//プレイヤーの召喚可能なモンスターを設定する
 	OrderSetPlayerSummonable(g_mapdata.summonable);
 	//プレイヤーのSPを設定する
