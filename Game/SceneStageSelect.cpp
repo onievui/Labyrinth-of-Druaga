@@ -31,6 +31,7 @@ void InitializeStageSelect(void);  // ステージセレクトシーンの初期化処理
 void UpdateStageSelect(void);      // ステージセレクトシーンの更新処理
 void RenderStageSelect(void);      // ステージセレクトシーンの描画処理
 void FinalizeStageSelect(void);    // ステージセレクトシーンの終了処理
+BOOL IsSelectableStage(int i);
 
 
 
@@ -88,12 +89,18 @@ void UpdateStageSelect(void)
 	case 1:
 		if (CheckStateKey(KEY_INPUT_LEFT) % CURSOR_SPEED == 1) {
 			g_select_stage += g_select_stage % 5 ? -1 : 4;
+			if (!IsSelectableStage(g_select_stage)) {
+				g_select_stage += g_select_stage % 5 != 4 ? 1 : -4;
+			}
 		}
 		break;
 	//右が押されている
 	case 2:
 		if (CheckStateKey(KEY_INPUT_RIGHT) % CURSOR_SPEED == 1) {
 			g_select_stage += g_select_stage % 5 != 4 ? 1 : -4;
+			if (!IsSelectableStage(g_select_stage)) {
+				g_select_stage += g_select_stage % 5 ? -1 : 4;
+			}
 		}
 		break;
 	//上が押されている
@@ -101,6 +108,9 @@ void UpdateStageSelect(void)
 		if (CheckStateKey(KEY_INPUT_UP) % CURSOR_SPEED == 1) {
 			if (g_select_stage > 4) {
 				g_select_stage -= 5;
+				if (!IsSelectableStage(g_select_stage)) {
+					g_select_stage += 5;
+				}
 			}
 		}
 		break;
@@ -109,6 +119,9 @@ void UpdateStageSelect(void)
 		if (CheckStateKey(KEY_INPUT_DOWN) % CURSOR_SPEED == 1) {
 			if (g_select_stage < STAGE_NUM - 5) {
 				g_select_stage += 5;
+				if (!IsSelectableStage(g_select_stage)) {
+					g_select_stage -= 5;
+				}
 			}
 		}
 		break;
@@ -151,9 +164,12 @@ void RenderStageSelect(void)
 			DrawBoxAA(pos.x - 60, pos.y - 40, pos.x + 60, pos.y + 40, COLOR_BLACK, TRUE);
 
 			//文字の描画
-			sprintf(name, "%d - %d", i / 5 + 1, i % 5 + 1);
-			DrawFormatStringFToHandle(pos.x - GetDrawFormatStringWidthToHandle(g_font_g30, "%s", name) / 2.0f,
-				pos.y - 10, COLOR_WHITE, g_font_g30, "%s", name);
+			//選択できないステージは表示しない
+			if (IsSelectableStage(i)) {
+				sprintf(name, "%d - %d", i / 5 + 1, i % 5 + 1);
+				DrawFormatStringFToHandle(pos.x - GetDrawFormatStringWidthToHandle(g_font_g30, "%s", name) / 2.0f,
+					pos.y - 10, COLOR_WHITE, g_font_g30, "%s", name);
+			}
 		}
 		//クリア状態なら
 		else {
@@ -221,7 +237,17 @@ void FinalizeStageSelect(void)
 }
 
 
-
+//選択できるステージかどうか
+BOOL IsSelectableStage(int i) {
+	int j = i;
+	if (i == 0) {
+		j = 1;
+	}
+	if(!g_view_clear_data->clear_data[j - 1].is_clear && i % 5) {
+		return FALSE;
+	}
+	return TRUE;
+}
 
 
 
