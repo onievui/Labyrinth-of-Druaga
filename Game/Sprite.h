@@ -20,6 +20,7 @@ enum SPR_ID {
 	SPR_STAGESELECT_ICON,	//ステージセレクトアイコンスプライト
 	SPR_STD_GIL,			//プレイヤー基準スプライト
 	SPR_STD_SWORD,			//剣基準スプライト
+	SPR_DELETE_ICON,		//消滅アイコンスプライト
 	SPR_STD_MONSTER,		//モンスター基準スプライト
 	SPR_STD_DRAGON,			//ドラゴン基準スプライト
 	SPR_STD_FIRE,			//ドラゴンの炎基準スプライト
@@ -36,6 +37,7 @@ enum SPR_ID {
 	SPR_MAPCHIP1_10,		//マップチップ1スプライト10
 	SPR_MAPCHIP1_11,		//マップチップ1スプライト11
 	SPR_OBJECT_TREASURE,	//お宝スプライト
+	SPR_STD_EFFECT1,		//エフェクト1基準スプライト			
 	SPR_ALL_NUM,			//スプライトの数
 };
 

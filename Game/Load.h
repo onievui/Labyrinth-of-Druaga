@@ -22,12 +22,14 @@ enum GRP_ID {
 	GRP_STAGESELECT_ICON,	//ステージセレクトアイコン
 	GRP_GIL,				//プレイヤー画像
 	GRP_SWORD,				//剣画像
+	GRP_DELETE_ICON,		//消滅アイコン画像
 	GRP_MONSTER,			//モンスター画像
 	GRP_DRAGON,				//ドラゴン画像
 	GRP_FIRE,				//ドラゴンの炎画像
 	GRP_MAGIC,				//モンスター魔法画像
 	GRP_MAPCHIP1,			//マップチップ画像1
 	GRP_OBJECT_OTHER,		//その他オブジェクト画像
+	GRP_EFFECT1,			//エフェクト画像1	
 	GRP_ALL_NUM,			//読み込む画像ファイルの数
 };
 
@@ -41,6 +43,7 @@ enum SE_ID {
 	SE_WALK,			//歩き効果音
 	SE_SWORD,			//剣効果音
 	SE_SUMMON,			//召喚効果音
+	SE_ORB,				//オーブ効果音
 	SE_FIRE,			//ドラゴンの炎効果音
 	SE_MINION_STRIKE,	//召喚モンスター消滅効果音
 	SE_MAGIC,			//敵の魔法効果音

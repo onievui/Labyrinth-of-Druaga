@@ -186,6 +186,31 @@ struct Magic {
 
 };
 
+//オーブ構造体
+struct Orb {
+	int state;			//状態
+	int count;			//出現してからの時間
+	Vector2DF pos;		//座標
+	RectF col;			//当たり判定の相対座標	
+	Vector2DF vel;		//速度
+	float angle;		//角度
+	int sp;				//回復SP量
+	Graph graph;		//表示画像情報
+	int sprite_num;		//スプライト番号
+};
+
+//エフェクト構造体
+struct Effect {
+	EffectPattern knd;	//種類
+	int state;			//状態
+	int count;			//出現してからのフレーム数
+	Vector2DF pos;		//座標
+	Vector2DF vel;		//速度
+	float angle;		//角度
+	Graph graph;		//表示画像情報
+	int sprite_num;		//スプライト番号
+};
+
 //動く矩形の衝突判定用構造体
 struct BoxCollider {
 	int *state;				//オブジェクトの状態

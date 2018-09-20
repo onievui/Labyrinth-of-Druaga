@@ -191,4 +191,12 @@ BOOL IsUnderMap(Vector2DF *pos, RectF *col) {
 	return FALSE;
 }
 
-
+//‰æ–Ê‰¡‚É‚Í‚Ýo‚È‚¢‚æ‚¤‚É‚·‚é
+void ClampMap(Vector2DF *pos, RectF *col) {
+	if (pos->x + col->left < 0) {
+		pos->x = -col->left;
+	}
+	else if (pos->x + col->right > g_mapdata.width*MAPCHIP_SIZE) {
+		pos->x = g_mapdata.width*MAPCHIP_SIZE - col->right;
+	}
+}

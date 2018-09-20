@@ -41,7 +41,7 @@ void PlayerActSummon();
 void PlayerActClear();
 void AnimatePlayer();
 void SummonMinion();
-void PlayerMiss();
+void PlayerMiss(BOOL is_damage);
 
 
 
@@ -56,7 +56,7 @@ SummonAreaData g_summon_area;						//召喚・消滅範囲情報
 BOOL g_use_summon_area;								//召喚・消滅範囲表示フラグ
 BOOL g_is_walking;									//今回歩いたかどうか
 BOOL g_was_walking;									//前回歩いたかどうか
-
+BOOL g_is_damage;									
 
 
 extern HFNT g_font_g40;
@@ -85,6 +85,7 @@ void InitializePlayer() {
 	memset(g_summonable, 0, sizeof(g_summonable));
 	g_summonable[0].is_use = TRUE;
 	g_summonable[0].knd = MINION_PATTERN_NUM;
+	g_summonable[0].graph = Graph{ g_sprite[SPR_DELETE_ICON],1.0,0.0 };
 	g_slist_active_num = 1;
 	g_select_summon_type = 0;
 	memset(&g_summon_area, 0, sizeof(g_summon_area));
@@ -92,6 +93,8 @@ void InitializePlayer() {
 
 	g_is_walking = FALSE;
 	g_was_walking = FALSE;
+
+	g_is_damage = FALSE;
 }
 
 
@@ -101,9 +104,11 @@ void UpdatePlayer() {
 	if (g_player.state) {
 		//プレイヤーの行動
 		ActPlayer();
+		//マップの横に出ないようにする
+		OrderClampMap(&g_player.pos, &g_player.col);
 		//マップでの死亡判定
 		if (OrderIsUnderMap(&g_player.pos,&g_player.col)) {
-			PlayerMiss();
+			PlayerMiss(FALSE);
 		}
 		//召喚・消滅範囲の表示切替
 		if (CheckHitKeyDown(KEY_INPUT_S_AREA)) {
@@ -194,7 +199,10 @@ void ActPlayer() {
 void PlayerActMiss() {
 	//上に飛んで落下する
 	if (g_player.anime_count == 0) {
-		g_player.vel.y = PLAYER_JUMP_SPEED*1.5f;
+		//落下死なら飛ばない
+		if (g_is_damage) {
+			g_player.vel.y = PLAYER_JUMP_SPEED*1.5f;
+		}
 	}
 	else {
 		g_player.vel.y += GRAVITY;
@@ -466,7 +474,7 @@ void DrawPlayerUI() {
 			COLOR_WHITE,
 			TRUE);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-		//消滅モードは画像を表示しない
+		//消滅モードはモンスターの画像を表示しない
 		if (index != 0) {
 			//召喚コストの取得
 			int cost = OrderGetSummonCost(g_summonable[index].knd);
@@ -477,9 +485,16 @@ void DrawPlayerUI() {
 				SetDrawBright(r * 2 / 5, g * 2 / 5,b * 2 / 5);
 			}
 			DrawGraphic(pos, &g_summonable[index].graph);
+			float exrate = g_summonable[index].graph.exrate;
+			DrawFormatStringFToHandle(pos.x + 15 * exrate, pos.y + 8 * exrate, COLOR_YELLOW, g_font_g30, "%d", cost);
 			if (cost > g_player.sp) {
 				SetDrawBright(r, g, b);
 			}
+		}
+		//消滅アイコンの描画
+		else {
+			g_summonable[index].graph.exrate *= 0.8f;
+			DrawGraphic(pos, &g_summonable[index].graph);
 		}
 	}
 
@@ -564,7 +579,9 @@ void PlayerGetTreasure() {
 }
 
 //プレイヤーが死んだ時の処理
-void PlayerMiss() {
+void PlayerMiss(BOOL is_damage) {
+	//演出を行うかの判定
+	g_is_damage = is_damage;
 	//プレイヤーをミス状態にする
 	g_player.state = PLAYER_STATE_MISS;
 	g_player.anime_count = 0;
@@ -575,5 +592,5 @@ void PlayerMiss() {
 //プレイヤーがダメージ判定と衝突したときの処理
 void CollisionPlayer() {
 	//死んだときの処理を呼び出す
-	PlayerMiss();
+	PlayerMiss(TRUE);
 }

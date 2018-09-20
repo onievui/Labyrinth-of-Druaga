@@ -44,4 +44,7 @@ BOOL IsOutsideMap(Vector2DF *pos, RectF *col);
 //âÊñ â∫Ç…Ç¢ÇÈÇ©ÇÃîªíË
 BOOL IsUnderMap(Vector2DF *pos, RectF *col);
 
+//âÊñ â°Ç…ÇÕÇ›èoÇ»Ç¢ÇÊÇ§Ç…Ç∑ÇÈ
+void ClampMap(Vector2DF *pos, RectF *col);
+
 

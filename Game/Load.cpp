@@ -52,12 +52,14 @@ void LoadResources() {
 	g_texture[GRP_BG]           = LoadGraph("Resources/Textures/Protected/bg.png");
 	g_texture[GRP_GIL]          = LoadGraph("Resources/Textures/Protected/gil.png");
 	g_texture[GRP_SWORD]        = LoadGraph("Resources/Textures/Protected/sword.png");
+	g_texture[GRP_DELETE_ICON]  = LoadGraph("Resources/Textures/Protected/delete_icon.png");
 	g_texture[GRP_MONSTER]      = LoadGraph("Resources/Textures/Protected/monster.png");
 	g_texture[GRP_DRAGON]       = LoadGraph("Resources/Textures/Protected/dragon.png");
 	g_texture[GRP_FIRE]         = LoadGraph("Resources/Textures/Protected/fire.png");
 	g_texture[GRP_MAGIC]        = LoadGraph("Resources/Textures/Protected/magic.png");
 	g_texture[GRP_MAPCHIP1]     = LoadGraph("Resources/Textures/Protected/mapchip1.png");
 	g_texture[GRP_OBJECT_OTHER] = LoadGraph("Resources/Textures/Protected/object_other.png");
+	g_texture[GRP_EFFECT1]      = LoadGraph("Resources/Textures/Protected/effect1.png");
 
 
 	//å¯â âπÇÃì«Ç›çûÇ›
@@ -69,6 +71,7 @@ void LoadResources() {
 	g_se[SE_WALK]          = LoadSoundMem("Resources/Audio/Protected/se_gil_walk.wav");
 	g_se[SE_SWORD]         = LoadSoundMem("Resources/Audio/Protected/se_sword.wav");
 	g_se[SE_SUMMON]        = LoadSoundMem("Resources/Audio/Protected/se_summon.wav");
+	g_se[SE_ORB]           = LoadSoundMem("Resources/Audio/Protected/se_orb.wav");
 	g_se[SE_FIRE]          = LoadSoundMem("Resources/Audio/Protected/se_fire.wav");
 	g_se[SE_MINION_STRIKE] = LoadSoundMem("Resources/Audio/Protected/se_minion_strike.wav");
 	g_se[SE_MAGIC]         = LoadSoundMem("Resources/Audio/Protected/se_magic.wav");

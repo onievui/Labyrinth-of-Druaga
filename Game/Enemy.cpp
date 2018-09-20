@@ -159,13 +159,7 @@ void UpdateEnemyWizard(Enemy *enemy) {
 //ドルイドの描画
 void DrawEnemyDruid(Enemy *enemy) {
 	DrawGraphicToMap(enemy->pos, &enemy->graph);
-	/*Vector2DF pos = enemy->pos;
-	SubVector2DF(pos, OrderGetCameraOffset());
-	RectF rect = { pos.x + enemy->col.left,
-	pos.y + enemy->col.top,
-	pos.x + enemy->col.right,
-	pos.y + enemy->col.bottom };
-	DrawBoxAA(rect.left, rect.top, rect.right, rect.bottom, COLOR_BLUE, 0);*/
+	
 }
 
 //ウィザードの描画

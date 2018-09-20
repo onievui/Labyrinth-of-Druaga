@@ -41,6 +41,7 @@
 BoxCollider g_player_collider[PLAYER_MAX];			//プレイヤーの当たり判定
 BoxCollider g_treasure_collider[TREASURE_MAX];		//お宝の当たり判定	
 BoxCollider g_minion_collider[MINION_MAX];			//召喚モンスターの当たり判定
+BoxCollider g_orb_collider[ORB_MAX];				//オーブの当たり判定
 BoxCollider g_fire_collider[FIRE_MAX];				//ドラゴンの炎の当たり判定
 BoxCollider g_enemy_collider[ENEMY_MAX];			//敵モンスターの当たり判定
 BoxCollider g_magic_collider[MAGIC_MAX];			//モンスターの魔法の当たり判定
@@ -60,6 +61,7 @@ void InitializeCollision() {
 	OrderSetPlayerCollider(g_player_collider);
 	OrderSetTreasureCollider(g_treasure_collider);
 	OrderSetMinionsCollider(g_minion_collider);
+	OrderSetOrbsCollider(g_orb_collider);
 	OrderSetFireCollider(g_fire_collider);
 	OrderSetEnemiesCollider(g_enemy_collider);
 	OrderSetMagicsCollider(g_magic_collider);
@@ -232,6 +234,12 @@ void UpdateCollision() {
 				//*g_enemy_collider[i].ground_flag = FALSE;
 			}
 		}
+	}
+
+	//プレイヤーとオーブの当たり判定
+	MR_COLLISION_MACRO3(g_player_collider, PLAYER_MAX, i, g_orb_collider, ORB_MAX, j, check) {
+		//オーブを消滅させる
+		OrderDestroyOrb(j);
 	}
 
 	//敵モンスターとドラゴンの炎の当たり判定

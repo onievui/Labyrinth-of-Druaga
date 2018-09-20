@@ -89,6 +89,8 @@
   <!-- ソースファイル -->
   <ItemGroup>
     <ClCompile Include="Game\Collision.cpp" />
+    <ClCompile Include="Game\Effect.cpp" />
+    <ClCompile Include="Game\EffectManager.cpp" />
     <ClCompile Include="Game\Enemy.cpp" />
     <ClCompile Include="Game\EnemyManager.cpp" />
     <ClCompile Include="Game\Fire.cpp" />
@@ -101,6 +103,7 @@
     <ClCompile Include="Game\Mediator.cpp" />
     <ClCompile Include="Game\Minion.cpp" />
     <ClCompile Include="Game\MinionManager.cpp" />
+    <ClCompile Include="Game\Orb.cpp" />
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="Game\SceneLogo.cpp" />
     <ClCompile Include="Game\ScenePlay.cpp" />
@@ -123,6 +126,8 @@
   <!-- ヘッダファイル -->
   <ItemGroup>
     <ClInclude Include="Game\Collision.h" />
+    <ClInclude Include="Game\Effect.h" />
+    <ClInclude Include="Game\EffectManager.h" />
     <ClInclude Include="Game\Enemy.h" />
     <ClInclude Include="Game\EnemyManager.h" />
     <ClInclude Include="Game\Fire.h" />
@@ -138,6 +143,7 @@
     <ClInclude Include="Game\Mediator.h" />
     <ClInclude Include="Game\Minion.h" />
     <ClInclude Include="Game\MinionManager.h" />
+    <ClInclude Include="Game\Orb.h" />
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\RectF.h" />
     <ClInclude Include="Game\SceneLogo.h" />

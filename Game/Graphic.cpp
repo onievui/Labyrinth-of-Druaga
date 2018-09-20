@@ -14,7 +14,6 @@
 #include "Mediator.h"
 
 
-
 //グラフィックの描画
 void DrawGraphic(const Vector2DF pos, Graph *tex) {
 	Sprite sprite = tex->sprite;

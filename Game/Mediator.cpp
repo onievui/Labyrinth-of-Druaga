@@ -8,6 +8,7 @@
 #include "Map.h"
 #include "Player.h"
 #include "MinionManager.h"
+#include "Orb.h"
 #include "Fire.h"
 #include "EnemyManager.h"
 #include "MagicManager.h"
@@ -81,7 +82,6 @@ int GetClearStageNum() {
 	}
 	return count;
 }
-
 
 //召喚・消滅範囲表示フラグの設定
 void SetUseSummonArea(BOOL flag) {
@@ -176,6 +176,21 @@ BOOL OrderDamageMinion(int i, int power) {
 //召喚モンスターの消滅依頼
 void OrderDestroyMinion(int i) {
 	DestroyMinion(i);
+}
+
+//オーブの生成依頼
+BOOL OrderCreateOrb(Vector2DF *pos, int sp) {
+	return CreateOrb(pos, sp);
+}
+
+//オーブの当たり判定の設定依頼
+void OrderSetOrbsCollider(BoxCollider collider[]) {
+	SetOrbsCollider(collider);
+}
+
+//オーブの消滅処理依頼
+void OrderDestroyOrb(int i) {
+	DestroyOrb(i);
 }
 
 //ドラゴンの炎の当たり判定の設定依頼
@@ -287,4 +302,10 @@ BOOL OrderIsOutsideMap(Vector2DF *pos, RectF *col) {
 BOOL OrderIsUnderMap(Vector2DF *pos, RectF *col) {
 	return IsUnderMap(pos, col);
 }
+
+//画面横にはみ出ないようにする依頼
+void OrderClampMap(Vector2DF *pos, RectF *col) {
+	ClampMap(pos, col);
+}
+
 

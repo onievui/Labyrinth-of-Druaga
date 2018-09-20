@@ -93,6 +93,15 @@ BOOL OrderDamageMinion(int i, int power);
 //召喚モンスターの消滅依頼
 void OrderDestroyMinion(int i);
 
+//オーブの生成依頼
+BOOL OrderCreateOrb(Vector2DF *pos, int sp);
+
+//オーブの当たり判定の設定依頼
+void OrderSetOrbsCollider(BoxCollider collider[]);
+
+//オーブの消滅処理依頼
+void OrderDestroyOrb(int i);
+
 //ドラゴンの炎の当たり判定の設定依頼
 void OrderSetFireCollider(BoxCollider collider[]);
 
@@ -158,5 +167,8 @@ BOOL OrderIsOutsideMap(Vector2DF *pos, RectF *col);
 
 //画面下にいるかの判定依頼
 BOOL OrderIsUnderMap(Vector2DF *pos, RectF *col);
+
+//画面横にはみ出ないようにする依頼
+void OrderClampMap(Vector2DF *pos, RectF *col);
 
 

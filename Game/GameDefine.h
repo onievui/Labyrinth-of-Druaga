@@ -73,6 +73,10 @@
 #define MAGIC_MAX	(40)	//モンスターの魔法の最大出現数
 
 
+//オーブ関係
+#define ORB_MAX		(15)	//オーブの最大出現数
+
+
 //お宝関係
 #define TREASURE_MAX	(1)		//お宝の数
 

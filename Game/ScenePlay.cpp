@@ -12,6 +12,7 @@
 #include "Map.h"
 #include "Player.h"
 #include "MinionManager.h"
+#include "Orb.h"
 #include "Fire.h"
 #include "EnemyManager.h"
 #include "MagicManager.h"
@@ -75,6 +76,9 @@ void InitializePlay(void)
 
 	//召喚モンスターの初期化
 	InitializeMinions();
+
+	//オーブの初期化
+	InitializeOrbs();
 
 	//ドラゴンの炎の初期化
 	InitializeFire();
@@ -188,12 +192,15 @@ void RenderPlay(void)
 	//プレイヤーの描画
 	DrawPlayer();
 
+	//オーブの描画
+	DrawOrbs();
+
 	//プレイヤー関係の情報の描画
 	DrawPlayerUI();
 
 	//時間の表示
 	if (g_play_state != PLAY_STATE_WAIT) {
-		DrawFormatStringFToHandle(SCREEN_CENTER_X + 5 - GetDrawFormatStringWidthToHandle(g_font_g50, "%.2f", g_count / 60.0f) / 2.0f,
+		DrawFormatStringFToHandle(SCREEN_CENTER_X + 5.0f - GetDrawFormatStringWidthToHandle(g_font_g50, "%d.", g_count / 60),
 			15, COLOR_WHITE, g_font_g50, "%.2f", g_count / 60.0f);
 	}
 	//キー入力の促し
@@ -287,6 +294,9 @@ void PlayProcess()
 
 	//敵モンスターの更新
 	UpdateEnemies();
+
+	//オーブの更新
+	UpdateOrbs();
 
 	//お宝の更新
 	UpdateTreasure();

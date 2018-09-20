@@ -57,6 +57,9 @@
     <Filter Include="ゲーム\オブジェクト関連\モンスターの魔法関係">
       <UniqueIdentifier>{d0849965-fc61-41db-94c9-be4bb8e233ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ゲーム\オブジェクト関連\エフェクト関係">
+      <UniqueIdentifier>{2759f437-0b06-4008-8068-17fcb60930a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <!-- ソースファイル -->
   <ItemGroup>
@@ -150,6 +153,15 @@
     </ClCompile>
     <ClCompile Include="Game\MagicManager.cpp">
       <Filter>ゲーム\オブジェクト関連\モンスターの魔法関係</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Orb.cpp">
+      <Filter>ゲーム\オブジェクト関連</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Effect.cpp">
+      <Filter>ゲーム\オブジェクト関連\エフェクト関係</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\EffectManager.cpp">
+      <Filter>ゲーム\オブジェクト関連\エフェクト関係</Filter>
     </ClCompile>
   </ItemGroup>
   <!-- ヘッダファイル -->
@@ -261,6 +273,15 @@
     </ClInclude>
     <ClInclude Include="Game\MagicManager.h">
       <Filter>ゲーム\オブジェクト関連\モンスターの魔法関係</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Orb.h">
+      <Filter>ゲーム\オブジェクト関連</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Effect.h">
+      <Filter>ゲーム\オブジェクト関連\エフェクト関係</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\EffectManager.h">
+      <Filter>ゲーム\オブジェクト関連\エフェクト関係</Filter>
     </ClInclude>
   </ItemGroup>
   <!-- リソースファイル -->
