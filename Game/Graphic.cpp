@@ -14,6 +14,19 @@
 #include "Mediator.h"
 
 
+
+//グローバル変数の宣言
+HGRP g_orb_rayer1;
+HGRP g_orb_rayer2;
+
+
+
+//レイヤーの作成
+void InitializeRayer() {
+
+}
+
+
 //グラフィックの描画
 void DrawGraphic(const Vector2DF pos, Graph *tex) {
 	Sprite sprite = tex->sprite;

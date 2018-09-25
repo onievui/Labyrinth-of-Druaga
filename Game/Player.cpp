@@ -42,6 +42,7 @@ void PlayerActClear();
 void AnimatePlayer();
 void SummonMinion();
 void PlayerMiss(BOOL is_damage);
+void ChangePlayerGraphic();
 
 
 
@@ -57,9 +58,6 @@ BOOL g_use_summon_area;								//召喚・消滅範囲表示フラグ
 BOOL g_is_walking;									//今回歩いたかどうか
 BOOL g_was_walking;									//前回歩いたかどうか
 BOOL g_is_damage;									
-
-
-extern HFNT g_font_g40;
 
 
 
@@ -85,7 +83,8 @@ void InitializePlayer() {
 	memset(g_summonable, 0, sizeof(g_summonable));
 	g_summonable[0].is_use = TRUE;
 	g_summonable[0].knd = MINION_PATTERN_NUM;
-	g_summonable[0].graph = Graph{ g_sprite[SPR_DELETE_ICON],1.0,0.0 };
+	g_summonable[0].graph = Graph{ g_sprite[SPR_STD_SWORD],1.0,0.0 };
+	g_summonable[0].graph.sprite.rect = GetSpriteRect(SPR_STD_SWORD, 13);
 	g_slist_active_num = 1;
 	g_select_summon_type = 0;
 	memset(&g_summon_area, 0, sizeof(g_summon_area));
@@ -191,6 +190,8 @@ void ActPlayer() {
 	//召喚タイプの選択
 	if (CheckHitKeyDown(KEY_INPUT_SELECT)) {
 		g_select_summon_type = (g_select_summon_type + 1) % g_slist_active_num;
+		//プレイヤー画像の変更
+		ChangePlayerGraphic();
 	}
 
 }
@@ -447,6 +448,36 @@ void DrawPlayer() {
 		DrawGraphicToMap(g_player.pos, &g_player.graph);
 		DrawGraphicToMap(g_player.pos, &g_sword);
 	}
+	//選択中のモンスターを表示する
+	if (g_player.state != PLAYER_STATE_SUMMON && g_player.state != PLAYER_STATE_CLEAR && g_player.state != PLAYER_STATE_MISS) {
+		//頭上に表示する
+		Vector2DF pos = g_player.pos;
+		pos.y -= 60.0f;
+		float exrate;
+		//選択しているモンスター表示倍率を変える
+		switch (g_summonable[g_select_summon_type].knd) {
+		case MINION_PATTERN_NUM:
+			exrate = 0.75f;
+			break;
+		case MINION_SLIME:
+			exrate = 0.75f;
+			break;
+		case MINION_GHOST:
+			exrate = 0.6f;
+			break;
+		case MINION_QUOX:
+			exrate = 0.5f;
+			break;
+		default:
+			MessageBox(NULL, "プレイヤーの選択モンスターの表示で不正な値が渡されました", "", MB_OK);
+			exrate = 0;
+			break;
+		}
+		g_summonable[g_select_summon_type].graph.exrate = exrate;
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
+		DrawGraphicToMap(pos, &g_summonable[g_select_summon_type].graph);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
 }
 
 //プレイヤー関係の情報の描画
@@ -459,6 +490,11 @@ void DrawPlayerUI() {
 
 	//召喚可能なモンスターのリストの描画
 	int i;
+	//操作方法の描画
+	Vector2DF pos = { (float)(SLIST_POS_X-25),(float)(SLIST_POS_Y+30) };
+	//SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
+	DrawFormatStringFToHandle(pos.x, pos.y, COLOR_YELLOW, g_font_g30, "←L-Shift←");
+	//SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	for (i = 0; i < g_slist_active_num; i++) {
 		int index = (g_select_summon_type + i) % g_slist_active_num;
 		//先頭は大きく表示する
@@ -486,6 +522,7 @@ void DrawPlayerUI() {
 			}
 			DrawGraphic(pos, &g_summonable[index].graph);
 			float exrate = g_summonable[index].graph.exrate;
+			//召喚コストの描画
 			DrawFormatStringFToHandle(pos.x + 15 * exrate, pos.y + 8 * exrate, COLOR_YELLOW, g_font_g30, "%d", cost);
 			if (cost > g_player.sp) {
 				SetDrawBright(r, g, b);
@@ -493,8 +530,10 @@ void DrawPlayerUI() {
 		}
 		//消滅アイコンの描画
 		else {
-			g_summonable[index].graph.exrate *= 0.8f;
+			pos.y += 20.0f;
+			g_summonable[index].graph.exrate *= 1.5f;
 			DrawGraphic(pos, &g_summonable[index].graph);
+			pos.y -= 20.0f;
 		}
 	}
 
@@ -567,6 +606,8 @@ void SetPlayerCollider(BoxCollider *collider) {
 //プレイヤーのSPを回復する
 void AddPlayerSp(int plus) {
 	g_player.sp += plus;
+	//エフェクトの生成
+	OrderCreateEffect(EFFECT_GET_ORB, &g_player.pos, g_player.is_left);
 }
 
 //プレイヤーがお宝を取得したときの処理
@@ -594,3 +635,26 @@ void CollisionPlayer() {
 	//死んだときの処理を呼び出す
 	PlayerMiss(TRUE);
 }
+
+//プレイヤーの画像変更
+void ChangePlayerGraphic() {
+	//選択しているモンスターによって色を変える
+	switch (g_summonable[g_select_summon_type].knd) {
+	case MINION_PATTERN_NUM:
+		g_player.graph.sprite.texture = g_texture[GRP_GIL];
+		break;
+	case MINION_SLIME:
+		g_player.graph.sprite.texture = g_texture[GRP_GIL_SLIME];
+		break;
+	case MINION_GHOST:
+		g_player.graph.sprite.texture = g_texture[GRP_GIL_GHOST];
+		break;
+	case MINION_QUOX:
+		g_player.graph.sprite.texture = g_texture[GRP_GIL_QUOX];
+		break;
+	default:
+		MessageBox(NULL, "プレイヤーの画像変更で不正な値が渡されました", "", MB_OK);
+		break;
+	}
+}
+

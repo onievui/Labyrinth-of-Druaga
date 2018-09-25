@@ -76,7 +76,7 @@ enum MagicPattern {
 //エフェクトの種類
 enum EffectPattern {
 	EFFECT_GET_ORB,			//オーブ取得エフェクト
-	EFFECT_PATTER_NUM		//エフェクトの種類数
+	EFFECT_PATTERN_NUM		//エフェクトの種類数
 };
 
 

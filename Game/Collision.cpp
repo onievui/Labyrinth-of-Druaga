@@ -157,6 +157,19 @@ void UpdateCollision() {
 		}
 	}
 
+	//召喚モンスターとマップの当たり判定
+	for (i = 0; i < MINION_MAX; i++) {
+		if (*g_minion_collider[i].state) {
+			*g_minion_collider[i].collision_state |= check = CollisionObjectMap(g_minion_collider[i].pos, g_minion_collider[i].vel, g_minion_collider[i].col);
+			if (check & ISGROUND) {
+				*g_minion_collider[i].ground_flag = TRUE;
+			}
+			else {
+				//*g_minion_collider[i].ground_flag = FALSE;
+			}
+		}
+	}
+
 	//プレイヤーと召喚モンスターの当たり判定
 	*g_player_collider->ride = NULL;
 	MR_COLLISION_MACRO(g_player_collider, PLAYER_MAX, i, g_minion_collider, MINION_MAX, j, check) {
@@ -210,18 +223,7 @@ void UpdateCollision() {
 		*g_treasure_collider->collision_state = FALSE;
 	}
 
-	//召喚モンスターとマップの当たり判定
-	for (i = 0; i < MINION_MAX; i++) {
-		if (*g_minion_collider[i].state) {
-			*g_minion_collider[i].collision_state |= check = CollisionObjectMap(g_minion_collider[i].pos, g_minion_collider[i].vel, g_minion_collider[i].col);
-			if (check & ISGROUND) {
-				*g_minion_collider[i].ground_flag = TRUE;
-			}
-			else {
-				//*g_minion_collider[i].ground_flag = FALSE;
-			}
-		}
-	}
+	
 
 	//敵モンスターとマップの当たり判定
 	for (i = 0; i < ENEMY_MAX; i++) {
@@ -545,11 +547,21 @@ int CollisionMovingAABB(BoxCollider *obj1, BoxCollider *obj2) {
 			if (vel.y == 0) {
 				if (obj1->vel->y > 0) {
 					(obj1->pos->y < obj2->pos->y ? obj1->vel->y : obj2->vel->y) = 0;
-					return ISGROUND;
+					//return ISGROUND;
 				}
 				else {
 					(obj1->pos->y > obj2->pos->y ? obj1->vel->y : obj2->vel->y) = 0;
-					return ISCEILING;
+					//return ISCEILING;
+				}
+			}
+			if (vel.x == 0) {
+				if (obj1->vel->x > 0) {
+					(obj1->pos->x < obj2->pos->x ? obj1->vel->x : obj2->vel->x) = 0;
+					return ISRIGHT;
+				}
+				else {
+					(obj1->pos->x > obj2->pos->x ? obj1->vel->x : obj2->vel->x) = 0;
+					return ISLEFT;
 				}
 			}
 		}

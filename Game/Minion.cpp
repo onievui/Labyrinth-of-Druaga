@@ -165,6 +165,7 @@ void UpdateMinionGhost(Minion *minion) {
 		minion->graph.sprite.rect = GetSpriteRect(SPR_STD_MONSTER, minion->sprite_num);
 		minion->collision_state -= ISRIGHT;
 	}
+	
 }
 
 //クオックスの更新

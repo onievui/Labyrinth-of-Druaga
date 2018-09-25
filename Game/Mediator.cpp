@@ -13,6 +13,7 @@
 #include "EnemyManager.h"
 #include "MagicManager.h"
 #include "Treasure.h"
+#include "EffectManager.h"
 #include "Collision.h"
 
 
@@ -246,6 +247,11 @@ void OrderSetTreasureCollider(BoxCollider *collider) {
 //お宝がプレイヤーと衝突したときの処理依頼
 void OrderCollisionTreasure() {
 	CollisionTreasure();
+}
+
+//エフェクトの生成依頼
+BOOL OrderCreateEffect(EffectPattern knd, Vector2DF *pos, BOOL isLeft) {
+	return CreateEffect(knd, pos, isLeft);
 }
 
 //マップを取得する依頼

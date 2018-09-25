@@ -20,8 +20,8 @@
 #define SCREEN_CENTER_Y (SCREEN_HEIGHT / 2)    // 画面の中央(Y座標)
 
 //マップ関係
-#define MAP_WIDTH_MAX	(20)	//マップの最大横幅
-#define MAP_HEIGHT_MAX	(20)	//マップの最大縦幅
+#define MAP_WIDTH_MAX	(22)	//マップの最大横幅
+#define MAP_HEIGHT_MAX	(22)	//マップの最大縦幅
 
 #define MAPCHIP_SIZE		(64)	//マップチップの大きさ
 #define MAPCHIP_SIZE_HALF	(32)	//マップチップの大きさの半分

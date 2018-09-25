@@ -17,6 +17,7 @@
 #include "EnemyManager.h"
 #include "MagicManager.h"
 #include "Treasure.h"
+#include "EffectManager.h"
 #include "Collision.h"
 #include "Shader.h"
 #include "Mediator.h"
@@ -91,6 +92,9 @@ void InitializePlay(void)
 
 	//お宝の初期化
 	InitializeTreasure();
+
+	//エフェクトの初期化
+	InitializeEffects();
 
 	//マップの初期化
 	InitializeMap();
@@ -194,6 +198,9 @@ void RenderPlay(void)
 
 	//オーブの描画
 	DrawOrbs();
+
+	//エフェクトの描画
+	DrawEffects();
 
 	//プレイヤー関係の情報の描画
 	DrawPlayerUI();
@@ -301,6 +308,9 @@ void PlayProcess()
 	//お宝の更新
 	UpdateTreasure();
 
+	//エフェクトの更新
+	UpdateEffects();
+
 	//当たり判定の更新
 	UpdateCollision();
 	
@@ -373,6 +383,7 @@ void PauseProcess()
 	//ポーズキーで再開
 	else if (CheckHitKeyDown(KEY_INPUT_PAUSE2)) {
 		g_play_state = PLAY_STATE_PLAY;
+		ContinueBGM(BGM_INGAME);
 		g_select_mode = 0;
 	}
 }

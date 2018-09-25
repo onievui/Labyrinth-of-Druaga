@@ -21,6 +21,9 @@ enum GRP_ID {
 	GRP_STAGESELECT_BG,		//ステージセレクト背景
 	GRP_STAGESELECT_ICON,	//ステージセレクトアイコン
 	GRP_GIL,				//プレイヤー画像
+	GRP_GIL_SLIME,			//プレイヤー画像（スライム）
+	GRP_GIL_GHOST,			//プレイヤー画像（ゴースト）
+	GRP_GIL_QUOX,			//プレイヤー画像（クオックス）
 	GRP_SWORD,				//剣画像
 	GRP_DELETE_ICON,		//消滅アイコン画像
 	GRP_MONSTER,			//モンスター画像

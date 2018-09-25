@@ -81,3 +81,6 @@ RECT GetSpriteRect(const SPR_ID sprId, const int num) {
 	return rect;
 }
 
+
+
+

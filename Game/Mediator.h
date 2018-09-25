@@ -135,6 +135,9 @@ void OrderSetTreasureCollider(BoxCollider *collider);
 //お宝がプレイヤーと衝突したときの処理依頼
 void OrderCollisionTreasure();
 
+//エフェクトの生成依頼
+BOOL OrderCreateEffect(EffectPattern knd, Vector2DF *pos, BOOL isLeft);
+
 //マップを取得する依頼
 MapData OrderGetMap();
 
