@@ -302,6 +302,9 @@ void PlayProcess()
 	//敵モンスターの更新
 	UpdateEnemies();
 
+	//オーブスポナーの更新
+	UpdateOrbSpawner();
+
 	//オーブの更新
 	UpdateOrbs();
 

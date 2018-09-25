@@ -179,9 +179,9 @@ void OrderDestroyMinion(int i) {
 	DestroyMinion(i);
 }
 
-//オーブの生成依頼
-BOOL OrderCreateOrb(Vector2DF *pos, int sp) {
-	return CreateOrb(pos, sp);
+//オーブスポナーの生成依頼
+BOOL OrderCreateOrbSpawner(Vector2DF *pos, int sp) {
+	return CreateOrbSpawner(pos, sp);
 }
 
 //オーブの当たり判定の設定依頼

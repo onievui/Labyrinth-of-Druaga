@@ -271,21 +271,21 @@ BOOL DamageMinionQuox(Minion *minion, int power) {
 //スライムの消滅
 void DestroyMinionSlime(Minion *minion, SummonData *s_dat) {
 	minion->state = 0;
-	OrderCreateOrb(&minion->pos, s_dat->cost);
+	OrderCreateOrbSpawner(&minion->pos, s_dat->cost);
 	SetSE(SE_MINION_STRIKE);
 }
 
 //ゴーストの消滅
 void DestroyMinionGhost(Minion *minion, SummonData *s_dat) {
 	minion->state = 0;
-	OrderCreateOrb(&minion->pos, s_dat->cost);
+	OrderCreateOrbSpawner(&minion->pos, s_dat->cost);
 	SetSE(SE_MINION_STRIKE);
 }
 
 //クオックスの消滅
 void DestroyMinionQuox(Minion *minion, SummonData *s_dat) {
 	minion->state = 0;
-	OrderCreateOrb(&minion->pos, s_dat->cost);
+	OrderCreateOrbSpawner(&minion->pos, s_dat->cost);
 	SetSE(SE_MINION_STRIKE);
 	//子オブジェクトの炎を消す
 	DestroyFire(minion);

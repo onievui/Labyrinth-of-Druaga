@@ -10,11 +10,14 @@
 
 
 //定数の定義
+#define ORB_SPAWNER_MAX				(8)		//オーブスポナーの最大出現数
+#define ORB_SPAWNER_SPEED			(6)		//オーブの生成間隔
+
 #define ORB_APPEAR_ROTATE_SPEED		(8)		//オーブの出現した時の回転間隔
 #define ORB_MOVE_ROTATE_SPEED		(5)		//オーブの追尾中の回転間隔
 
 #define ORB_APPEAR_SPEED			(2)		//オーブが出現したときの速度
-#define ORB_MOVE_SPEED				(16)	//オーブがプレイヤーに向かうときの速度
+#define ORB_MOVE_SPEED				(18)	//オーブがプレイヤーに向かうときの速度
 
 #define ORB_APPEAR_TIME				(30)	//オーブの出現状態が終わるまでの時間
 
@@ -28,17 +31,29 @@ enum OrbState {
 
 
 
-Orb g_orb[ORB_MAX];		//オーブオブジェクト
-Orb g_prototype_orb;	//オーブのプロトタイプ
+OrbSpawner g_orb_spawner[ORB_SPAWNER_MAX];	//オーブスポナーオブジェクト
+OrbSpawner g_prototype_orb_spawner;			//オーブスポナーのプロトタイプ
+
+Orb g_orb[ORB_MAX];			//オーブオブジェクト
+Orb g_prototype_orb;		//オーブのプロトタイプ
 
 
 //オーブの初期化
 void InitializeOrbs() {
 
 	//データの初期化
+	memset(g_orb_spawner, 0, sizeof(g_orb_spawner));
 	memset(g_orb, 0, sizeof(g_orb));
 
 	//プロトタイプの作成
+	g_prototype_orb_spawner =
+	{
+		1,
+		0,
+		{ 0,0 },
+		0
+	};
+
 	g_prototype_orb =
 	{
 		ORB_STATE_APPEAR,
@@ -54,25 +69,56 @@ void InitializeOrbs() {
 	g_prototype_orb.graph.sprite.rect = GetSpriteRect(SPR_STD_MONSTER, g_prototype_orb.sprite_num);
 }
 
-//オーブの生成
-BOOL CreateOrb(Vector2DF *pos, int sp) {
-	int i, j;
-	BOOL ret;
-
-	//回復量分ループ
-	for (i = 0; i < sp; i++) {
-		for (j = 0; j < ORB_MAX; j++) {
-			//未使用かどうか
-			if (!g_orb[j].state) {
-				g_orb[j] = g_prototype_orb;
-				g_orb[j].pos = *pos;
-				g_orb[j].angle = PI2 * GetRand(10000) / 10000.0f;
-				ret = TRUE;
-				break;
-			}
+//オーブスポナーの生成
+BOOL CreateOrbSpawner(Vector2DF *pos, int sp) {
+	int i;
+	for (i = 0; i < ORB_SPAWNER_MAX; i++) {
+		//未使用かどうか
+		if (!g_orb_spawner[i].state) {
+			g_orb_spawner[i] = g_prototype_orb_spawner;
+			g_orb_spawner[i].pos = *pos;
+			g_orb_spawner[i].sp = sp;
+			return TRUE;
 		}
 	}
-	return ret;
+	return FALSE;
+}
+
+//オーブの生成
+BOOL CreateOrb(Vector2DF *pos, int sp) {
+	int i;
+	for (i = 0; i < ORB_SPAWNER_MAX; i++) {
+		//未使用かどうか
+		if (!g_orb[i].state) {
+			g_orb[i] = g_prototype_orb;
+			g_orb[i].pos = *pos;
+			g_orb[i].sp = sp;
+			g_orb[i].angle = GetRand(10000) / 10000.0f*PI2;
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+//オーブスポナーの更新
+void UpdateOrbSpawner() {
+	int i;
+	for (i = 0; i < ORB_SPAWNER_MAX; i++) {
+		if (g_orb_spawner[i].state) {
+			//オーブの生成周期なら
+			if (g_orb_spawner[i].count%ORB_SPAWNER_SPEED == 0) {
+				//オーブを生成する
+				CreateOrb(&g_orb_spawner[i].pos, 1);
+				//残りSPを減らす
+				g_orb_spawner[i].sp--;
+				//残りSPがなくなったら消滅する
+				if (g_orb_spawner[i].sp <= 0) {
+					g_orb_spawner[i].state = 0;
+				}
+			}
+			g_orb_spawner[i].count++;
+		}
+	}
 }
 
 //オーブの更新

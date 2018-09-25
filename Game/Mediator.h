@@ -93,8 +93,8 @@ BOOL OrderDamageMinion(int i, int power);
 //召喚モンスターの消滅依頼
 void OrderDestroyMinion(int i);
 
-//オーブの生成依頼
-BOOL OrderCreateOrb(Vector2DF *pos, int sp);
+//オーブスポナーの生成依頼
+BOOL OrderCreateOrbSpawner(Vector2DF *pos, int sp);
 
 //オーブの当たり判定の設定依頼
 void OrderSetOrbsCollider(BoxCollider collider[]);

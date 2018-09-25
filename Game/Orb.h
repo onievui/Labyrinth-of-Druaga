@@ -9,8 +9,11 @@
 //オーブの初期化
 void InitializeOrbs();
 
-//オーブの生成
-BOOL CreateOrb(Vector2DF *pos, int sp);
+//オーブスポナーの生成
+BOOL CreateOrbSpawner(Vector2DF *pos, int sp);
+
+//オーブスポナーの更新
+void UpdateOrbSpawner();
 
 //オーブの更新
 void UpdateOrbs();
