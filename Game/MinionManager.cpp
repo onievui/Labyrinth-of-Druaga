@@ -115,10 +115,14 @@ SummonAreaData GetSummonAreaData(MinionPattern knd, Vector2DF *pl_pos, RectF *pl
 			summon_area_data.is_available = TRUE;
 			summon_area_data.state = 0;
 		}
-		//対象がないなら有効にする
+		//対象がないなら無効にする
 		else {
 			summon_area_data.is_available = FALSE;
 			summon_area_data.state = 1;
+			//敵と重なっているときは区別する
+			if (OrderCollisionObjectEnemies(&pos, &col)) {
+				summon_area_data.state = 2;
+			}
 		}
 	}
 
@@ -178,10 +182,9 @@ void DeleteMinion(SummonAreaData *summon_area_data) {
 
 	//範囲が有効なら処理を行う
 	if (summon_area_data->is_available) {
-		//敵との当たり判定
+		//召喚モンスターとの当たり判定
 		OrderCollisionDeleteObjectMinions(&summon_area_data->pos, &summon_area_data->area);
 	}
-
 }
 
 //召喚コストの取得

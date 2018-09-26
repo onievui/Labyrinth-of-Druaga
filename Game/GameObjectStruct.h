@@ -231,4 +231,12 @@ struct BoxCollider {
 	BOOL *ground_flag;		//マップに着地したかどうか
 };
 
+//ガイド構造体
+struct Guide {
+	int state;				//状態
+	Vector2DF pos;			//座標
+	char text[50];			//テキスト
+	unsigned int color;		//文字色
+	HFNT font;				//フォント
+};
 

@@ -26,6 +26,8 @@ HFNT g_font_g40;
 HFNT g_font_g50;
 HFNT g_font_g60;
 HFNT g_font_g70;
+HFNT g_font_o30;
+
 
 //リソースの読み込み
 void LoadResources() {
@@ -44,6 +46,15 @@ void LoadResources() {
 	g_font_g60 = CreateFontToHandle("GN-こはるいろサンレイ", 60, 3, DX_FONTTYPE_ANTIALIASING);
 	g_font_g70 = CreateFontToHandle("GN-こはるいろサンレイ", 70, 3, DX_FONTTYPE_ANTIALIASING);
 
+	font_path = "Resources/Fonts/Protected/onryou.TTF";
+	if (AddFontResourceEx(font_path, FR_PRIVATE, NULL) > 0) {
+	}
+	else {
+		// フォント読込エラー処理
+		MessageBox(NULL, "フォント読込失敗", "", MB_OK);
+	}
+	g_font_o30 = CreateFontToHandle("怨霊", 30, 3, DX_FONTTYPE_ANTIALIASING);
+
 
 	//画像の読み込み
 	g_texture[GRP_LOGO1]        = LoadGraph("Resources/Textures/Protected/Logo.png");
@@ -55,6 +66,9 @@ void LoadResources() {
 	g_texture[GRP_GIL_GHOST]    = LoadGraph("Resources/Textures/Protected/gil_2_ghost.png");
 	g_texture[GRP_GIL_QUOX]     = LoadGraph("Resources/Textures/Protected/gil_3_quox.png");
 	g_texture[GRP_SWORD]        = LoadGraph("Resources/Textures/Protected/sword.png");
+	g_texture[GRP_SWORD_SLIME]  = LoadGraph("Resources/Textures/Protected/sword_1_slime.png");
+	g_texture[GRP_SWORD_GHOST]  = LoadGraph("Resources/Textures/Protected/sword_2_ghost.png");
+	g_texture[GRP_SWORD_QUOX]   = LoadGraph("Resources/Textures/Protected/sword_3_quox.png");
 	g_texture[GRP_DELETE_ICON]  = LoadGraph("Resources/Textures/Protected/delete_icon.png");
 	g_texture[GRP_MONSTER]      = LoadGraph("Resources/Textures/Protected/monster.png");
 	g_texture[GRP_DRAGON]       = LoadGraph("Resources/Textures/Protected/dragon.png");
@@ -79,6 +93,7 @@ void LoadResources() {
 	g_se[SE_MINION_STRIKE] = LoadSoundMem("Resources/Audio/Protected/se_minion_strike.wav");
 	g_se[SE_MAGIC]         = LoadSoundMem("Resources/Audio/Protected/se_magic.wav");
 	g_se[SE_ENEMY_STRIKE]  = LoadSoundMem("Resources/Audio/Protected/se_enemy_strike.wav");
+	g_se[SE_ENEMY_GUARD]   = LoadSoundMem("Resources/Audio/Protected/se_enemy_guard.wav");
 
 
 	//BGMの読み込み
@@ -387,6 +402,100 @@ void LoadMapData(const StageId stageId, MapData *mapdata) {
 
 }
 
+//ガイドデータの読み込み
+void LoadGuideData(const StageId stageId, Guide guide[]) {
+
+	//エラーチェック
+	if (stageId < 0 || stageId >= STAGE_NUM) {
+		MessageBox(NULL, "マップの読み込みで不正な値が渡されました", "", MB_OK);
+		return;
+	}
+
+	int i, fp, loop;
+	char fname[64];
+	sprintf(fname, "Resources/Texts/guide_data/stage%d_guide.dat", stageId + 1);
+	int input[64];
+	char inputc[64];
+	int knd;			//現在読み込んでいるデータの種類
+	int num;			//読み込んでいるデータの件数
+	
+	fp = FileRead_open(fname);//ファイル読み込み
+	if (fp == NULL) {
+		//ガイドがないときは処理しない
+		return;
+	}
+
+	//変数初期化
+	loop = 1, knd = 0, num = 0;
+
+	while (loop) {
+
+		for (i = 0; i<64; i++) {
+			inputc[i] = input[i] = FileRead_getc(fp);	//1文字取得する
+			if (inputc[i] == '#') {						//シャープがあればその行を読み飛ばす
+				while (FileRead_getc(fp) != '\n');
+				i = -1;
+				continue;
+			}
+			if (input[i] == ',' || input[i] == '\n') {	//カンマか改行ならそこまでを文字列とする
+				inputc[i] = '\0';
+				break;
+			}
+			if (input[i] == EOF) {		//ファイルの終わりなら
+				knd = -1;			//終了
+			}
+		}
+		switch (knd) {
+			//ガイドのX座標
+		case 0:
+			guide[num].state = 1;
+			guide[num].pos.x = (float)atof(inputc);
+			knd++;
+			break;
+			//ガイドのY座標
+		case 1:
+			guide[num].pos.y = (float)atof(inputc);
+			knd++;
+			break;
+			//ガイドのテキスト
+		case 2:
+			strcpy(guide[num].text, inputc);
+			knd++;
+			break;
+			//文字色
+		case 3:
+			guide[num].color = (unsigned int)strtol(inputc, NULL, 16);
+			knd++;
+			break;
+			//フォント
+		case 4:
+			switch (atoi(inputc)) {
+				//怨霊 30
+			case 0:
+				guide[num].font = g_font_o30;
+				break;
+			default:
+				MessageBox(NULL, "フォントの指定で不正な値が渡されました", "", MB_OK);
+				break;
+			}
+			knd = 0;
+			num++;
+			//最大登録数に到達したら処理を抜けさせる
+			if (num == GUIDE_MAX)
+				knd = -1;
+			break;
+		case -1:
+			//ループを抜ける
+			loop = 0;
+			break;
+
+		}
+	}
+	FileRead_close(fp);
+
+}
+
+
 //リソースの解放
 void DeleteResources() {
 	//画像の削除
@@ -415,4 +524,5 @@ void DeleteResources() {
 	DeleteFontToHandle(g_font_g50);
 	DeleteFontToHandle(g_font_g60);
 	DeleteFontToHandle(g_font_g70);
+	DeleteFontToHandle(g_font_o30);
 }

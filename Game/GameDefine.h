@@ -81,7 +81,8 @@
 #define TREASURE_MAX	(1)		//お宝の数
 
 
-
+//ガイド関係
+#define GUIDE_MAX	(10)	//ガイドの最大出現数
 
 
 

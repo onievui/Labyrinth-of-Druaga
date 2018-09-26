@@ -18,6 +18,7 @@
 #include "MagicManager.h"
 #include "Treasure.h"
 #include "EffectManager.h"
+#include "Guide.h"
 #include "Collision.h"
 #include "Shader.h"
 #include "Mediator.h"
@@ -99,6 +100,9 @@ void InitializePlay(void)
 	//マップの初期化
 	InitializeMap();
 
+	//ガイドの初期化
+	InitializeGuide();
+
 	//当たり判定の初期化
 	InitializeCollision();
 
@@ -177,6 +181,9 @@ void RenderPlay(void)
 
 	//マップの描画
 	DrawMap();
+
+	//ガイドの描画
+	DrawGuide();
 
 	//敵モンスターの描画
 	DrawEnemies();

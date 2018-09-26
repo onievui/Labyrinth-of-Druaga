@@ -433,7 +433,13 @@ void SummonMinion() {
 	else {
 		OrderDeleteMinion(&g_summon_area);
 		g_summon_time = SUMMON_FAILED_TIME;
-		SetSE(SE_SWORD);
+		if (g_summon_area.state != 2) {
+			SetSE(SE_SWORD);
+		}
+		//敵モンスターに当てた時は効果音を変える
+		else {
+			SetSE(SE_ENEMY_GUARD);
+		}
 	}
 }
 
@@ -449,7 +455,7 @@ void DrawPlayer() {
 		DrawGraphicToMap(g_player.pos, &g_sword);
 	}
 	//選択中のモンスターを表示する
-	if (g_player.state != PLAYER_STATE_SUMMON && g_player.state != PLAYER_STATE_CLEAR && g_player.state != PLAYER_STATE_MISS) {
+	if (g_player.state == PLAYER_STATE_STAND || g_player.state == PLAYER_STATE_JUMP) {
 		//頭上に表示する
 		Vector2DF pos = g_player.pos;
 		pos.y -= 60.0f;
@@ -540,16 +546,36 @@ void DrawPlayerUI() {
 	//召喚・消滅範囲情報の描画
 	if (g_use_summon_area) {
 		if (g_player.state == PLAYER_STATE_STAND || g_player.state == PLAYER_STATE_JUMP) {
-			SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
-			int color = g_summon_area.state == 0 ? COLOR_BLUE : COLOR_RED;
-			Vector2DF pos = g_summon_area.pos;
-			SubVector2DF(pos, OrderGetCameraOffset());
-			DrawBoxAA(pos.x + g_summon_area.area.left,
+			//消滅モードの時は四角を表示する
+			//if (g_select_summon_type == 0) {
+				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 80);
+				//有効かどうかで色を変える
+				int color = g_summon_area.state == 0 ? COLOR_BLUE : COLOR_RED;
+				Vector2DF pos = g_summon_area.pos;
+				SubVector2DF(pos, OrderGetCameraOffset());
+				DrawBoxAA(pos.x + g_summon_area.area.left,
 				pos.y + g_summon_area.area.top,
 				pos.x + g_summon_area.area.right,
 				pos.y + g_summon_area.area.bottom,
 				color,
 				TRUE);
+			//}
+			//召喚モードの時は画像を表示する
+			//else {
+			//	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
+			//	//有効かどうかで色を変える
+			//	int r, g, b;
+			//	GetDrawBright(&r, &g, &b);
+			//	if (g_summon_area.state == 0) {
+			//		SetDrawBright(r/2, g/2, b);
+			//	}
+			//	else {
+			//		SetDrawBright(r, g/2, b/2);
+			//	}
+			//	//モンスターを描画する
+			//	DrawGraphicToMap(g_summon_area.pos, &g_summonable[g_select_summon_type].graph);
+			//	SetDrawBright(r, g, b);
+			//}		
 			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		}
 	}
@@ -642,15 +668,19 @@ void ChangePlayerGraphic() {
 	switch (g_summonable[g_select_summon_type].knd) {
 	case MINION_PATTERN_NUM:
 		g_player.graph.sprite.texture = g_texture[GRP_GIL];
+		g_sword.sprite.texture = g_texture[GRP_SWORD];
 		break;
 	case MINION_SLIME:
 		g_player.graph.sprite.texture = g_texture[GRP_GIL_SLIME];
+		g_sword.sprite.texture = g_texture[GRP_SWORD_SLIME];
 		break;
 	case MINION_GHOST:
 		g_player.graph.sprite.texture = g_texture[GRP_GIL_GHOST];
+		g_sword.sprite.texture = g_texture[GRP_SWORD_GHOST];
 		break;
 	case MINION_QUOX:
 		g_player.graph.sprite.texture = g_texture[GRP_GIL_QUOX];
+		g_sword.sprite.texture = g_texture[GRP_SWORD_QUOX];
 		break;
 	default:
 		MessageBox(NULL, "プレイヤーの画像変更で不正な値が渡されました", "", MB_OK);

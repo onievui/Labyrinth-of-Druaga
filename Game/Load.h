@@ -25,6 +25,9 @@ enum GRP_ID {
 	GRP_GIL_GHOST,			//プレイヤー画像（ゴースト）
 	GRP_GIL_QUOX,			//プレイヤー画像（クオックス）
 	GRP_SWORD,				//剣画像
+	GRP_SWORD_SLIME,		//剣画像（スライム）
+	GRP_SWORD_GHOST,		//剣画像（ゴースト）
+	GRP_SWORD_QUOX,			//剣画像（クオックス）
 	GRP_DELETE_ICON,		//消滅アイコン画像
 	GRP_MONSTER,			//モンスター画像
 	GRP_DRAGON,				//ドラゴン画像
@@ -51,6 +54,7 @@ enum SE_ID {
 	SE_MINION_STRIKE,	//召喚モンスター消滅効果音
 	SE_MAGIC,			//敵の魔法効果音
 	SE_ENEMY_STRIKE,	//敵モンスター消滅効果音
+	SE_ENEMY_GUARD,	//敵モンスターを消滅しようとした時の音
 	SE_ALL_NUM,			//読み込む効果音ファイルの数
 };
 
@@ -78,6 +82,7 @@ extern HFNT g_font_g40;
 extern HFNT g_font_g50;
 extern HFNT g_font_g60;
 extern HFNT g_font_g70;
+extern HFNT g_font_o30;
 
 //リソースの読み込み
 void LoadResources();

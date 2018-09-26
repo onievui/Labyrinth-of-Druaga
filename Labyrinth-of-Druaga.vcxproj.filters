@@ -163,6 +163,9 @@
     <ClCompile Include="Game\EffectManager.cpp">
       <Filter>ゲーム\オブジェクト関連\エフェクト関係</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Guide.cpp">
+      <Filter>ゲーム\オブジェクト関連</Filter>
+    </ClCompile>
   </ItemGroup>
   <!-- ヘッダファイル -->
   <ItemGroup>
@@ -282,6 +285,9 @@
     </ClInclude>
     <ClInclude Include="Game\EffectManager.h">
       <Filter>ゲーム\オブジェクト関連\エフェクト関係</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Guide.h">
+      <Filter>ゲーム\オブジェクト関連</Filter>
     </ClInclude>
   </ItemGroup>
   <!-- リソースファイル -->

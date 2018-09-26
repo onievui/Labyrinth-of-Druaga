@@ -95,6 +95,7 @@
     <ClCompile Include="Game\EnemyManager.cpp" />
     <ClCompile Include="Game\Fire.cpp" />
     <ClCompile Include="Game\Graphic.cpp" />
+    <ClCompile Include="Game\Guide.cpp" />
     <ClCompile Include="Game\Key.cpp" />
     <ClCompile Include="Game\Load.cpp" />
     <ClCompile Include="Game\Magic.cpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="Game\GameEnum.h" />
     <ClInclude Include="Game\GameObjectStruct.h" />
     <ClInclude Include="Game\Graphic.h" />
+    <ClInclude Include="Game\Guide.h" />
     <ClInclude Include="Game\Key.h" />
     <ClInclude Include="Game\Load.h" />
     <ClInclude Include="Game\Magic.h" />
