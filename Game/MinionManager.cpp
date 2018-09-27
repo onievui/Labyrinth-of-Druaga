@@ -177,6 +177,44 @@ int CreateMinion(SummonAreaData *summon_area_data) {
 	return FALSE;
 }
 
+//召喚モンスターの配置
+BOOL SetMinion(MonsterList *minion) {
+
+	//エラーチェック
+	if (minion->knd < 0 || minion->knd >= MINION_PATTERN_NUM) {
+		MessageBox(NULL, "召喚モンスターの配置で不正な値が渡されました", "", MB_OK);
+		return FALSE;
+	}
+
+	//召喚モンスターの空きがあるかどうか
+	if (g_active_minion_num != MINION_MAX) {
+		
+		//召喚モンスターの初期化
+		g_minion[g_active_minion_num] = g_prototype_minion[minion->knd];
+		g_minion[g_active_minion_num].pos = minion->pos;
+		g_minion[g_active_minion_num].is_left = minion->is_left;
+		//向きで画像が変わる場合
+		if (!minion->is_left && g_summon_data[minion->knd].turn_graph_num) {
+			g_minion[g_active_minion_num].sprite_num += g_summon_data[minion->knd].turn_graph_num;
+			//スプライトの再設定
+			if (minion->knd != MINION_QUOX) {
+				g_minion[g_active_minion_num].graph.sprite.rect = GetSpriteRect(SPR_STD_MONSTER, g_minion[g_active_minion_num].sprite_num);
+			}
+			else {
+				g_minion[g_active_minion_num].graph.sprite.rect = GetSpriteRect(SPR_STD_DRAGON, g_minion[g_active_minion_num].sprite_num);
+			}
+		}
+
+
+		//使用中の数を増やす
+		g_active_minion_num++;
+
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
 //召喚モンスターを消す
 void DeleteMinion(SummonAreaData *summon_area_data) {
 

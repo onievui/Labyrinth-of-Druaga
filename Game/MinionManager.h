@@ -13,6 +13,9 @@ void InitializeMinions();
 //召喚モンスターの生成
 int CreateMinion(SummonAreaData *summon_area_data);
 
+//召喚モンスターの配置
+BOOL SetMinion(MonsterList *minion);
+
 //召喚コストの取得
 int GetSummonCost(MinionPattern knd);
 

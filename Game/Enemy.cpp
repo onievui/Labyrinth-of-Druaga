@@ -80,7 +80,9 @@ void UpdateEnemyDruid(Enemy *enemy) {
 
 	//60フレームに1回白魔法を撃ち出す
 	if (enemy->count % 60 == 59) {
-		CreateMagic(MAGIC_WHITE, &enemy->pos, enemy->is_left);
+		Vector2DF pos = enemy->pos;
+		pos.x += enemy->is_left ? -8 : 8;
+		CreateMagic(MAGIC_WHITE, &pos, enemy->is_left);
 	}
 
 	//マップとの着地判定の適用
@@ -129,7 +131,9 @@ void UpdateEnemyWizard(Enemy *enemy) {
 
 	//60フレームに1回緑魔法を撃ち出す
 	if (enemy->count % 60 == 59) {
-		CreateMagic(MAGIC_GREEN, &enemy->pos, enemy->is_left);
+		Vector2DF pos = enemy->pos;
+		pos.x += enemy->is_left ? -8 : 8;
+		CreateMagic(MAGIC_GREEN, &pos, enemy->is_left);
 	}
 
 	//マップとの着地判定の適用

@@ -27,6 +27,7 @@ HFNT g_font_g50;
 HFNT g_font_g60;
 HFNT g_font_g70;
 HFNT g_font_o30;
+HFNT g_font_o40;
 
 
 //リソースの読み込み
@@ -53,7 +54,8 @@ void LoadResources() {
 		// フォント読込エラー処理
 		MessageBox(NULL, "フォント読込失敗", "", MB_OK);
 	}
-	g_font_o30 = CreateFontToHandle("怨霊", 30, 3, DX_FONTTYPE_ANTIALIASING);
+	g_font_o30 = CreateFontToHandle("怨霊", 30, 9, DX_FONTTYPE_ANTIALIASING);
+	g_font_o40 = CreateFontToHandle("怨霊", 40, 9, DX_FONTTYPE_ANTIALIASING);
 
 
 	//画像の読み込み
@@ -369,27 +371,31 @@ void LoadMapData(const StageId stageId, MapData *mapdata) {
 			break;
 		//敵モンスター出現データ
 		case 6:
-			switch (num % 4) {
-			//種類
+			switch (num % 5) {
+			//タイプ
 			case 0:
-				mapdata->enemy_list[num / 4].is_use = TRUE;
-				mapdata->enemy_list[num / 4].knd = (EnemyPattern)atoi(inputc);
-			//X座標
+				mapdata->monster_list[num / 5].is_use = TRUE;
+				mapdata->monster_list[num / 5].type = atoi(inputc);
+				break;
+			//種類
 			case 1:
-				mapdata->enemy_list[num / 4].pos.x = (float)atoi(inputc);
+				mapdata->monster_list[num / 5].knd = atoi(inputc);
+			//X座標
+			case 2:
+				mapdata->monster_list[num / 5].pos.x = (float)atoi(inputc);
 				break;
 			//Y座標
-			case 2:
-				mapdata->enemy_list[num / 4].pos.y = (float)atoi(inputc);
+			case 3:
+				mapdata->monster_list[num / 5].pos.y = (float)atoi(inputc);
 				break;
 			//向き
-			case 3:
-				mapdata->enemy_list[num / 4].is_left = atoi(inputc);
+			case 4:
+				mapdata->monster_list[num / 5].is_left = atoi(inputc);
 				break;
 			}
 			num++;
 			//最大登録数に到達したら処理を抜けさせる
-			if (num == ENEMY_MAX * 4)
+			if (num == ENEMY_MAX * 5)
 				knd = -1;
 			break;
 		case -1:
@@ -474,6 +480,10 @@ void LoadGuideData(const StageId stageId, Guide guide[]) {
 			case 0:
 				guide[num].font = g_font_o30;
 				break;
+				//怨霊 40
+			case 1:
+				guide[num].font = g_font_o40;
+				break;
 			default:
 				MessageBox(NULL, "フォントの指定で不正な値が渡されました", "", MB_OK);
 				break;
@@ -525,4 +535,5 @@ void DeleteResources() {
 	DeleteFontToHandle(g_font_g60);
 	DeleteFontToHandle(g_font_g70);
 	DeleteFontToHandle(g_font_o30);
+	DeleteFontToHandle(g_font_o40);
 }

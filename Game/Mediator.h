@@ -72,6 +72,9 @@ void OrderCollisionPlayer();
 //召喚モンスターの生成依頼
 int OrderCreateMinion(SummonAreaData *summon_area_data);
 
+//召喚モンスターの配置依頼
+BOOL OrderSetMinion(MonsterList *minion);
+
 //召喚コストの取得依頼
 int OrderGetSummonCost(MinionPattern knd);
 
@@ -106,7 +109,7 @@ void OrderDestroyOrb(int i);
 void OrderSetFireCollider(BoxCollider collider[]);
 
 //敵モンスターの生成依頼
-BOOL OrderCreateEnemies(EnemyList enemy_list[]);
+BOOL OrderCreateEnemy(MonsterList *enemy_list);
 
 //敵モンスターの当たり判定の設定依頼
 void OrderSetEnemiesCollider(BoxCollider collider[]);

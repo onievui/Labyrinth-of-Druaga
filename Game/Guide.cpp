@@ -43,7 +43,7 @@ void DrawGuide() {
 		if (g_guide[i].state) {
 			pos = g_guide[i].pos;
 			SubVector2DF(pos, OrderGetCameraOffset());
-			DrawFormatStringFToHandle(pos.x - GetDrawFormatStringWidthToHandle(g_guide[i].font, "%s", g_guide[i].text),
+			DrawFormatStringFToHandle(pos.x - GetDrawFormatStringWidthToHandle(g_guide[i].font, "%s", g_guide[i].text) / 2,
 				pos.y, g_guide[i].color, g_guide[i].font, "%s", g_guide[i].text);
 		}
 	}

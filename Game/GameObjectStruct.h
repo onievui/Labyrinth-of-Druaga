@@ -51,25 +51,26 @@ struct Map {
 	GraphP graphp;		//画像
 };
 
-//敵モンスター出現用データ
-struct EnemyList {
+//モンスター出現用データ
+struct MonsterList {
 	BOOL is_use;		//使用するかどうか
-	EnemyPattern knd;	//種類
+	int type;			//召喚モンスターかどうか
+	int knd;			//種類
 	Vector2DF pos;		//座標
 	BOOL is_left;		//左向きかどうか
 };
 
 //マップ全体の構造体
 struct MapData {
-	Map map[MAP_WIDTH_MAX][MAP_HEIGHT_MAX];	//各マスの情報
-	int width;								//マップの横幅
-	int height;								//マップの縦幅
-	Vector2DF player_pos;					//プレイヤーの初期座標
-	BOOL player_is_left;					//プレイヤーの初期方向
-	int player_sp;							//プレイヤーの初期SP
-	Vector2DF treasure_pos;					//お宝の座標
-	BOOL summonable[MINION_PATTERN_NUM];	//召喚できるモンスターの種類
-	EnemyList enemy_list[ENEMY_MAX];		//出現する敵の情報
+	Map map[MAP_WIDTH_MAX][MAP_HEIGHT_MAX];		//各マスの情報
+	int width;									//マップの横幅
+	int height;									//マップの縦幅
+	Vector2DF player_pos;						//プレイヤーの初期座標
+	BOOL player_is_left;						//プレイヤーの初期方向
+	int player_sp;								//プレイヤーの初期SP
+	Vector2DF treasure_pos;						//お宝の座標
+	BOOL summonable[MINION_PATTERN_NUM];		//召喚できるモンスターの種類
+	MonsterList monster_list[MONSTER_LIST_MAX];	//出現するモンスターの情報
 };
 
 // プレイヤー構造体

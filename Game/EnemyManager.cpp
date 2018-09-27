@@ -61,37 +61,34 @@ void InitializeEnemies() {
 
 
 //敵モンスターの生成
-BOOL CreateEnemies(EnemyList enemy_list[]) {
+BOOL CreateEnemy(MonsterList *enemy) {
+
+	//エラーチェック
+	if (enemy->knd < 0 || enemy->knd >= ENEMY_PATTERN_NUM) {
+		MessageBox(NULL, "敵モンスターの生成で不正な値が渡されました", "", MB_OK);
+		return FALSE;
+	}
 
 	int i;
 	for (i = 0; i < ENEMY_MAX; i++) {
-		//使われるかどうか
-		if (enemy_list[i].is_use) {
-			//エラーチェック
-			if (enemy_list[i].knd < 0 || enemy_list[i].knd >= ENEMY_PATTERN_NUM) {
-				MessageBox(NULL, "敵モンスターの生成で不正な値が渡されました", "", MB_OK);
-				return FALSE;
-			}
+		if (!g_enemy[i].state) {
 			//敵モンスターの初期化
-			g_enemy[i] = g_prototype_enemy[enemy_list[i].knd];
-			g_enemy[i].knd = enemy_list[i].knd;
-			g_enemy[i].pos = enemy_list[i].pos;
+			g_enemy[i] = g_prototype_enemy[enemy->knd];
+			g_enemy[i].pos = enemy->pos;
 			//向きで画像が変わる場合
-			if (!(g_enemy[i].is_left = enemy_list[i].is_left)) {
+			if (!(g_enemy[i].is_left = enemy->is_left)) {
 				g_enemy[i].sprite_num++;
 				//スプライトの再設定
 				g_enemy[i].graph.sprite.rect = GetSpriteRect(SPR_STD_MONSTER, g_enemy[i].sprite_num);
 			}
 			//使用中の数を増やす
 			g_active_enemy_num++;
-		}
-		//リストの終わりなら処理を抜ける
-		else {
-			break;
+
+			return TRUE;
 		}
 	}
 
-	return TRUE;
+	return FALSE;
 }
 
 //敵モンスターの更新

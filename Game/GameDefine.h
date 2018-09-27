@@ -73,6 +73,10 @@
 #define MAGIC_MAX	(40)	//モンスターの魔法の最大出現数
 
 
+//モンスターリスト関係
+#define MONSTER_LIST_MAX	(20)	//モンスターリストの最大登録数
+
+
 //オーブ関係
 #define ORB_MAX		(15)	//オーブの最大出現数
 
@@ -82,7 +86,7 @@
 
 
 //ガイド関係
-#define GUIDE_MAX	(10)	//ガイドの最大出現数
+#define GUIDE_MAX	(20)	//ガイドの最大出現数
 
 
 

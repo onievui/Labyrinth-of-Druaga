@@ -144,6 +144,11 @@ int OrderCreateMinion(SummonAreaData *summon_area_data) {
 	return CreateMinion(summon_area_data);
 }
 
+//召喚モンスターの配置依頼
+BOOL OrderSetMinion(MonsterList *minion) {
+	return SetMinion(minion);
+}
+
 //召喚コストの取得依頼
 int OrderGetSummonCost(MinionPattern knd) {
 	return GetSummonCost(knd);
@@ -200,8 +205,8 @@ void OrderSetFireCollider(BoxCollider collider[]) {
 }
 
 //敵モンスターの生成依頼
-BOOL OrderCreateEnemies(EnemyList enemy_list[]) {
-	return CreateEnemies(enemy_list);
+BOOL OrderCreateEnemy(MonsterList *enemy_list) {
+	return CreateEnemy(enemy_list);
 }
 
 //敵モンスターの当たり判定の設定依頼

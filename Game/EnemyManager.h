@@ -11,7 +11,7 @@
 void InitializeEnemies();
 
 //敵モンスターの生成
-BOOL CreateEnemies(EnemyList enemy_list[]);
+BOOL CreateEnemy(MonsterList *enemy_list);
 
 //敵モンスターの更新
 void UpdateEnemies();
