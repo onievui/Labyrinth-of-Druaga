@@ -312,9 +312,9 @@ int CollisionObjectMap(Vector2DF *pos, Vector2DF *vel, RectF *col) {
 
 	//マップ斜め方向判定
 	if (!mL && !mU) { mL = mU = OrderIsWallWithPos(rect1.left, rect1.top); }
-	if (!mL && !mD) { mL = mD = OrderIsWallWithPos(rect1.left, rect1.bottom); }
+	if (!mL && !mD) { mL = OrderIsWallWithPos(rect1.left, rect1.bottom); }
 	if (!mR && !mU) { mR = mU = OrderIsWallWithPos(rect1.right, rect1.top); }
-	if (!mR && !mD) { mR = mD = OrderIsWallWithPos(rect1.right, rect1.bottom); }
+	if (!mR && !mD) { mR = OrderIsWallWithPos(rect1.right, rect1.bottom); }
 
 	//座標をブロックの縁に合わせる
 	if (mL && !mR) {

@@ -49,6 +49,8 @@ void ChangePlayerGraphic();
 //グローバル変数の宣言
 Player g_player;									//プレイヤーオブジェクト
 Graph g_sword;										//剣オブジェクト
+Graph g_sp_icon;									//SPアイコン
+int g_sp_anime_count;								//SPアイコンのアニメーション用カウンタ
 int g_summon_time;									//召喚動作に必要な時間
 SummonableList g_summonable[MINION_PATTERN_NUM+1];	//召喚可能なモンスターのリスト
 int g_slist_active_num;								//リストで使用中の要素数
@@ -57,7 +59,7 @@ SummonAreaData g_summon_area;						//召喚・消滅範囲情報
 BOOL g_use_summon_area;								//召喚・消滅範囲表示フラグ
 BOOL g_is_walking;									//今回歩いたかどうか
 BOOL g_was_walking;									//前回歩いたかどうか
-BOOL g_is_damage;									
+BOOL g_is_damage;									//プレイヤーがダメージを受けて倒れたかどうか
 
 
 
@@ -78,6 +80,10 @@ void InitializePlayer() {
 
 	g_sword = Graph{ g_sprite[SPR_STD_SWORD],1.0,0.0 };
 	g_sword.sprite.rect = GetSpriteRect(SPR_STD_SWORD, 6);
+
+	g_sp_icon = Graph{ g_sprite[SPR_STD_MONSTER],0.5f,0.0 };
+	g_sp_icon.sprite.rect = GetSpriteRect(SPR_STD_MONSTER, 33);
+	g_sp_anime_count = 0;
 
 	g_summon_time = 0;
 	memset(g_summonable, 0, sizeof(g_summonable));
@@ -114,6 +120,11 @@ void UpdatePlayer() {
 			g_use_summon_area = !g_use_summon_area;
 			SetUseSummonArea(g_use_summon_area);
 		}
+		//SPアイコンのアニメーション
+		if (g_sp_anime_count % 12 == 11) {
+			g_sp_icon.angle += PI / 2;
+		}
+		g_sp_anime_count++;
 	}
 	//プレイヤーが死んでいる場合
 	else {
@@ -490,8 +501,12 @@ void DrawPlayer() {
 void DrawPlayerUI() {
 	//SPの描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
-	DrawBox(SP_POS_X - 10, SP_POS_Y, SP_POS_X + 100, SP_POS_Y + 35, COLOR_AQUA, TRUE);
+	DrawBox(SP_POS_X - 45, SP_POS_Y, SP_POS_X + 100, SP_POS_Y + 35, COLOR_AQUA, TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	//SPアイコンの描画
+	
+	DrawGraphic(Vector2DF{ SP_POS_X-23, SP_POS_Y+18 }, &g_sp_icon);
+	//SPの値の表示
 	DrawFormatStringFToHandle(SP_POS_X, SP_POS_Y, COLOR_BLUE, g_font_g40, "SP:%d", g_player.sp);
 
 	//召喚可能なモンスターのリストの描画
