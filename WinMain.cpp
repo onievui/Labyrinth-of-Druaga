@@ -4,8 +4,6 @@
 //! @brief  ゲームプログラムのエントリーポイントのソースファイル
 //!
 //! @date   2017/3/17
-//!
-//! @author ********
 //__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
 
 // ヘッダファイルの読み込み ================================================
@@ -37,7 +35,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 #if defined(_DEBUG)
 	// メモリーリーク検出機構のセットアップ
-	SetUpMemoryLeakDetector();
+	// SetUpMemoryLeakDetector();
 #endif
 
 
@@ -75,7 +73,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	
 	while (!ProcessMessage() && !CheckHitKey(EXIT_KEY))
 	{ 
-		UpdateSystem();        // システムの更新
 		
 		UpdateGame();          // ゲームの更新処理
 		RenderGame();          // ゲームの描画処理

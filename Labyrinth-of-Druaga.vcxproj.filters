@@ -64,21 +64,6 @@
   <!-- ソースファイル -->
   <ItemGroup>
     <ClCompile Include="WinMain.cpp" />
-    <ClCompile Include="Libraries\GameLibrary\GameLibGraphics.cpp">
-      <Filter>ライブラリ\ゲームライブラリ</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\GameLibrary\GameLibInput.cpp">
-      <Filter>ライブラリ\ゲームライブラリ</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\GameLibrary\GameLibMath.cpp">
-      <Filter>ライブラリ\ゲームライブラリ</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\GameLibrary\GameLibSystem.cpp">
-      <Filter>ライブラリ\ゲームライブラリ</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\GameLibrary\GameLibTime.cpp">
-      <Filter>ライブラリ\ゲームライブラリ</Filter>
-    </ClCompile>
     <ClCompile Include="Game\GameMain.cpp">
       <Filter>ゲーム\シーン関連</Filter>
     </ClCompile>
@@ -171,24 +156,6 @@
   <ItemGroup>
     <ClInclude Include="Libraries\GameLibrary\GameLib.h">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\GameLibrary\GameLibMath.h">
-      <Filter>ライブラリ\ゲームライブラリ</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\GameLibrary\GameLibSystem.h">
-      <Filter>ライブラリ\ゲームライブラリ</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\GameLibrary\GameLibGraphics.h">
-      <Filter>ライブラリ\ゲームライブラリ</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\GameLibrary\GameLibInput.h">
-      <Filter>ライブラリ\ゲームライブラリ</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\GameLibrary\GameLibTime.h">
-      <Filter>ライブラリ\ゲームライブラリ</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\Utilities\MemoryLeakDetector.h">
-      <Filter>ライブラリ\ユーティリティ</Filter>
     </ClInclude>
     <ClInclude Include="Game\GameMain.h">
       <Filter>ゲーム\シーン関連</Filter>
